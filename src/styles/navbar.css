@@ -1,0 +1,58 @@
+:root {
+  --bg-secondary:var(--bg-secondary);
+
+  --border-color-primary:var(--border-color-primary);
+
+  --text-color-primary:var(--text-color-primary);
+}
+/* ------- Nav Bar -------*/
+
+/* Margin */
+.nav-fill {
+    width: 280px;
+}
+
+/* Main nav bar style */
+.navbar {
+  position: fixed;
+  display: block;
+  background-color: var(--bg-secondary);
+  
+  min-width: 260px;
+  max-width: 260px;
+  min-height: 100%;
+}
+
+
+.navbar ul {
+  list-style: none;
+  width: 260px;
+
+  margin-top: 100px;
+  padding: 0; 
+}
+
+.navbar li {
+  display: block;
+  border: 1px solid var(--border-color-primary);
+
+  padding: 10px 15px;
+  width: 100%;
+}
+
+.navbar li:hover {
+  background-color: #41424e;
+}
+
+.navbar a {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  color: var(--text-color-primary);
+
+  font-size: 1rem;
+  width: 100%;
+}
+
+
+

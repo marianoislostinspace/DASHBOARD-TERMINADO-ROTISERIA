@@ -27,6 +27,8 @@ export default function Categories({ }: Props) {
 
     const [newCategory, setNewCategory] = useState("");
 
+
+    // Agregar Categorías
     const handleAddCategory = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newCategory.trim()) {
@@ -54,6 +56,7 @@ export default function Categories({ }: Props) {
         }
     };
 
+    // Eliminar categorías
     const handleDeleteCategory = async (categoryId: string) => {
         const result = await Swal.fire({
             title: "¿Estás seguro que quieres eliminar esta categoria?",

@@ -1,72 +1,34 @@
-import React, {  useEffect, useState } from "react";
-import { fetchApi } from "../services/api";
+// Librerias
+import React, {useState , useContext} from "react";
+import { flushCompileCache } from "module";
 import Swal from 'sweetalert2'
+// Componentes
+import { ProductForm } from "../components/ProductForm";
+//Helpers
+import { fetchApi } from "../services/api";
+import { editProduct, SwalNotification } from "../helpers/productDBHandler";
+import { usePopUpDispatch, usePopUpStates } from "../components/contexts/PopUpContext";
+// Contextos
+import { ProductDataContext } from "../components/contexts/ProductsDataContext";
+// Tipos y Estilos
+import type { Product, Category } from "../types/types";
 
 
 type Props = {};
 
-interface Product {
-  id: string;
-  nombre: string;
-  descripcion: string;
-  precio: number;
-  precioDescuento: number;
-  imagen: string;
-  opciones: Opcion[]
-  categoriaId: string;
-}
-
-interface Opcion {
-  id: string
-  nombre: string;
-  precio?: number; // Opcional
-}
-
-
-interface Category {
-  id: string;
-  nombre: string;
-}
 
 export const Dashboard = (props: Props) => {
-  const [items, setItems] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const {productsList, categoriesList} = useContext(ProductDataContext)
+  const isVisible = usePopUpStates()
+  const {handleIsVisible, handleIsEditing, handleFormData} = usePopUpDispatch()
 
-  // Estados para editar el ítem
-  const [editItem, setEditItem] = useState<Product | null>(null);
-  const [newName, setNewName] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const [newPrice, setNewPrice] = useState<number | "">("");
-  const [newDiscountPrice, setNewDiscountPrice] = useState<number | "">("");
-  const [newCategoryId, setNewCategoryId] = useState("");
   const [detalle, setdetalle] = useState<Boolean>(false)
   const [singlePlato, setsinglePlato] = useState<Product | null>(null)
-  const [newImage, setnewImage] = useState<File | null>(null)
 
   // Estados para agregar opción
   const [activeOptionFormId, setActiveOptionFormId] = useState<string | null>(null);
   const [optionName, setOptionName] = useState("");
   const [optionExtraPrice, setOptionExtraPrice] = useState<number | "">("");
-
-
-
-
-  useEffect(() => {
-    const getItemsAndCategories = async () => {
-      try {
-        const itemsData: Product[] = await fetchApi("platos");
-        const categoriesData: Category[] = await fetchApi("categorias");
-        setItems(itemsData);
-        setCategories(categoriesData);
-      } catch (error) {
-        console.error("Error al obtener los ítems y categorías:", error);
-      }
-    };
-    getItemsAndCategories();
-  }, []);
-
-
-
 
 
   const handleDeleteItem = async (itemId: string, categoriaId: string) => {
@@ -80,6 +42,8 @@ export const Dashboard = (props: Props) => {
       confirmButtonText: "Sí, eliminar"
     });
 
+    // Delete Logic
+    /*
     if (result.isConfirmed) {
       try {
         await fetchApi(`platos/categorias/${categoriaId}/${itemId}`, "DELETE");
@@ -95,67 +59,20 @@ export const Dashboard = (props: Props) => {
         Swal.fire("Error", "No se pudo eliminar el producto.", "error");
       }
     }
+    */
   };
 
-
-
-
-  const handleEditItem = async (e: React.FormEvent, itemId: string, categoriaId: string) => {
-    e.preventDefault();
-
-    if (!newName || !newPrice || !newCategoryId) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "todos los campos deben ser completados",
-        footer: '<a href="#">Why do I have this issue?</a>'
-      }); return;
-    }
-
-    const formData = new FormData()
-    formData.append("nombre", newName)
-    formData.append("descripcion", newDescription)
-    formData.append("precio", String(newPrice))
-    formData.append("categoriaId", newCategoryId)
-    if (newDiscountPrice !== "") formData.append("precioDescuento", String(newDiscountPrice));
-
-    if (newImage) {
-      formData.append("imagen", newImage);
-    }
-    try {
-      const response = await fetchApi(
-        `platos/categorias/${categoriaId}/platos/${itemId}`,
-        "PATCH",
-        formData,
-        true
-      );
-
-      setItems(items.map((item) => (item.id === itemId ? response : item)));
-      Swal.fire({
-        title: "Completado!",
-        icon: "success",
-        text: "producto actualizado exitosamente",
-        draggable: true
-      });
-      setEditItem(null);
-    }
-    catch (error) {
-      console.error("Error al actualizar el producto:", error);
-    }
-  };
-
+  /* Genera el Pop Up para editar el campo */
   const handleEditFields = (item: Product) => {
-    setEditItem(item);
-    setNewName(item.nombre);
-    setNewDescription(item.descripcion);
-    setNewPrice(item.precio);
-    setNewDiscountPrice(item.precioDescuento);
-    setNewCategoryId(item.categoriaId);
-  };
+    handleIsEditing(true)
+    handleFormData(item)
+    handleIsVisible(true)
+    
+  }
 
-
+  // Funcion para agregar opciones al plato
   const handleAddOption = async (productId: string) => {
-    const product = items.find(item => item.id === productId);
+    const product = productsList.find(item => item.id === productId);
     const categoryId = product ? product.categoriaId : null;
 
     if (!optionName) {
@@ -241,8 +158,6 @@ export const Dashboard = (props: Props) => {
 
   return (
     <div>
-      <h2>Dashboard de Productos</h2>
-
       {/* Lista de productos */}
       <div className="itemContainer">
         {detalle ? (
@@ -267,7 +182,7 @@ export const Dashboard = (props: Props) => {
 
           </div>
         ) : (
-          items.map((item) => (
+          productsList.map((item) => (
             <div key={item.id} className="item-card">
               <h3>{item.nombre}</h3>
               <p>{item.descripcion}</p>
@@ -302,50 +217,14 @@ export const Dashboard = (props: Props) => {
         )}
       </div>
 
-      {/* Formulario de edición */}
+      {/* Formulario de edición 
+      
       {editItem && (
-        <div className="edit-form">
-          <h3>Editar Producto</h3>
-          <form onSubmit={(e) => handleEditItem(e, editItem.id, editItem.categoriaId)}>
-            <input
-              type="text"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              placeholder="Nombre"
-            />
-            <input
-              type="text"
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
-              placeholder="Descripción"
-            />
-            <input
-              type="number"
-              value={newPrice}
-              onChange={(e) => setNewPrice(Number(e.target.value))}
-              placeholder="Precio"
-            />
-            <input
-              type="file"
-              accept="image/"
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  setnewImage(e.target.files[0]);
-                }
-              }}
-            />
-            <select value={newCategoryId} onChange={(e) => setNewCategoryId(e.target.value)}>
-              <option value="">Selecciona una categoría</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.nombre}
-                </option>
-              ))}
-            </select>
-            <button type="submit">Actualizar Producto</button>
-          </form>
-        </div>
+        
       )}
+      
+      */}
+
     </div>
   );
 };

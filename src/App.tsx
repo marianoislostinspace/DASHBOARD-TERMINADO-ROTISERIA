@@ -1,49 +1,80 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import { Dashboard } from "./components/Dashboard";
+// Librerias
+import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+
+// Componentes
+import { SideBar } from "./components/SideBar";
+import { ProductForm } from "./components/ProductForm";
+
+// Helpers
+import { fetchApi } from "./services/api";
+
+// Context
+import { ProductDataContext } from "./components/contexts/ProductsDataContext";
+
+// Paginas
+import { Dashboard } from "./pages/DashboardPage";
 import Categories from "./components/Categories";
 import { Items } from "./components/Items";
-import './styles.css'
 import { Pedidos } from "./components/Pedidos";
 import { HistorialPedidos } from "./components/HistorialPedidos";
-import './styles/navbar.css'
+
+// Estilos y Tipos
+import type { Product, Category } from "./types/types";
+import './styles.css';
+
 
 
 export const App = () => {
 
+  const [sectionName, setSectionName] = useState<String>("Pedidos")
+  const {categoriesList, initCategoriesList, initProductList} = useContext(ProductDataContext)
+
+  // Recuperar la información del backend
+  useEffect(() => {
+    const getItemsAndCategories = async () => {
+      try {
+        const itemsData: Product[] = await fetchApi("platos");
+        const categoriesData: Category[] = await fetchApi("categorias");
+        initProductList(itemsData);
+        initCategoriesList(categoriesData);
+      } catch (error) {
+        console.error("Error al obtener los ítems y categorías:", error);
+      }
+    };
+    getItemsAndCategories();
+  }, []);
+
   return (
 
     <Router>
-      <div>
-        <nav className="navbar">
-          <ul>
-            <li>
-              <Link to="/pedidos">Pedidos Entrantes</Link>
-            </li>
-            <li>
-              <Link to="/dashboard">Productos en venta y Stock</Link>
-            </li>
-            <li>
-              <Link to="/categories">Crear Categorias</Link>
-            </li>
-            <li>
-              <Link to="/items">Agregar Productos</Link>
-            </li>
-            <li>
-              <Link to="/historial">Historial de pedidos</Link>
-            </li>
-          </ul>
-        </nav>
+      
 
-        <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/items" element={<Items />} />
-          <Route path="/pedidos" element={<Pedidos />} />
-          <Route path="/historial" element={<HistorialPedidos />} />
-        </Routes>
+      <div className="app">
+
+        <SideBar sectionNameSetter={setSectionName}></SideBar>
+
+        <section className="content">
+
+          <div className="section-tittle">
+            <h1>{sectionName}</h1>
+          </div>
+
+          <Routes>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/items" element={<Items />} />
+            <Route path="/pedidos" element={<Pedidos />} />
+            <Route path="/historial" element={<HistorialPedidos />} />
+            <Route path="/" element={<Navigate to={"/pedidos"}></Navigate>}></Route>
+          </Routes>
+
+        </section>
       </div>
+      
+      <ProductForm categories={categoriesList}></ProductForm>
     </Router>
+    
   );
 };
 

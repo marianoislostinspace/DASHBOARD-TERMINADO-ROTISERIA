@@ -31,9 +31,6 @@ type PedidoContextType = {
   eliminarPedido: (id: string) => void;
 };
 
-
-
-
 const PedidoContext = createContext<PedidoContextType | undefined>(undefined);
 
 export const PedidoProvider = ({ children }: { children: React.ReactNode }) => {
