@@ -1,5 +1,5 @@
-import type { Product } from "../types/types"
-import { fetchApi } from "../services/api"
+import type { Product } from "../assets/types/types"
+import { fetchApi } from "../api"
 import Swal from "sweetalert2";
 
 export const SwalNotification = Swal.mixin({

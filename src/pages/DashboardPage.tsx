@@ -1,23 +1,17 @@
 // Librerias
 import React, { useState, useContext } from "react";
-import { flushCompileCache } from "module";
 import Swal from 'sweetalert2'
-// Componentes
-import { ProductForm } from "../components/ProductForm";
 //Helpers
-import { fetchApi } from "../services/api";
-import { editProduct, SwalNotification } from "../helpers/productDBHandler";
-import { usePopUpDispatch, usePopUpStates } from "../components/contexts/PopUpContext";
+import { fetchApi } from "../api";
 // Contextos
-import { ProductDataContext } from "../components/contexts/ProductsDataContext";
+import { ProductDataContext } from "../contexts/ProductsDataContext";
+import { usePopUpDispatch, usePopUpStates } from "../contexts/PopUpContext";
 // Tipos y Estilos
-import type { Product, Category } from "../types/types";
+import type { Product } from "../assets/types/types";
 
 
-type Props = {};
 
-
-export const Dashboard = (props: Props) => {
+export const Dashboard = () => {
   const { productsList, categoriesList } = useContext(ProductDataContext)
   const isVisible = usePopUpStates()
   const { handleIsVisible, handleIsEditing, handleFormData, handleFormType } = usePopUpDispatch()

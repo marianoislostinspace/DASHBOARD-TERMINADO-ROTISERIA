@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import type { Product } from '../types/types'
+import type { Product } from '../assets/types/types'
 
 const emptyProduct: Product = {
   id: "",

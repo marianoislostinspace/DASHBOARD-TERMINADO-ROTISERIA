@@ -4,24 +4,24 @@ import { useState, useEffect, useContext } from "react";
 
 // Componentes
 import { SideBar } from "./components/SideBar";
-import { ProductForm } from "./components/ProductForm";
+import { ProductForm } from "./components/PopUp/ProductForm";
 
 // Helpers
-import { fetchApi } from "./services/api";
+import { fetchApi } from "./api";
 
 // Context
-import { ProductDataContext } from "./components/contexts/ProductsDataContext";
+import { ProductDataContext } from "./contexts/ProductsDataContext";
 
 // Paginas
 import { Dashboard } from "./pages/DashboardPage";
-import Categories from "./components/Categories";
+import Categories from "./pages/Categories";
 import { Items } from "./components/Items";
-import { Pedidos } from "./components/Pedidos";
-import { HistorialPedidos } from "./components/HistorialPedidos";
+import { Pedidos } from "./pages/Pedidos";
+import { HistorialPedidos } from "./pages/HistorialPedidos";
 
 // Estilos y Tipos
-import type { Product, Category } from "./types/types";
-import './styles.css';
+import type { Product, Category } from "./assets/types/types";
+import './assets/styles.css';
 
 
 

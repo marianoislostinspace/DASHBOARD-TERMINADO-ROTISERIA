@@ -1,6 +1,5 @@
 import { useState, createContext } from "react"
-import { Product, Category } from "../../types/types"
-import Categories from "../Categories"
+import { Product, Category } from "../assets/types/types"
 
 interface ProductsContext {
   productsList: Product[],

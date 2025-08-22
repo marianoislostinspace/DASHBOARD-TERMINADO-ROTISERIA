@@ -1,7 +1,7 @@
 // src/providers/SocketProvider.tsx
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
-import { usePedidos } from './contexts/PedidoContext'; // ajustá el path si hace falta
+import { usePedidos } from './PedidoContext'; // ajustá el path si hace falta
 
 const socket = io(import.meta.env.VITE_API_URL);
 

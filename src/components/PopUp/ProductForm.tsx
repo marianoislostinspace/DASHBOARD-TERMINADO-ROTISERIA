@@ -1,10 +1,10 @@
 // Librerias
 import { useState } from "react"
 // Estilos y tipos
-import type { Category } from "../types/types"
-import "../styles/productForm.css"
-import { usePopUpDispatch, usePopUpStates } from "./contexts/PopUpContext"
-import { editProduct } from "../helpers/productDBHandler"
+import type { Category } from "../../assets/types/types"
+import "../../assets/styles/productForm.css"
+import { usePopUpDispatch, usePopUpStates } from "../../contexts/PopUpContext"
+import { editProduct } from "../../utils/productDBHandler"
 
 interface Props {
   categories: Category[]

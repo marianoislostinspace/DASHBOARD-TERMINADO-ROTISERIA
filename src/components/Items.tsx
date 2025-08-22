@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { fetchApi } from "../services/api";
-import '../styles/edit.css'
+import { fetchApi } from "../api";
+import '../assets/styles/edit.css'
 import Swal from 'sweetalert2'
 
 

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { fetchApi } from "../services/api";
+import { fetchApi } from "../api";
 import Swal from 'sweetalert2'
-import '../styles/categoryPage.css'
-import { usePopUpDispatch } from "./contexts/PopUpContext";
+import '../assets/styles/categoryPage.css'
+import { usePopUpDispatch } from "../contexts/PopUpContext";
 
 
-type Props = {}
-
-export default function Categories({ }: Props) {
+export default function Categories() {
     interface Category {
         id: string;
         nombre: string;

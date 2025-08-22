@@ -3,10 +3,10 @@ import { createRoot } from 'react-dom/client'
 import { App } from './App.tsx'
 
 // Contextos
-import { PedidoProvider } from './components/contexts/PedidoContext.tsx';
-import { SocketProvider } from './components/socketProvider.tsx';
-import { ProductsDataProvider } from './components/contexts/ProductsDataContext.tsx';
-import { PopUpProvider } from './components/contexts/PopUpContext.tsx';
+import { PedidoProvider } from './contexts/PedidoContext.tsx';
+import { SocketProvider } from './contexts/socketProvider.tsx';
+import { ProductsDataProvider } from './contexts/ProductsDataContext.tsx';
+import { PopUpProvider } from './contexts/PopUpContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <PedidoProvider>

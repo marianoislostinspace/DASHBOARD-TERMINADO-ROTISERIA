@@ -1,4 +1,4 @@
-import "../styles/navbar.css"
+import "../assets/styles/sidebar.css"
 import { Link } from "react-router"
 
 interface Props {

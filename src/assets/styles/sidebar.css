@@ -1,6 +1,6 @@
 :root {
   --bg-secondary: var(--bg-secondary);
-
+  --bg-primary: var(var(--bg-primary));
   --border-color-primary: var(--border-color-primary);
 
   --text-color-primary: var(--text-color-primary);
@@ -48,10 +48,19 @@
   display: flex;
   width: 100px;
   height: 40px;
-  background-color: red;
   justify-content: center;
   align-items: center;
   padding: 10px;
   font-size: 15px;
   margin-bottom: 10px;
+}
+
+
+.nav-link:hover {
+  background-color: var(--bg-primary); 
+}
+
+.nav-link:focus {
+  color: var(--text-color-primary);
+  background-color: var(--bg-primary); 
 }

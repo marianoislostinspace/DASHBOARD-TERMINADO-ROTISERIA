@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import { usePedidos } from './contexts/PedidoContext'; // o el path donde tengas tu context
-import '../styles/pedidosEntrantes.css'
+import { usePedidos } from '../contexts/PedidoContext'; // o el path donde tengas tu context
+import '../assets/styles/pedidosEntrantes.css'
 import Swal from 'sweetalert2'
 
 
