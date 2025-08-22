@@ -131,9 +131,10 @@ export default function Categories({ }: Props) {
                             {Categories.map((category) => (
                                 <li key={category.id}>
                                     {category.nombre}
-                                    <button onClick={() => handleDeleteCategory(category.id)}>Eliminar</button>
-                                    <button onClick={() => handleEditFields(category)}>Editar</button>
-
+                                    <div className="actions">
+                                        <button className="deleteButton" onClick={() => handleDeleteCategory(category.id)}>Eliminar</button>
+                                        <button className="editButton" onClick={() => handleEditFields(category)}>Editar</button>
+                                    </div>
                                 </li>
                             ))}
                         </ul>

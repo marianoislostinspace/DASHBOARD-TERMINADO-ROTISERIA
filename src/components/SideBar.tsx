@@ -13,19 +13,19 @@ export const SideBar = ({sectionNameSetter}: Props) => {
           <div className="nav-fill">
             <ul>
             <li onClick={() => sectionNameSetter("Pedidos")}>
-              <Link to="/pedidos">Pedidos Entrantes</Link>
+              <Link  className="nav-link" to="/pedidos">Pedidos Entrantes</Link>
             </li>
             <li onClick={() => sectionNameSetter("Productos")}>
-              <Link to="/dashboard">Productos en venta y Stock</Link>
+              <Link  className="nav-link" to="/dashboard">Productos en venta y Stock</Link>
             </li>
             <li onClick={() => sectionNameSetter("Categorias")}>
-              <Link to="/categories">Crear Categorias</Link>
+              <Link  className="nav-link" to="/categories">Crear Categorias</Link>
             </li>
             <li onClick={() => sectionNameSetter("Crear Productos")}>
-              <Link to="/items">Agregar Productos</Link>
+              <Link  className="nav-link" to="/items">Agregar Productos</Link>
             </li>
             <li onClick={() => sectionNameSetter("Historial de Pedidos")}>
-              <Link to="/historial">Historial de pedidos</Link>
+              <Link  className="nav-link" to="/historial">Historial de pedidos</Link>
             </li>
           </ul>
           </div>
