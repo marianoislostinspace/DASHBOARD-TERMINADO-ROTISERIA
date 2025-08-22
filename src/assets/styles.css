@@ -30,7 +30,6 @@ body {
 .content > * {
   display: flex;
   flex-wrap: wrap;
-  max-width: 1020px;
 }
 
 .section-tittle {
