@@ -1,134 +1,107 @@
-import { createContext, useState, useReducer, useContext } from 'react';
-import type { Product } from '../../types/types';
- 
+import { createContext, useState, useContext } from "react"
+import type { Category, Product } from "../../types/types"
 
-export type PopUpActionType = "Set Visible" | "Set Editing" | "Edit Form" | "Submit Form" | "Clear Form"
-
+// Estado del popup
 interface PopUpState {
-    isVisible: Boolean,
-    isEditing: Boolean,
+    isVisible: boolean
+    isEditing: boolean
     formData: Product
+    formDataCat: Category
+    formType: "product" | "category" | null
 }
 
+// Métodos del popup
 interface PopUpMethods {
-    handleIsVisible: (value: boolean) => void,
-    handleIsEditing: (value: boolean) => void,
+    handleIsVisible: (value: boolean) => void
+    handleIsEditing: (value: boolean) => void
     handleFormData: (data: Product) => void
-    handleInputChange: (event : React.ChangeEvent<HTMLInputElement>) => void,
-    handleCategoryChange: (event : React.ChangeEvent<HTMLSelectElement>) => void
+    handleFormDataCat: (data: Category) => void
+    handleFormType: (type: "product" | "category") => void
+    handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+    handleCategoryChange: (event: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
-interface PopUpAction {
-    type: PopUpActionType,
-    payload: PopUpState,
+// Valores iniciales
+const emptyProductCat: Category = {
+    id: "",
+    nombre: "",
+    imagen: ""
 }
 
 const emptyProduct: Product = {
-  id: "",
-  categoriaId: "",
-  nombre: "",
-  descripcion: "",
-  imagen: "",
-  opciones: [],
-
-  precio: 0,
-  precioDescuento: 0
+    id: "",
+    categoriaId: "",
+    nombre: "",
+    descripcion: "",
+    imagen: "",
+    opciones: [],
+    precio: 0,
+    precioDescuento: 0
 }
 
-const initialStates : PopUpState = {
-        isVisible: true,
-        isEditing: false,
-        formData: emptyProduct 
-}
+// Contextos
+const PopUpStateContext = createContext<PopUpState>({
+    isVisible: false,
+    isEditing: false,
+    formData: emptyProduct,
+    formDataCat: emptyProductCat,
+    formType: null
+})
 
-const defaultMethods : PopUpMethods = {
-    handleIsVisible: (value: boolean) => {}, 
-    handleIsEditing: (value: boolean) => {}, 
-    handleFormData: (product: Product) => {},
-    handleInputChange: (event : React.ChangeEvent<HTMLInputElement>) => {},
-    handleCategoryChange: (event : React.ChangeEvent<HTMLSelectElement>) => {}
-}
+const PopUpMethodsContext = createContext<PopUpMethods>({
+    handleIsVisible: () => {},
+    handleIsEditing: () => {},
+    handleFormData: () => {},
+    handleFormDataCat: () => {},
+    handleFormType: () => {},
+    handleInputChange: () => {},
+    handleCategoryChange: () => {}
+})
 
-const PopUpReducer = (initialState : PopUpState, action : PopUpAction) : PopUpState => {
-
-    switch (action.type) {
-        case 'Set Visible':
-            console.log("Set Visible: " + action.payload.isVisible)
-            console.log(initialState)
-            initialState.isVisible = action.payload.isVisible
-            return initialState
-        case 'Set Editing':
-            initialState.isEditing = action.payload.isEditing
-            return initialState
-        case 'Edit Form':
-            initialState.formData = action.payload.formData
-            return initialState
-        case 'Submit Form':
-            return initialState
-        case 'Clear Form':
-            initialState.formData = emptyProduct
-            return initialState
-    }
-
-}
-const PopUpStateContext = createContext(initialStates)
-const PopUpMethodsContext = createContext<PopUpMethods>(defaultMethods)
-
-export const PopUpProvider = ({children} : {children: React.ReactNode}) => {
-    
-    const [isVisible, setisVisible] = useState<boolean>(true)
-    const [isEditing, setIsEditing] = useState<boolean>(true)
+// Provider
+export const PopUpProvider = ({ children }: { children: React.ReactNode }) => {
+    const [isVisible, setIsVisible] = useState(false)
+    const [isEditing, setIsEditing] = useState(false)
     const [formData, setFormData] = useState<Product>(emptyProduct)
+    const [formDataCat, setFormDataCat] = useState<Category>(emptyProductCat)
+    const [formType, setFormType] = useState<"product" | "category" | null>(null)
 
-    const handleIsVisible = (value: boolean) => {
-        console.log(value)
-        setisVisible(value)
+    // Métodos
+    const handleIsVisible = (value: boolean) => setIsVisible(value)
+    const handleIsEditing = (value: boolean) => setIsEditing(value)
+    const handleFormData = (data: Product) => setFormData(data)
+    const handleFormDataCat = (categoria: Category) => setFormDataCat(categoria)
+    const handleFormType = (type: "product" | "category") => setFormType(type)
+
+    const handleInputChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = target
+        setFormData({ ...formData, [name]: value })
     }
 
-    const handleIsEditing = (value: boolean) => {
-        console.log(value)
-        setIsEditing(value)
+    const handleCategoryChange = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
+        const { name, value } = target
+        setFormData({ ...formData, [name]: value })
     }
 
-    const handleFormData = (data: Product) => {
-        setFormData(data)
-    } 
-
-    const handleInputChange = ({target} : React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = target
-
-        console.log(name, value)
-        setFormData({
-            ...formData,
-            [name]: value
-        })
-    } 
-
-    const handleCategoryChange = ({target} : React.ChangeEvent<HTMLSelectElement>) => {
-        const {name, value} = target
-
-        console.log(name, value)
-        setFormData({
-            ...formData,
-            [name]: value
-        })
-    } 
     return (
-        <>
-            <PopUpStateContext.Provider value={{isVisible, isEditing, formData}}>
-                <PopUpMethodsContext.Provider value={{handleIsVisible, handleIsEditing, handleFormData, handleInputChange, handleCategoryChange}}>
-                    {children}
-                </PopUpMethodsContext.Provider>
-            </PopUpStateContext.Provider>
-        </>
+        <PopUpStateContext.Provider value={{ isVisible, isEditing, formData, formDataCat, formType }}>
+            <PopUpMethodsContext.Provider
+                value={{
+                    handleIsVisible,
+                    handleIsEditing,
+                    handleFormData,
+                    handleFormDataCat,
+                    handleFormType,
+                    handleInputChange,
+                    handleCategoryChange
+                }}
+            >
+                {children}
+            </PopUpMethodsContext.Provider>
+        </PopUpStateContext.Provider>
     )
 }
 
-export const usePopUpStates = () => {
-    return useContext(PopUpStateContext)
-}
-
-export const usePopUpDispatch = () => {
-    return useContext(PopUpMethodsContext)
-}
-
+// Hooks
+export const usePopUpStates = () => useContext(PopUpStateContext)
+export const usePopUpDispatch = () => useContext(PopUpMethodsContext)

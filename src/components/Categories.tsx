@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { fetchApi } from "../services/api";
 import Swal from 'sweetalert2'
+import '../styles/categoryPage.css'
+import { usePopUpDispatch } from "./contexts/PopUpContext";
 
 
 type Props = {}
@@ -9,6 +11,7 @@ export default function Categories({ }: Props) {
     interface Category {
         id: string;
         nombre: string;
+        imagen: string;
     }
 
     const [Categories, setCategories] = useState<Category[]>([]);
@@ -26,6 +29,18 @@ export default function Categories({ }: Props) {
     }, []);
 
     const [newCategory, setNewCategory] = useState("");
+    const [imgURL, setImgURL] = useState<File | null>(null);
+
+
+    // Función para manejar la selección de archivo
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setImgURL(e.target.files[0]);
+            console.log("Archivo seleccionado:", e.target.files[0]);
+        } else {
+            console.log("No se seleccionó ningún archivo");
+        }
+    };
 
 
     // Agregar Categorías
@@ -38,6 +53,8 @@ export default function Categories({ }: Props) {
                 text: "El nombre no puede estar vacio",
                 footer: '<a href="#">Why do I have this issue?</a>'
             }); return;
+
+
         }
 
         try {
@@ -48,7 +65,17 @@ export default function Categories({ }: Props) {
                 draggable: true
             });
 
-            const createdCategory = await fetchApi("categorias", "POST", { nombre: newCategory });
+            const formData = new FormData();
+            formData.append("nombre", newCategory);
+
+            if (imgURL) {
+                formData.append("imagen", imgURL);
+            } else {
+                console.error("❌ No se ha seleccionado una imagen.");
+                return;
+            }
+
+            const createdCategory = await fetchApi("categorias", "POST", formData, true);
             setCategories([...Categories, createdCategory]);
             setNewCategory("");
         } catch (error) {
@@ -79,14 +106,25 @@ export default function Categories({ }: Props) {
         }
     };
 
-    const logcat = () => {
-        console.log(Categories)
+
+
+
+    const { handleIsVisible, handleIsEditing, handleFormDataCat, handleFormType } = usePopUpDispatch()
+
+    const handleEditFields = (categoria: Category) => {
+        handleIsEditing(true)
+        handleFormDataCat(categoria)
+        handleIsVisible(true)
+        handleFormType("category")
     }
+
+
+
 
     return (
         <div className="categoriesContainer">
             <div className="categories">
-                <div>
+                <div className="subCat">
                     <h2>Categorías</h2>
                     {Categories && Categories.length > 0 ? (
                         <ul>
@@ -94,6 +132,8 @@ export default function Categories({ }: Props) {
                                 <li key={category.id}>
                                     {category.nombre}
                                     <button onClick={() => handleDeleteCategory(category.id)}>Eliminar</button>
+                                    <button onClick={() => handleEditFields(category)}>Editar</button>
+
                                 </li>
                             ))}
                         </ul>
@@ -102,11 +142,17 @@ export default function Categories({ }: Props) {
                     )}
 
                     {/* Formulario para agregar nueva categoría */}
-                    <form onSubmit={handleAddCategory}>
+                    <form onSubmit={handleAddCategory} className="formulario">
                         <input
                             type="text"
                             value={newCategory}
                             onChange={(e) => setNewCategory(e.target.value)}
+                            placeholder="Nueva Categoría"
+                        />
+                        <input
+                            type="file"
+                            accept="image/*" className="file"
+                            onChange={handleFileChange}
                             placeholder="Nueva Categoría"
                         />
                         <button type="submit">Agregar</button>

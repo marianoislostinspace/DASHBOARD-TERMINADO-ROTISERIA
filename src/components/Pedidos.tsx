@@ -17,7 +17,7 @@ type Pedido = {
     idPlato: string;
     nombre: string;
     precio: number;
-    cantidad:number
+    cantidad: number
     opcionesSeleccionadas: {
       id: string,
       nombre: string,
@@ -31,10 +31,13 @@ type Pedido = {
 
 
 export const Pedidos = () => {
-  const { pedidos, agregarPedido,eliminarPedido } = usePedidos()
+  const API_URL = import.meta.env.VITE_API_URL;
+
+
+  const { pedidos, agregarPedido, eliminarPedido } = usePedidos()
 
   useEffect(() => {
-    const socket = io('https://backend-crud-firebase-production.up.railway.app');
+    const socket = io(API_URL);
 
     socket.on('nuevo-pedido', (data: Pedido) => {
       console.log('Pedido recibido por socket:', data);

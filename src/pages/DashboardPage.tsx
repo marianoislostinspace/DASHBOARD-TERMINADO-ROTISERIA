@@ -1,5 +1,5 @@
 // Librerias
-import React, {useState , useContext} from "react";
+import React, { useState, useContext } from "react";
 import { flushCompileCache } from "module";
 import Swal from 'sweetalert2'
 // Componentes
@@ -18,9 +18,9 @@ type Props = {};
 
 
 export const Dashboard = (props: Props) => {
-  const {productsList, categoriesList} = useContext(ProductDataContext)
+  const { productsList, categoriesList } = useContext(ProductDataContext)
   const isVisible = usePopUpStates()
-  const {handleIsVisible, handleIsEditing, handleFormData} = usePopUpDispatch()
+  const { handleIsVisible, handleIsEditing, handleFormData, handleFormType } = usePopUpDispatch()
 
   const [detalle, setdetalle] = useState<Boolean>(false)
   const [singlePlato, setsinglePlato] = useState<Product | null>(null)
@@ -67,7 +67,7 @@ export const Dashboard = (props: Props) => {
     handleIsEditing(true)
     handleFormData(item)
     handleIsVisible(true)
-    
+    handleFormType("product")
   }
 
   // Funcion para agregar opciones al plato
