@@ -1,5 +1,5 @@
 import { createContext, useState, useContext } from "react"
-import type { Category, Product } from "../../types/types"
+import type { Category, Product } from "../assets/types/types"
 
 // Estado del popup
 interface PopUpState {
