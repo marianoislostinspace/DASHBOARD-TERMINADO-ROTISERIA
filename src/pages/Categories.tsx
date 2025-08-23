@@ -1,30 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { fetchApi } from "../api";
+// Librerias
+import React, { useState, useContext } from "react";
 import Swal from 'sweetalert2'
-import '../assets/styles/categoryPage.css'
+// Utils
+import { fetchApi } from "../utils/api";
+import { addCategory } from "../utils/productDBHandler";
+import { SwalNotification } from "../utils/swalNotification";
+// Contextos
+import { ProductDataContext } from "../contexts/ProductsDataContext";
 import { usePopUpDispatch } from "../contexts/PopUpContext";
+// Estilos y tipos
+import '../assets/styles/categoryPage.css'
+import type { Category } from "../assets/types/types";
+
 
 
 export default function Categories() {
-    interface Category {
-        id: string;
-        nombre: string;
-        imagen: string;
-    }
 
-    const [Categories, setCategories] = useState<Category[]>([]);
-
-    useEffect(() => {
-        const getCategories = async () => {
-            try {
-                const data: Category[] = await fetchApi("categorias");
-                setCategories(data);
-            } catch (error) {
-                console.error("error al obtener las categorias", error);
-            }
-        };
-        getCategories();
-    }, []);
+    const { categoriesList, initCategoriesList } = useContext(ProductDataContext)
 
     const [newCategory, setNewCategory] = useState("");
     const [imgURL, setImgURL] = useState<File | null>(null);
@@ -44,18 +36,10 @@ export default function Categories() {
     // Agregar Categorías
     const handleAddCategory = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!newCategory.trim()) {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "El nombre no puede estar vacio",
-                footer: '<a href="#">Why do I have this issue?</a>'
-            }); return;
-
-
-        }
 
         try {
+
+            // Notificacion (Se emite antes porque no hay feedback sino)
             Swal.fire({
                 title: "completado!",
                 icon: "success",
@@ -63,21 +47,36 @@ export default function Categories() {
                 draggable: true
             });
 
-            const formData = new FormData();
-            formData.append("nombre", newCategory);
+            //  Actualizar backend
+            const categoryObject = await addCategory(newCategory, imgURL)
 
-            if (imgURL) {
-                formData.append("imagen", imgURL);
-            } else {
-                console.error("❌ No se ha seleccionado una imagen.");
-                return;
+            // Actualizar local (El backend devuelve el objeto)
+            if (categoryObject) initCategoriesList([...categoriesList, categoryObject])
+
+
+        } catch (error) {   
+            switch (error) {
+                case "Introduzca un nombre para la categoría":
+                case "Seleccione una imagen para la categoría":
+                    SwalNotification.fire({
+                        title: "Ops...",
+                        icon: "error",
+                        text: error,
+                        draggable: true
+                    });
+                    break
+                default:
+                    Swal.fire({
+                        title: "Ops...",
+                        icon: "error",
+                        text: "Ocurrió un error inesperado",
+                        draggable: true
+                    });
+                    console.log(error)
             }
+            
+         
 
-            const createdCategory = await fetchApi("categorias", "POST", formData, true);
-            setCategories([...Categories, createdCategory]);
-            setNewCategory("");
-        } catch (error) {
-            console.error("error al crear la categoría", error);
         }
     };
 
@@ -96,7 +95,7 @@ export default function Categories() {
         if (result.isConfirmed) {
             try {
                 await fetchApi(`categorias/${categoryId}`, "DELETE");
-                setCategories(Categories.filter((category) => category.id !== categoryId));
+                initCategoriesList(categoriesList.filter((c: Category) => c.id !== categoryId));
             }
             catch (error) {
                 console.error("Error al eliminar la categoría", error);
@@ -109,6 +108,7 @@ export default function Categories() {
 
     const { handleIsVisible, handleIsEditing, handleFormDataCat, handleFormType } = usePopUpDispatch()
 
+
     const handleEditFields = (categoria: Category) => {
         handleIsEditing(true)
         handleFormDataCat(categoria)
@@ -117,16 +117,14 @@ export default function Categories() {
     }
 
 
-
-
     return (
         <div className="categoriesContainer">
             <div className="categories">
                 <div className="subCat">
                     <h2>Categorías</h2>
-                    {Categories && Categories.length > 0 ? (
+                    {categoriesList && categoriesList.length > 0 ? (
                         <ul>
-                            {Categories.map((category) => (
+                            {categoriesList.map((category) => (
                                 <li key={category.id}>
                                     {category.nombre}
                                     <div className="actions">

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import '../assets/styles/historial.css'
-import { fetchApi } from '../api';
+import { fetchApi } from '../utils/api';
 import Swal from 'sweetalert2'
 
 

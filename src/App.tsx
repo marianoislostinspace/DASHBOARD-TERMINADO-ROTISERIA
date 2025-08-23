@@ -1,13 +1,13 @@
 // Librerias
 import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-router-dom";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useImperativeHandle } from "react";
 
 // Componentes
 import { SideBar } from "./components/SideBar";
 import { ProductForm } from "./components/PopUp/ProductForm";
 
 // Helpers
-import { fetchApi } from "./api";
+import { fetchApi } from "./utils/api";
 
 // Context
 import { ProductDataContext } from "./contexts/ProductsDataContext";
@@ -18,6 +18,9 @@ import Categories from "./pages/Categories";
 import { Items } from "./components/Items";
 import { Pedidos } from "./pages/Pedidos";
 import { HistorialPedidos } from "./pages/HistorialPedidos";
+
+// Helper
+import { getItemsAndCategories } from "./utils/productDBHandler";
 
 // Estilos y Tipos
 import type { Product, Category } from "./assets/types/types";
@@ -32,17 +35,13 @@ export const App = () => {
 
   // Recuperar la información del backend
   useEffect(() => {
-    const getItemsAndCategories = async () => {
-      try {
-        const itemsData: Product[] = await fetchApi("platos");
-        const categoriesData: Category[] = await fetchApi("categorias");
-        initProductList(itemsData);
-        initCategoriesList(categoriesData);
-      } catch (error) {
-        console.error("Error al obtener los ítems y categorías:", error);
-      }
-    };
-    getItemsAndCategories();
+    getItemsAndCategories()
+      .then((data) => {
+        if (data) {
+          initCategoriesList(data.Categories)
+          initProductList(data.Products)
+        }
+      })
   }, []);
 
   return (

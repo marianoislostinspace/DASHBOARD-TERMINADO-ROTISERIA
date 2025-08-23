@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchApi } from "../api";
+import { fetchApi } from "../utils/api";
 import Swal from 'sweetalert2'
 import '../styles/categoryPage.css'
 import { usePopUpDispatch } from "../contexts/PopUpContext";

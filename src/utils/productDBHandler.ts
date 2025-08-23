@@ -1,23 +1,35 @@
-import type { Product } from "../assets/types/types"
-import { fetchApi } from "../api"
-import Swal from "sweetalert2";
+// Utils
+import { fetchApi } from "./api"
+import { SwalNotification } from "./swalNotification"
+// Tipos
+import type { Product, Category } from "../assets/types/types"
 
-export const SwalNotification = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-    }
-});
+
 
 
 export const addProduct = (product: Product) => {
 
 }
+
+export const addCategory = async (categoryName : string, imgURL: File | null)=> {
+
+            // Check text/image not empty
+            if (!categoryName.trim()) {
+                throw "Introduzca un nombre para la categoría"
+            }
+            if (!imgURL) {
+                throw "Seleccione una imagen para la categoría"
+            }
+
+            const formData = new FormData();
+            formData.append("nombre", categoryName);
+            formData.append("imagen", imgURL);
+
+            // Actualizar backend
+            const createdCategory = await fetchApi("categorias", "POST", formData, true);
+            return createdCategory as Category
+}
+
 
 export const editProduct = async (productId: string, editedProduct: Product) => {
 
@@ -25,13 +37,6 @@ export const editProduct = async (productId: string, editedProduct: Product) => 
 
     /* Hay algún campo sin completar*/
     if (!nombre || !precio || !categoriaId) {
-        /*
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "todos los campos deben ser completados",
-          footer: '<a href="#">Why do I have this issue?</a>'
-        }); */
         SwalNotification.fire({
             icon: "error",
             title: "Faltan campos"
@@ -66,7 +71,26 @@ export const editProduct = async (productId: string, editedProduct: Product) => 
     }
 }
 
-export const getProducts = (): Product[] => {
-    return []
+export const editCategory = async () => {
+
 }
 
+export const deleteProduct = async (producId: string, categoriaId: string) => {
+    // Edicion base de datos
+    const newProductList = await fetchApi(`platos/categorias/${categoriaId}/${producId}`, "DELETE");
+
+    console.log(newProductList)
+}
+
+export const getItemsAndCategories = async () => {
+        
+      try {
+        const itemsData: Product[] = await fetchApi("platos");
+        const categoriesData: Category[] = await fetchApi("categorias");
+
+        return {"Products": itemsData, "Categories": categoriesData}
+
+      } catch (error) {
+        console.error("Error al obtener los ítems y categorías:", error);
+      }
+    };
