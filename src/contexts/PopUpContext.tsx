@@ -7,7 +7,7 @@ interface PopUpState {
     isEditing: boolean
     formData: Product
     formDataCat: Category
-    formType: "product" | "category" | null
+    formType: "product" | "category" | "add" | null
 }
 
 // Métodos del popup
@@ -16,7 +16,7 @@ interface PopUpMethods {
     handleIsEditing: (value: boolean) => void
     handleFormData: (data: Product) => void
     handleFormDataCat: (data: Category) => void
-    handleFormType: (type: "product" | "category") => void
+    handleFormType: (type: "product" | "category" | "add") => void
     handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void
     handleCategoryChange: (event: React.ChangeEvent<HTMLSelectElement>) => void
 }
@@ -28,7 +28,7 @@ const emptyProductCat: Category = {
     imagen: ""
 }
 
-const emptyProduct: Product = {
+export const emptyProduct: Product = {
     id: "",
     categoriaId: "",
     nombre: "",
@@ -38,6 +38,9 @@ const emptyProduct: Product = {
     precio: 0,
     precioDescuento: 0
 }
+
+
+
 
 // Contextos
 const PopUpStateContext = createContext<PopUpState>({
@@ -64,14 +67,14 @@ export const PopUpProvider = ({ children }: { children: React.ReactNode }) => {
     const [isEditing, setIsEditing] = useState(false)
     const [formData, setFormData] = useState<Product>(emptyProduct)
     const [formDataCat, setFormDataCat] = useState<Category>(emptyProductCat)
-    const [formType, setFormType] = useState<"product" | "category" | null>(null)
+    const [formType, setFormType] = useState<"product" | "category" | "add" | null>(null)
 
     // Métodos
     const handleIsVisible = (value: boolean) => setIsVisible(value)
     const handleIsEditing = (value: boolean) => setIsEditing(value)
     const handleFormData = (data: Product) => setFormData(data)
     const handleFormDataCat = (categoria: Category) => setFormDataCat(categoria)
-    const handleFormType = (type: "product" | "category") => setFormType(type)
+    const handleFormType = (type: "product" | "category" | "add") => setFormType(type)
 
     const handleInputChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = target
@@ -105,3 +108,4 @@ export const PopUpProvider = ({ children }: { children: React.ReactNode }) => {
 // Hooks
 export const usePopUpStates = () => useContext(PopUpStateContext)
 export const usePopUpDispatch = () => useContext(PopUpMethodsContext)
+

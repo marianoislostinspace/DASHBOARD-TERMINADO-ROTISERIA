@@ -18,7 +18,7 @@ export const ProductForm = ({ categories }: Props) => {
   const [newImage, setNewImage] = useState<File | null>(null)
   const [newImageCat, setNewImageCat] = useState<File | null>(null)
 
-  const [activeForm, setActiveForm] = useState<"product" | "category" | null>("product")
+  const [activeForm, setActiveForm] = useState<"product" | "category" | "add" | null>("product")
 
   // Se encarga de la edición de productos
   const handleEditItem = async (e: React.FormEvent) => {
@@ -114,6 +114,49 @@ export const ProductForm = ({ categories }: Props) => {
               />
               <input type="file" accept="image/*" onChange={(e) => e.target.files && setNewImageCat(e.target.files[0])} />
               <button type="submit">Actualizar Categoría</button>
+            </form>
+          </>
+        )}
+
+        {formType == "add" && (
+          <>
+            <h3>Agregar Producto</h3>
+            <form onSubmit={handleEditItem}>
+              <input
+                type="text"
+                value={formData.nombre}
+                name="nombre"
+                onChange={handleInputChange}
+                placeholder="Nombre"
+              />
+              <input
+                type="text"
+                value={formData.descripcion}
+                name="descripcion"
+                onChange={handleInputChange}
+                placeholder="Descripción"
+              />
+              <input
+                type="number"
+                value={formData.precio}
+                name="precio"
+                onChange={handleInputChange}
+                placeholder="Precio"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => e.target.files && setNewImage(e.target.files[0])}
+              />
+              <select name="categoriaId" value={formData.categoriaId} onChange={handleCategoryChange}>
+                <option value="">Selecciona una categoría</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.nombre}
+                  </option>
+                ))}
+              </select>
+              <button type="submit">Agregar Producto</button>
             </form>
           </>
         )}

@@ -6,10 +6,11 @@ import { fetchApi } from "../utils/api";
 import { deleteProduct } from "../utils/productDBHandler";
 // Contextos
 import { ProductDataContext } from "../contexts/ProductsDataContext";
-import { usePopUpDispatch } from "../contexts/PopUpContext";
+import { emptyProduct, usePopUpDispatch } from "../contexts/PopUpContext";
 // Tipos y Estilos
 import type { Product } from "../assets/types/types";
 import { swalThemeConfig } from "../assets/ThemeData";
+import '../assets/styles/dashboardStyles.css'
 
 
 
@@ -56,7 +57,7 @@ export const Dashboard = () => {
           icon: "success"
         });
 
-        
+
       } catch (error) {
         console.error("Error al eliminar el producto:", error);
         Swal.fire("Error", "No se pudo eliminar el producto.", "error");
@@ -72,6 +73,17 @@ export const Dashboard = () => {
     handleIsVisible(true)
     handleFormType("product")
   }
+
+
+
+  const handleAddFields = (item: Product) => {
+    handleIsEditing(true)
+    handleFormData(emptyProduct)
+    handleIsVisible(true)
+    handleFormType("add")
+  }
+
+
 
   // Funcion para agregar opciones al plato
   const handleAddOption = async (productId: string) => {
@@ -162,6 +174,12 @@ export const Dashboard = () => {
   return (
     <div>
       {/* Lista de productos */}
+      <div className="addProduct" onClick={() => handleAddFields(emptyProduct)}>
+        <h1>Agregar Productos</h1>
+      </div>
+
+
+
       <div className="itemContainer">
         {detalle ? (
           /// HTML del producto único
@@ -185,47 +203,47 @@ export const Dashboard = () => {
             <button onClick={goBack} className='volverBtn'>Volver</button>
 
           </div>
-        ) 
-        : (
-          /// HTML de la lista de productos
-          productsList.map((item) => (
-            // Tarjetas
-            <div key={item.id} className="item-card">
-              <h3>{item.nombre}</h3>
-              <p>{item.descripcion}</p>
-              <p>Precio: ${item.precio}</p>
-              <p>Precio de Descuento: ${item.precioDescuento}</p>
-              <img src={item.imagen} alt={item.nombre} onClick={() => getDetalles(item)} />
+        )
+          : (
+            /// HTML de la lista de productos
+            productsList.map((item) => (
+              // Tarjetas
+              <div key={item.id} className="item-card">
+                <h3>{item.nombre}</h3>
+                <p>{item.descripcion}</p>
+                <p>Precio: ${item.precio}</p>
+                <p>Precio de Descuento: ${item.precioDescuento}</p>
+                <img src={item.imagen} alt={item.nombre} onClick={() => getDetalles(item)} />
 
-              <button className="item-card-btn-danger" onClick={() => handleDeleteItem(item.id, item.categoriaId)}>Eliminar</button>
-              <button className="item-card-btn" onClick={() => handleEditFields(item)}>Editar</button>
-              <button className="item-card-btn" onClick={() => setActiveOptionFormId(item.id)}>Agregar opción</button>
+                <button className="item-card-btn-danger" onClick={() => handleDeleteItem(item.id, item.categoriaId)}>Eliminar</button>
+                <button className="item-card-btn" onClick={() => handleEditFields(item)}>Editar</button>
+                <button className="item-card-btn" onClick={() => setActiveOptionFormId(item.id)}>Agregar opción</button>
 
-              {/* Formulario para agregar opción */}
-              {activeOptionFormId === item.id && (
-                <div style={{ marginTop: "10px" }}>
-                  <input
-                    className="item-card-input"
-                    type="text"
-                    placeholder="Nombre de la opción"
-                    value={optionName}
-                    onChange={(e) => setOptionName(e.target.value)}
-                  />
-                  <input
-                    className="item-card-input"
-                    type="number"
-                    placeholder="Precio extra (opcional)"
-                    value={optionExtraPrice}
-                    onChange={(e) => setOptionExtraPrice(Number(e.target.value))}
-                  />
-                  <button 
-                    className="item-card-btn"
-                    onClick={() => handleAddOption(item.id)}>Guardar opción</button>
-                </div>
-              )}
-            </div>
-          ))
-        )}
+                {/* Formulario para agregar opción */}
+                {activeOptionFormId === item.id && (
+                  <div style={{ marginTop: "10px" }}>
+                    <input
+                      className="item-card-input"
+                      type="text"
+                      placeholder="Nombre de la opción"
+                      value={optionName}
+                      onChange={(e) => setOptionName(e.target.value)}
+                    />
+                    <input
+                      className="item-card-input"
+                      type="number"
+                      placeholder="Precio extra (opcional)"
+                      value={optionExtraPrice}
+                      onChange={(e) => setOptionExtraPrice(Number(e.target.value))}
+                    />
+                    <button
+                      className="item-card-btn"
+                      onClick={() => handleAddOption(item.id)}>Guardar opción</button>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
       </div>
 
       {/* Formulario de edición 
