@@ -33,7 +33,7 @@ export const addCategory = async (categoryName: string, imgURL: File | null) => 
 
 
 
-export const addProduct = async (newProduct: Product) => {
+export const addProduct = async (newProduct: Product, newImage: File) => {
     const { nombre, precio, descripcion, categoriaId, imagen } = newProduct;
 
     if (!nombre || !descripcion || !precio || !categoriaId) {
@@ -51,7 +51,7 @@ export const addProduct = async (newProduct: Product) => {
     formData.append("descripcion", descripcion)
     formData.append("precio", String(precio))
     formData.append("categoriaId", categoriaId)
-    if (imagen) formData.append("imagen", imagen);
+    if (newImage) formData.append("imagen", newImage);
 
     try {
         const response = await fetchApi(
@@ -60,7 +60,8 @@ export const addProduct = async (newProduct: Product) => {
             formData,
             true
         );
-              console.log("✅ Respuesta del servidor:", response);
+
+        console.log("✅ Respuesta del servidor:", response);
         Swal.fire({
             title: "Completado!",
             icon: "success",
@@ -84,7 +85,7 @@ export const addProduct = async (newProduct: Product) => {
 
 
 
-export const editProduct = async (productId: string, editedProduct: Product) => {
+export const editProduct = async (productId: string, editedProduct: Product, newImage: File) => {
 
     const { nombre, precio, descripcion, categoriaId, precioDescuento, imagen } = editedProduct
 
@@ -104,7 +105,7 @@ export const editProduct = async (productId: string, editedProduct: Product) => 
     formData.append("precio", String(precio))
     formData.append("categoriaId", categoriaId)
     if (precioDescuento) formData.append("precioDescuento", String(precioDescuento));
-    if (imagen) formData.append("imagen", imagen);
+    if (newImage) formData.append("imagen", newImage);
 
     /* POST a la DB */
     try {
@@ -114,7 +115,7 @@ export const editProduct = async (productId: string, editedProduct: Product) => 
             formData,
             true
         );
-        
+
         /* Retorna el item editado */
         editedProduct.id = productId
         return editedProduct

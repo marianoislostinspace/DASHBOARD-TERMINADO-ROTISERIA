@@ -5,6 +5,7 @@ import type { Category } from "../../assets/types/types"
 import "../../assets/styles/productForm.css"
 import { usePopUpDispatch, usePopUpStates } from "../../contexts/PopUpContext"
 import { editProduct, addProduct } from "../../utils/productDBHandler"
+import Swal from "sweetalert2"
 
 interface Props {
   categories: Category[]
@@ -24,17 +25,40 @@ export const ProductForm = ({ categories }: Props) => {
 
   const handleAddItem = async (e: React.FormEvent) => {
     e.preventDefault()
-    await addProduct(formData); handleCloseForm()
-    handleCloseForm()
 
+    if (!newImage) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Debes seleccionar una imagen para el producto!"
+      })
+      return
+    }
+    const productToSend = {
+      ...formData
+    }
+    await addProduct(productToSend, newImage)
+
+    handleCloseForm()
   }
 
 
 
   // Se encarga de la edición de productos
   const handleEditItem = async (e: React.FormEvent) => {
+
     e.preventDefault()
-    editProduct(formData.id, formData)
+
+    if (!newImage) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Debes seleccionar una imagen para el producto!"
+      })
+      return
+    }
+    e.preventDefault()
+    editProduct(formData.id, formData, newImage)
     handleCloseForm()
   }
 
