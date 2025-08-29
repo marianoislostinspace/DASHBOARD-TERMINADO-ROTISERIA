@@ -4,7 +4,7 @@ import { useState } from "react"
 import type { Category } from "../../assets/types/types"
 import "../../assets/styles/productForm.css"
 import { usePopUpDispatch, usePopUpStates } from "../../contexts/PopUpContext"
-import { editProduct } from "../../utils/productDBHandler"
+import { editProduct, addProduct } from "../../utils/productDBHandler"
 
 interface Props {
   categories: Category[]
@@ -19,6 +19,17 @@ export const ProductForm = ({ categories }: Props) => {
   const [newImageCat, setNewImageCat] = useState<File | null>(null)
 
   const [activeForm, setActiveForm] = useState<"product" | "category" | "add" | null>("product")
+
+
+
+  const handleAddItem = async (e: React.FormEvent) => {
+    e.preventDefault()
+    await addProduct(formData); handleCloseForm()
+    handleCloseForm()
+
+  }
+
+
 
   // Se encarga de la edición de productos
   const handleEditItem = async (e: React.FormEvent) => {
@@ -121,7 +132,7 @@ export const ProductForm = ({ categories }: Props) => {
         {formType == "add" && (
           <>
             <h3>Agregar Producto</h3>
-            <form onSubmit={handleEditItem}>
+            <form onSubmit={handleAddItem}>
               <input
                 type="text"
                 value={formData.nombre}
