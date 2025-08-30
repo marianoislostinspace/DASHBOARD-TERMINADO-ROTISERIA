@@ -28,6 +28,7 @@ export const Dashboard = () => {
   const [optionExtraPrice, setOptionExtraPrice] = useState<number | "">("");
 
 
+  // Elimina un archivo de la base de datos
   const handleDeleteItem = async (itemId: string, categoriaId: string) => {
     const result = await Swal.fire({
       ...swalThemeConfig,
@@ -66,7 +67,7 @@ export const Dashboard = () => {
 
   };
 
-  /* Genera el Pop Up para editar el campo */
+  /* Editar productos (Abre el formulario de productos) */
   const handleEditFields = (item: Product) => {
     handleIsEditing(true)
     handleFormData(item)
@@ -75,15 +76,13 @@ export const Dashboard = () => {
   }
 
 
-
+  // Agregar productos (Abre formulario de productos)
   const handleAddFields = (item: Product) => {
     handleIsEditing(true)
     handleFormData(emptyProduct)
     handleIsVisible(true)
     handleFormType("add")
   }
-
-
 
   // Funcion para agregar opciones al plato
   const handleAddOption = async (productId: string) => {
@@ -135,7 +134,7 @@ export const Dashboard = () => {
     }
   };
 
-
+  // Borrar opciones del plato
   const deleteOption = async (categoriaId: string, itemId: string, opcionId: string) => {
     const result = await Swal.fire({
       title: "¿Estás seguro que quieres eliminar esta categoria?",
@@ -157,29 +156,30 @@ export const Dashboard = () => {
 
   }
 
-
+  // Abrir detalles
   const getDetalles = (plato: Product) => {
     setsinglePlato(plato)
     setdetalle(true)
 
   }
 
+  // Cerrar detalles
   const goBack = () => {
     setdetalle(false)
-    console.log("Volviendo, detalles:", false)
   }
 
 
 
   return (
     <div>
-      {/* Lista de productos */}
+
+      {/* Boton de agregar producto */}
       <div className="addProduct" onClick={() => handleAddFields(emptyProduct)}>
         <h1>Agregar Productos</h1>
       </div>
-
-
-
+      
+      {/* Lista de productos */}
+      
       <div className="itemContainer">
         {detalle ? (
           /// HTML del producto único

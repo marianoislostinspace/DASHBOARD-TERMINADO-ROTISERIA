@@ -11,6 +11,7 @@ import { usePopUpDispatch } from "../contexts/PopUpContext";
 // Estilos y tipos
 import '../assets/styles/categoryPage.css'
 import type { Category } from "../assets/types/types";
+import { swalThemeConfig } from "../assets/ThemeData";
 
 
 
@@ -22,11 +23,10 @@ export default function Categories() {
     const [imgURL, setImgURL] = useState<File | null>(null);
 
 
-    // Función para manejar la selección de archivo
+    // Función para manejar la selección de archivo (FileInput)
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             setImgURL(e.target.files[0]);
-            console.log("Archivo seleccionado:", e.target.files[0]);
         } else {
             console.log("No se seleccionó ningún archivo");
         }
@@ -54,7 +54,8 @@ export default function Categories() {
             if (categoryObject) initCategoriesList([...categoriesList, categoryObject])
 
 
-        } catch (error) {   
+        }
+        catch (error) {   
             switch (error) {
                 case "Introduzca un nombre para la categoría":
                 case "Seleccione una imagen para la categoría":
@@ -83,12 +84,11 @@ export default function Categories() {
     // Eliminar categorías
     const handleDeleteCategory = async (categoryId: string) => {
         const result = await Swal.fire({
+            ...swalThemeConfig,
             title: "¿Estás seguro que quieres eliminar esta categoria?",
             text: "¡No hay vuelta atrás!",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
             confirmButtonText: "Sí, eliminar"
         });
 
@@ -104,11 +104,11 @@ export default function Categories() {
     };
 
 
-
-
+    /////// Formulario de edición de categoría
     const { handleIsVisible, handleIsEditing, handleFormDataCat, handleFormType } = usePopUpDispatch()
 
 
+    // Abre el formulario
     const handleEditFields = (categoria: Category) => {
         handleIsEditing(true)
         handleFormDataCat(categoria)

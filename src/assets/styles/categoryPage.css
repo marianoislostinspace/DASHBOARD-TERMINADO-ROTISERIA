@@ -1,22 +1,39 @@
+:root {
+    --bg-primary: var(--bg-primary);
+    --bg-secondary: var(--bg-secondary);
+    
+    --btn-primary: var(--btn-primary);
+    --btn-secondary: var(--btn-secondary);
+    --btn-hover: var(--btn-hover);
+    --btn-danger: var(--btn-danger);
+
+    --text-color-primary: var(--text-color-primary);
+}
+
+
+/* Contenedor padre*/
 .categoriesContainer {
     max-width: 600px;
     margin: 30px auto;
     padding: 20px;
-    background: #f9fafb;
+    background: var(--bg-secondary);
+    color: var(--text-color-primary);
     border-radius: 12px;
 }
 
-
+.categories ul {
+    padding-inline-start: 0px;
+}
 
 .categories li {
-  background: white;
-  padding: 10px 15px;
+  background: var(--bg-primary);
+  color: var(--text-color-primary);
+  padding: 0px 15px;
   border-radius: 8px;
   margin-bottom: 10px;
   display: flex;
   justify-content: space-between; /* texto a la izq, botones a la der */
   align-items: center;
-  border: 1px solid #e5e7eb;
 }
 
 .actions {
@@ -25,7 +42,7 @@
 }
 
 .categories button {
-    color: white;
+    color: var(--text-color-primary);
     border: none;
     padding: 6px 12px;
     border-radius: 6px;
@@ -38,8 +55,7 @@
 
 
 .deleteButton {
-    background-color: #ef4444;
-    color: white;
+    background-color: var(--btn-danger);
     border: none;
     padding: 6px 12px;
     border-radius: 6px;
@@ -49,8 +65,7 @@
 }
 
 .editButton {
-    background-color: #55e412;
-    color: white;
+    background-color: var(--btn-secondary);
     border: none;
     padding: 6px 12px;
     border-radius: 6px;
@@ -64,12 +79,23 @@
 
 .categories input[type="text"],
 .categories input[type="file"] {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
 
-    padding: 10px;
     font-size: 14px;
     border-radius: 6px;
     border: 1px solid #d1d5db;
     height: 60px;
+    background: var(--bg-primary);
+    color: var(--text-color-primary);
+}
+
+.categories input[type="file"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 0px;
 }
 
 .categories input[type="text"]:focus {
@@ -78,11 +104,12 @@
 }
 
 .categories form button[type="submit"] {
-    background-color: #10b981;
+    background-color: var(--btn-primary);
     font-size: 15px;
     padding: 10px;
+    margin-bottom: 10px;
 }
 
 .categories form button[type="submit"]:hover {
-    background-color: #059669;
+    background-color: var(--btn-hover);
 }
