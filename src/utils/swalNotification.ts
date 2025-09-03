@@ -1,6 +1,8 @@
 import Swal from "sweetalert2";
+import { swalThemeConfig } from "../assets/ThemeData";
 
 export const SwalNotification = Swal.mixin({
+    ...swalThemeConfig,
     toast: true,
     position: "top-end",
     showConfirmButton: false,

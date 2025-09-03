@@ -41,7 +41,6 @@ export const emptyProduct: Product = {
 
 
 
-
 // Contextos
 const PopUpStateContext = createContext<PopUpState>({
     isVisible: false,
@@ -52,13 +51,13 @@ const PopUpStateContext = createContext<PopUpState>({
 })
 
 const PopUpMethodsContext = createContext<PopUpMethods>({
-    handleIsVisible: () => {},
-    handleIsEditing: () => {},
-    handleFormData: () => {},
-    handleFormDataCat: () => {},
-    handleFormType: () => {},
-    handleInputChange: () => {},
-    handleCategoryChange: () => {}
+    handleIsVisible: () => { },
+    handleIsEditing: () => { },
+    handleFormData: () => { },
+    handleFormDataCat: () => { },
+    handleFormType: () => { },
+    handleInputChange: () => { },
+    handleCategoryChange: () => { }
 })
 
 // Provider
@@ -78,7 +77,13 @@ export const PopUpProvider = ({ children }: { children: React.ReactNode }) => {
 
     const handleInputChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = target
-        setFormData({ ...formData, [name]: value })
+        
+        if (formType == "category") {
+            setFormDataCat({ ...formData, [name]: value })
+        } else {
+            setFormData({ ...formData, [name]: value })
+        }
+
     }
 
     const handleCategoryChange = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {

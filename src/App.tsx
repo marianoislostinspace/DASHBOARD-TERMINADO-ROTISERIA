@@ -1,13 +1,10 @@
 // Librerias
-import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-router-dom";
-import { useState, useEffect, useContext, useImperativeHandle } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
 
 // Componentes
 import { SideBar } from "./components/SideBar";
-import { ProductForm } from "./components/PopUp/ProductForm";
-
-// Helpers
-import { fetchApi } from "./utils/api";
+import { PopUpForm } from "./components/PopUp/PopUpView";
 
 // Context
 import { ProductDataContext } from "./contexts/ProductsDataContext";
@@ -20,10 +17,9 @@ import { Pedidos } from "./pages/Pedidos";
 import { HistorialPedidos } from "./pages/HistorialPedidos";
 
 // Helper
-import { getItemsAndCategories } from "./utils/productDBHandler";
+import { ProductDB, CategoryDB } from "./utils/DataBase";
 
 // Estilos y Tipos
-import type { Product, Category } from "./assets/types/types";
 import './assets/styles.css';
 
 
@@ -35,13 +31,16 @@ export const App = () => {
 
   // Recuperar la información del backend
   useEffect(() => {
-    getItemsAndCategories()
+
+    ProductDB.getAll()
       .then((data) => {
-        if (data) {
-          initCategoriesList(data.Categories)
-          initProductList(data.Products)
-        }
+        initProductList(data)
       })
+    CategoryDB.getAll()
+      .then((data) => {
+        initCategoriesList(data)
+      })
+
   }, []);
 
   return (
@@ -71,7 +70,7 @@ export const App = () => {
         </section>
       </div>
       
-      <ProductForm categories={categoriesList}></ProductForm>
+      <PopUpForm categories={categoriesList}></PopUpForm>
     </Router>
     
   );

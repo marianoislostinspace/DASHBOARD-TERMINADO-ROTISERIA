@@ -2,8 +2,7 @@
 import React, { useState, useContext } from "react";
 import Swal from 'sweetalert2'
 // Utils
-import { fetchApi } from "../utils/api";
-import { addCategory } from "../utils/productDBHandler";
+import { CategoryDB } from "../utils/DataBase";
 import { SwalNotification } from "../utils/swalNotification";
 // Contextos
 import { ProductDataContext } from "../contexts/ProductsDataContext";
@@ -19,9 +18,14 @@ export default function Categories() {
 
     const { categoriesList, initCategoriesList } = useContext(ProductDataContext)
 
-    const [newCategory, setNewCategory] = useState("");
-    const [imgURL, setImgURL] = useState<File | null>(null);
+    // Formulario de edición de categoría
+    const { handleIsVisible, handleIsEditing, handleFormDataCat, handleFormType } = usePopUpDispatch()
 
+    // States
+    const [newCategory, setNewCategory] = useState("");
+    const [imgURL, setImgURL] = useState<File | undefined>(undefined);
+
+    // -----------------------------------------------------------------------
 
     // Función para manejar la selección de archivo (FileInput)
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,14 +36,13 @@ export default function Categories() {
         }
     };
 
-
     // Agregar Categorías
     const handleAddCategory = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
 
-            // Notificacion (Se emite antes porque no hay feedback sino)
+            // Notificacion (Se emite antes porque sino no hay feedback)
             Swal.fire({
                 title: "completado!",
                 icon: "success",
@@ -48,7 +51,7 @@ export default function Categories() {
             });
 
             //  Actualizar backend
-            const categoryObject = await addCategory(newCategory, imgURL)
+            const categoryObject = await CategoryDB.add(newCategory, imgURL as File)
 
             // Actualizar local (El backend devuelve el objeto)
             if (categoryObject) initCategoriesList([...categoriesList, categoryObject])
@@ -94,7 +97,10 @@ export default function Categories() {
 
         if (result.isConfirmed) {
             try {
-                await fetchApi(`categorias/${categoryId}`, "DELETE");
+                // Edit Backend
+                CategoryDB.delete(categoryId)
+
+                // Edit Frontend
                 initCategoriesList(categoriesList.filter((c: Category) => c.id !== categoryId));
             }
             catch (error) {
@@ -102,10 +108,6 @@ export default function Categories() {
             }
         }
     };
-
-
-    /////// Formulario de edición de categoría
-    const { handleIsVisible, handleIsEditing, handleFormDataCat, handleFormType } = usePopUpDispatch()
 
 
     // Abre el formulario

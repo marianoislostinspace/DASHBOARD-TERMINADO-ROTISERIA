@@ -1,18 +1,21 @@
 // Librerias
 import { useState } from "react"
+// Context
+import { usePopUpDispatch, usePopUpStates } from "../../contexts/PopUpContext"
+// Utils
+import { SwalNotification } from "../../utils/swalNotification"
+import { ProductDB, CategoryDB } from "../../utils/DataBase"
 // Estilos y tipos
 import type { Category } from "../../assets/types/types"
-import "../../assets/styles/productForm.css"
-import { usePopUpDispatch, usePopUpStates } from "../../contexts/PopUpContext"
-import { editProduct, addProduct } from "../../utils/productDBHandler"
-import Swal from "sweetalert2"
+import "../../assets/styles/popUp.css"
+
 
 interface Props {
   categories: Category[]
 }
 
-export const ProductForm = ({ categories }: Props) => {
-  const { isVisible, formData, formType } = usePopUpStates()
+export const PopUpForm = ({ categories }: Props) => {
+  const { isVisible, formData, formDataCat, formType } = usePopUpStates()
   const { handleIsEditing, handleIsVisible, handleInputChange, handleCategoryChange, handleFormDataCat } =
     usePopUpDispatch()
 
@@ -23,63 +26,58 @@ export const ProductForm = ({ categories }: Props) => {
 
 
 
+  // Agrega un producto cuando detecta un Submit
   const handleAddItem = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    // Check there is an image
     if (!newImage) {
-      Swal.fire({
+      SwalNotification.fire({
         icon: "error",
         title: "Oops...",
         text: "Debes seleccionar una imagen para el producto!"
       })
       return
     }
-    const productToSend = {
-      ...formData
-    }
-    await addProduct(productToSend, newImage)
+    
+    // Add to Database
+    await ProductDB.add({...formData}, newImage)
 
+    // Close form
     handleCloseForm()
   }
-
 
 
   // Se encarga de la edición de productos
   const handleEditItem = async (e: React.FormEvent) => {
-
     e.preventDefault()
 
-    if (!newImage) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Debes seleccionar una imagen para el producto!"
-      })
-      return
-    }
-    e.preventDefault()
-    editProduct(formData.id, formData, newImage)
+    // Actualiza la base de datos
+    ProductDB.edit(formData.id, formData, newImage as File)
+
+    // TODO: Actualiza local
+
+    // Cierra el formulario
     handleCloseForm()
   }
+
 
   // Se encarga de la edición de categorías
   const handleEditCategory = (e: React.FormEvent) => {
     e.preventDefault()
-    // 🚀 acá llamarías a tu lógica de editar categoría (puede venir del contexto igual que producto)
-    handleFormDataCat({
-      id: "idCategoriaX",
-      nombre: "Nuevo nombre",
-      imagen: newImageCat ? URL.createObjectURL(newImageCat) : ""
-    })
-    console.log("Categoría editada desde contexto")
+
+    CategoryDB.edit(formDataCat.id, formDataCat, newImageCat as File)
+  
     handleCloseForm()
   }
 
+  // cierra el formulario
   const handleCloseForm = () => {
     handleIsEditing(false)
     handleIsVisible(false)
   }
 
+  // ???
   if (!isVisible) return null
 
   return (
@@ -131,6 +129,8 @@ export const ProductForm = ({ categories }: Props) => {
           </>
         )}
 
+        {/* FORMULARIO DE CATEGORÍA */}
+
         {formType === "category" && (
           <>
             <h3>Editar Categoría</h3>
@@ -139,13 +139,8 @@ export const ProductForm = ({ categories }: Props) => {
                 type="text"
                 name="nombre"
                 placeholder="Nombre de categoría"
-                onChange={(e) =>
-                  handleFormDataCat({
-                    id: "idCategoriaX", // ⚡ en tu app real deberías tener el id actual
-                    nombre: e.target.value,
-                    imagen: newImageCat ? URL.createObjectURL(newImageCat) : ""
-                  })
-                }
+                onChange={handleInputChange}
+                value={formDataCat.nombre}
               />
               <input type="file" accept="image/*" onChange={(e) => e.target.files && setNewImageCat(e.target.files[0])} />
               <button type="submit">Actualizar Categoría</button>
@@ -153,6 +148,7 @@ export const ProductForm = ({ categories }: Props) => {
           </>
         )}
 
+        {/* Formulario para agregar productos */}
         {formType == "add" && (
           <>
             <h3>Agregar Producto</h3>
@@ -196,6 +192,8 @@ export const ProductForm = ({ categories }: Props) => {
           </>
         )}
       </div>
+
+      
     </div>
   )
 }

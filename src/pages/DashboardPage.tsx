@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import Swal from 'sweetalert2'
 //Helpers
 import { fetchApi } from "../utils/api";
-import { deleteProduct } from "../utils/productDBHandler";
+import { ProductDB } from "../utils/DataBase";
 // Contextos
 import { ProductDataContext } from "../contexts/ProductsDataContext";
 import { emptyProduct, usePopUpDispatch } from "../contexts/PopUpContext";
@@ -44,7 +44,7 @@ export const Dashboard = () => {
     if (result.isConfirmed) {
       try {
 
-        await deleteProduct(itemId, categoriaId)
+        ProductDB.delete(itemId, categoriaId)
 
         // Edicion local
         initProductList(productsList.filter((p) => {
@@ -245,14 +245,6 @@ export const Dashboard = () => {
             ))
           )}
       </div>
-
-      {/* Formulario de edición 
-      
-      {editItem && (
-        
-      )}
-      
-      */}
 
     </div>
   );

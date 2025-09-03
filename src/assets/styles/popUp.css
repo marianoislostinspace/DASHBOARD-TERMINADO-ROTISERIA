@@ -1,0 +1,120 @@
+:root {
+    --bg-primary: var(--bg-primary);
+    --bg-secondary: var(--bg-secondary);
+
+    --btn-primary:var(--btn-primary);
+    --btn-hover:var(--btn-hover);
+
+    --text-color-primary: var(--text-color-primary);
+}
+
+
+/* ---------- FORMULARIO DE EDICIÓN ---------- */
+.edit-form {
+  background-color: var(--bg-secondary);
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 600px;
+  margin: 50px auto;
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  align-items: center;
+}
+
+.edit-form h3 {
+  font-size: 28px;
+  margin-bottom: 25px;
+  color: var(--text-color-primary);
+  text-align: center;
+}
+
+.edit-form form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.edit-form input,
+.edit-form select {
+  padding: 14px 16px;
+  border: 1px solid var(--btn-primary);
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: var(--bg-primary);
+  color: var(--text-color-primary);
+  transition: border-color 0.2s ease;
+  flex: 1 1 280px;
+  min-width: 250px;
+}
+
+.edit-form input[type="file"] {
+  padding: 10px;
+  background: var(--bg-primary);
+  border: 1px solid var(--btn-primary);
+  font-size: 15px;
+  color: var(--text-color-primary);
+}
+
+.edit-form input:focus,
+.edit-form select:focus {
+  border-color: var(--btn-hover);
+  outline: none;
+}
+
+.edit-form button {
+  background-color: var(--btn-primary);
+  color: var(--text-color-primary);
+  padding: 14px 24px;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.edit-form button:hover {
+  background-color: var(--btn-hover);
+}
+
+
+/* ---------- Pop Up ---------- */
+
+#pf-popup-container{
+    position: fixed;
+    display: flex;
+
+    width: 100vw;
+    height: 100vh;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.pf-background {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.322);
+}
+
+.open-form {
+    animation-name: popup;
+    animation-duration: 0.5s;
+}
+
+@keyframes popup{
+    from{
+        transform: translate(0, -50px);
+    }
+    to{
+        transform: translate(0, 0);
+    }
+}
