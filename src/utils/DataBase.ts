@@ -3,7 +3,6 @@ import { fetchApi } from "./api"
 import { SwalNotification } from "./swalNotification"
 // Tipos
 import type { Product, Category } from "../assets/types/types"
-import Swal from "sweetalert2"
 
 
 
@@ -82,11 +81,10 @@ export const ProductDB = {
         const { nombre, precio, descripcion, categoriaId, imagen } = newProduct;
 
         if (!nombre || !descripcion || !precio || !categoriaId) {
-            Swal.fire({
+            SwalNotification.fire({
                 icon: "error",
                 title: "Oops...",
                 text: "Todos los campos obligatorios deben estar completos!",
-                footer: '<a href="#">Why do I have this issue?</a>'
             });
             return;
         }
@@ -106,8 +104,7 @@ export const ProductDB = {
                 true
             );
 
-            console.log("✅ Respuesta del servidor:", response);
-            Swal.fire({
+            SwalNotification.fire({
                 title: "Completado!",
                 icon: "success",
                 text: "Producto agregado exitosamente",
