@@ -8,6 +8,7 @@ import { PopUpForm } from "./components/PopUp/PopUpView";
 
 // Context
 import { ProductDataContext } from "./contexts/ProductsDataContext";
+import { usePedidos } from "./contexts/PedidoContext";
 
 // Paginas
 import { Dashboard } from "./pages/DashboardPage";
@@ -16,7 +17,7 @@ import { Pedidos } from "./pages/Pedidos";
 import { HistorialPedidos } from "./pages/HistorialPedidos";
 
 // Helper
-import { ProductDB, CategoryDB } from "./utils/DataBase";
+import { ProductDB, CategoryDB, OrdersDB } from "./utils/DataBase";
 
 // Estilos y Tipos
 import './assets/styles.css';

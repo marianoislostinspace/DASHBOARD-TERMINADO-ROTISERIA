@@ -1,0 +1,118 @@
+/* --- Estilos de la Tarjeta del pedido --- */
+
+:root {
+    --bg-primary: var(--bg-primary);
+    --bg-secondary: var(--bg-secondary);
+
+    --btn-danger: var(--btn-danger);
+    --btn-primary: var(--btn-primary);
+    --btn-hover: var(--btn-hover);
+    --text-color-primary: var(--text-color-primary);
+}
+
+/* */
+.pedido {
+    background: var(--bg-secondary);
+    border: 1px solid #dcdde1;
+    border-left: 6px solid #00cec9;
+    border-radius: 12px;
+    padding: 16px;
+    width: 400px;
+    height: 600px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+    color: var(--text-color-primary);
+}
+
+.pedido:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.pedido h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #0984e3;
+}
+
+.pedido p {
+    font-size: 14px;
+    margin: 4px 0;
+    color: #636e72;
+}
+
+.pedido h3 {
+    font-size: 16px;
+    margin-top: 10px;
+    color: #2d3436;
+}
+
+.pedido ul {
+    padding-left: 20px;
+    margin-top: 8px;
+}
+
+.opcion {
+    font-size: 13px;
+    color: #555;
+    background: #f9f9f9;
+    padding: 6px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+    border-left: 3px solid #74b9ff;
+}
+
+/* Botones */
+
+
+.estadoButtondiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+
+.pedido button {
+
+    display: block;
+    border: none;
+    border-radius: 6px;
+
+    margin: 5px;
+    margin-top: 10px;
+    padding: 8px 12px;
+    
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    
+    height: 48px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.pedido-btn {
+    background-color: var(--btn-primary);
+    color: var(--text-color-primary);
+    width: 120px;
+
+}
+
+.pedido-btn:hover {
+    background-color: var(--btn-hover);
+}
+
+.pedido-delete {
+    background-color: var(--btn-danger);
+    color: var(--text-color-primary);
+    width: 100%;
+}
+
+.pedido-delete:hover {
+    background-color: crimson;
+}

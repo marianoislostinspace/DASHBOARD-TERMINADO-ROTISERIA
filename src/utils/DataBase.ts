@@ -1,11 +1,13 @@
 // Utils
 import { fetchApi } from "./api"
-import { SwalNotification } from "./swalNotification"
 // Assets
-import type { Product, Category } from "../assets/types/types"
+import type { Product, Category, Pedido } from "../assets/types/types"
 import { ValidationError } from "../assets/errors"
 
 
+/// IMPORTANTE: Aquí no se hace ningún manejo de errores. 
+// El detalle de los errores al comunicarse con el servidor se muestran con FetchAPI
+// El feedback al usuario del error se da usando Catch al llamar a cada función. 
 
 export const CategoryDB = {
     add: async (categoryName: string, imgURL: File) => {
@@ -43,36 +45,24 @@ export const CategoryDB = {
         formData.append("nombre", nombre)
         if (newImage) formData.append("imagen", newImage);
 
-        try {
-            /* POST a la DB */
-            await fetchApi(
-                `categorias/${categoryId}`,
-                "PATCH",
-                formData,
-                true
-            );
+        /* POST a la DB */
+        await fetchApi(
+            `categorias/${categoryId}`,
+            "PATCH",
+            formData,
+            true
+        );
 
-            /* Retorna el item editado */
-            editedCategory.id = categoryId
-            return editedCategory
-        } catch (e) {
-            console.error("Ocurrió un error editando las categorías: ", (e as Error).message)
-        }
+        /* Retorna el item editado */
+        editedCategory.id = categoryId
+        return editedCategory
 
     },
     getAll: async () => {
-        try {
-            const categoriesData: Category[] = await fetchApi("categorias");
-
-            return categoriesData
-
-        } catch (error) {
-            console.error("Error al obtener las categorías:", (error as Error).message);
-            return []
-        }
+        const categoriesData: Category[] = await fetchApi("categorias");
+        return categoriesData
     }
 }
-
 
 export const ProductDB = {
     add: async (newProduct: Product, newImage: File) => {
@@ -91,18 +81,14 @@ export const ProductDB = {
         formData.append("categoriaId", categoriaId)
         if (newImage) formData.append("imagen", newImage);
 
-        try {
-            const response = await fetchApi(
-                `platos/categorias/${categoriaId}/platos`,
-                "POST",
-                formData,
-                true
-            );
+        const response = await fetchApi(
+            `platos/categorias/${categoriaId}/platos`,
+            "POST",
+            formData,
+            true
+        );
+        return response; // usa lo que devuelva tu backend
 
-            return response; // usa lo que devuelva tu backend
-        } catch (error) {
-            console.error("Error al agregar el producto:", error);
-        }
     },
     delete: async (producId: string, categoriaId: string) => {
         // Edicion base de datos
@@ -138,19 +124,19 @@ export const ProductDB = {
         /* Retorna el item editado */
         editedProduct.id = productId
         return editedProduct
-
     },
     getAll: async () => {
+        const itemsData: Product[] = await fetchApi("platos");
+        return itemsData
+    }
+}
 
-        try {
-            const itemsData: Product[] = await fetchApi("platos");
-
-            return itemsData
-
-        } catch (error) {
-            console.error("Error al obtener los ítems", error);
-            return []
-        }
-
+export const OrdersDB = {
+    delete: async (id: string) => {
+        await fetchApi(`pedidos/${id}`, "DELETE")
+    },
+    getAll: async () => {
+        const ordersData: Pedido[] = await fetchApi(`pedidos`)
+        return ordersData
     }
 }

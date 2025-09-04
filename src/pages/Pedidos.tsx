@@ -1,57 +1,76 @@
-import React, { useEffect, useState } from 'react';
+// Librerías
+import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import { usePedidos } from '../contexts/PedidoContext'; // o el path donde tengas tu context
-import '../assets/styles/pedidosEntrantes.css'
-import Swal from 'sweetalert2'
-
-
-
-type Pedido = {
-  id: string;
-  cliente: {
-    nombre: string;
-    telefono: number;
-  };
-  total: number;
-  items: {
-    idPlato: string;
-    nombre: string;
-    precio: number;
-    cantidad: number
-    opcionesSeleccionadas: {
-      id: string,
-      nombre: string,
-      precioExtra: number
-    }[];
-    nota: string;
-  }[];
-  fecha: number;
-  pedidoId: string;
-};
+// Contextos
+import { usePedidos } from '../contexts/PedidoContext';
+// Assets
+import '../assets/styles/orderPage.css'
+import type { Pedido } from '../assets/types/types';
+import { OrderCard } from '../components/OrderCard';
 
 
 export const Pedidos = () => {
   const API_URL = import.meta.env.VITE_API_URL;
 
-
+  const [pedidosHistorial, setpedidosHistorial] = useState<Pedido[]>([])
   const { pedidos, agregarPedido, eliminarPedido } = usePedidos()
+  const [estadosPedidos, setEstadosPedidos] = useState<{ [key: string]: string }>({})
 
   useEffect(() => {
     const socket = io(API_URL);
 
     socket.on('nuevo-pedido', (data: Pedido) => {
-      console.log('Pedido recibido por socket:', data);
-      agregarPedido(data); // usar la función del context
+      agregarPedido(data);
     });
+
     return () => {
       socket.disconnect();
     };
   }, []);
 
+  useEffect(() => {
+    const fetchPedidos = async () => {
+      const response = await fetch(`${API_URL}/pedidos`)
+      const data = await response.json()
+
+      setpedidosHistorial(data)
+      console.log(data)
+    }
+
+    const estadosGuardados = localStorage.getItem("estadosPedidos");
+    if (estadosGuardados) {
+      setEstadosPedidos(JSON.parse(estadosGuardados));
+    }
+
+    fetchPedidos()
+  }, [])
+
+  const cambiarEstado = (id: string, nuevoEstado: string) => {
+    const nuevosEstados = {
+      ...estadosPedidos,
+      [id]: nuevoEstado
+    };
+
+    setEstadosPedidos(nuevosEstados);
+    localStorage.setItem("estadosPedidos", JSON.stringify(nuevosEstados));
+  };
+
+
+
   return (
     <div className='containerPadre'>
-      <h1>Pedidos en tiempo real</h1>
-      {pedidos.map((pedido) => (
+      <div className='pedidosWrapper'>
+        {pedidosHistorial && pedidosHistorial.map((pedido) => (
+          <OrderCard order={pedido} key={pedido.id}>
+
+          </OrderCard>
+        ))}
+      </div>
+
+
+
+      {/* --- Antiguo diseño de pedido --- */}
+      {/*pedidos.map((pedido) => (
         <div key={pedido.id} className='pedido'>
           <h2>Cliente: {pedido.cliente.nombre}</h2>
           <p>Teléfono: {pedido.cliente.telefono}</p>
@@ -87,7 +106,7 @@ export const Pedidos = () => {
           </ul>
           <button onClick={() => eliminarPedido(pedido.id)}>Eliminar Pedido</button>
         </div>
-      ))}
+      ))*/}
     </div>
   );
 };

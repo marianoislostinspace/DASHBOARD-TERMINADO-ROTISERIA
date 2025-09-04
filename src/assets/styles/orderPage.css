@@ -1,0 +1,26 @@
+/* 
+### CSS para la edición de la página en general. ###
+
+Nota: El CSS de las tarjetas es orderCards.css 
+*/
+
+.containerPadre {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+  width: 100%;
+  height: calc(100vh - 56px);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.containerPadre h1 {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #2d3436;
+}
+
+

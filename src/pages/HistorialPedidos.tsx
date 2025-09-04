@@ -2,35 +2,10 @@ import React, { useEffect, useState } from 'react'
 import '../assets/styles/historial.css'
 import { fetchApi } from '../utils/api';
 import Swal from 'sweetalert2'
+import type { Pedido } from '../assets/types/types';
 
 
-type Props = {}
-
-type Pedido = {
-  id: string;
-  cliente: {
-    nombre: string;
-    telefono: number;
-  };
-  total: number;
-  items: {
-    idPlato: string;
-    nombre: string;
-    precio: number;
-    opcionesSeleccionadas: {
-      id: string,
-      nombre: string,
-      precioExtra: number
-    }[];
-    cantidad: number
-    nota: string;
-  }[];
-  fecha: number;
-  pedidoId: string;
-};
-
-
-export const HistorialPedidos = (props: Props) => {
+export const HistorialPedidos = () => {
 
   const [pedidosHistorial, setpedidosHistorial] = useState<Pedido[]>([])
   const [pedSum, setpedSum] = useState<Pedido[]>([])
