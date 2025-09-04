@@ -1,20 +1,21 @@
 // Utils
 import { fetchApi } from "./api"
 import { SwalNotification } from "./swalNotification"
-// Tipos
+// Assets
 import type { Product, Category } from "../assets/types/types"
+import { ValidationError } from "../assets/errors"
 
 
 
 export const CategoryDB = {
     add: async (categoryName: string, imgURL: File) => {
 
-        // Check text/image not empty
+        // Errores de campos obligatorios
         if (!categoryName.trim()) {
-            throw "Introduzca un nombre para la categoría"
+            throw new ValidationError("Campo de nombre de categoría incompleto")
         }
         if (!imgURL) {
-            throw "Seleccione una imagen para la categoría"
+            throw new ValidationError("Ninguna imagen seleccionada para la categoría")
         }
 
         const formData = new FormData();
@@ -22,22 +23,19 @@ export const CategoryDB = {
         formData.append("imagen", imgURL);
 
         // Actualizar backend
+
         const createdCategory = await fetchApi("categorias", "POST", formData, true);
         return createdCategory as Category
     },
-    delete: async (categoryId : string) => {
+    delete: async (categoryId: string) => {
         await fetchApi(`categorias/${categoryId}`, "DELETE");
     },
-    edit: async (categoryId: string, editedCategory : Category, newImage? : File) => { 
-        const {nombre} = editedCategory
+    edit: async (categoryId: string, editedCategory: Category, newImage?: File) => {
+        const { nombre } = editedCategory
 
-        /* Hay algún campo sin completar*/
+        // Errores de campos obligatorios
         if (!nombre.trim()) {
-            SwalNotification.fire({
-                icon: "error",
-                title: "Falta un nombre en la categoría"
-            });
-            return;
+            throw new ValidationError("Campo de nombre de categoría incompleto")
         }
 
         // Crear formulario de datos
@@ -45,8 +43,8 @@ export const CategoryDB = {
         formData.append("nombre", nombre)
         if (newImage) formData.append("imagen", newImage);
 
-        /* POST a la DB */
         try {
+            /* POST a la DB */
             await fetchApi(
                 `categorias/${categoryId}`,
                 "PATCH",
@@ -57,10 +55,10 @@ export const CategoryDB = {
             /* Retorna el item editado */
             editedCategory.id = categoryId
             return editedCategory
+        } catch (e) {
+            console.error("Ocurrió un error editando las categorías: ", (e as Error).message)
         }
-        catch (error) {
-            console.error("Error al actualizar la categoría --", error);
-        }
+
     },
     getAll: async () => {
         try {
@@ -69,7 +67,7 @@ export const CategoryDB = {
             return categoriesData
 
         } catch (error) {
-            console.error("Error al obtener las categorías:", error);
+            console.error("Error al obtener las categorías:", (error as Error).message);
             return []
         }
     }
@@ -80,15 +78,12 @@ export const ProductDB = {
     add: async (newProduct: Product, newImage: File) => {
         const { nombre, precio, descripcion, categoriaId, imagen } = newProduct;
 
+        // Errores de campos obligatorios
         if (!nombre || !descripcion || !precio || !categoriaId) {
-            SwalNotification.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Todos los campos obligatorios deben estar completos!",
-            });
-            return;
+            throw new ValidationError("Hay campos de producto incompletos")
         }
 
+        // Formulario
         const formData = new FormData()
         formData.append("nombre", nombre)
         formData.append("descripcion", descripcion)
@@ -103,14 +98,6 @@ export const ProductDB = {
                 formData,
                 true
             );
-
-            SwalNotification.fire({
-                title: "Completado!",
-                icon: "success",
-                text: "Producto agregado exitosamente",
-                draggable: true
-            });
-
 
             return response; // usa lo que devuelva tu backend
         } catch (error) {
@@ -127,11 +114,7 @@ export const ProductDB = {
 
         /* Hay algún campo sin completar*/
         if (!nombre || !precio || !categoriaId) {
-            SwalNotification.fire({
-                icon: "error",
-                title: "Faltan campos"
-            });
-            return;
+            throw new ValidationError("Hay campos de producto incompletos")
         }
 
         // Crear formulario de datos
@@ -145,22 +128,18 @@ export const ProductDB = {
         if (newImage) formData.append("imagen", newImage);
 
         /* POST a la DB */
-        try {
-            await fetchApi(
-                `platos/categorias/${categoriaId}/platos/${productId}`,
-                "PATCH",
-                formData,
-                true
-            );
+        await fetchApi(
+            `platos/categorias/${categoriaId}/platos/${productId}`,
+            "PATCH",
+            formData,
+            true
+        );
 
-            /* Retorna el item editado */
-            editedProduct.id = productId
-            return editedProduct
-        }
-        catch (error) {
-            console.error("Error al actualizar el producto:", error);
-        }
-    },  
+        /* Retorna el item editado */
+        editedProduct.id = productId
+        return editedProduct
+
+    },
     getAll: async () => {
 
         try {

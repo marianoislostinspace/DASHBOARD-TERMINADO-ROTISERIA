@@ -13,3 +13,9 @@ export const SwalNotification = Swal.mixin({
         toast.onmouseleave = Swal.resumeTimer;
     }
 });
+
+export const SwalUnexpectedError = Swal.mixin({
+    ...swalThemeConfig,
+    icon: "error",
+    title: "Error Inesperado"
+})

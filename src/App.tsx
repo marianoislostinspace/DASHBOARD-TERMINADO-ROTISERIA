@@ -12,7 +12,6 @@ import { ProductDataContext } from "./contexts/ProductsDataContext";
 // Paginas
 import { Dashboard } from "./pages/DashboardPage";
 import Categories from "./pages/Categories";
-import { Items } from "./components/Items";
 import { Pedidos } from "./pages/Pedidos";
 import { HistorialPedidos } from "./pages/HistorialPedidos";
 
@@ -61,7 +60,6 @@ export const App = () => {
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/categories" element={<Categories />} />
-            <Route path="/items" element={<Items />} />
             <Route path="/pedidos" element={<Pedidos />} />
             <Route path="/historial" element={<HistorialPedidos />} />
             <Route path="/" element={<Navigate to={"/pedidos"}></Navigate>}></Route>

@@ -3,7 +3,7 @@ import React, { useState, useContext } from "react";
 import Swal from 'sweetalert2'
 // Utils
 import { CategoryDB } from "../utils/DataBase";
-import { SwalNotification } from "../utils/swalNotification";
+import { SwalNotification, SwalUnexpectedError } from "../utils/swalNotification";
 // Contextos
 import { ProductDataContext } from "../contexts/ProductsDataContext";
 import { usePopUpDispatch } from "../contexts/PopUpContext";
@@ -11,6 +11,7 @@ import { usePopUpDispatch } from "../contexts/PopUpContext";
 import '../assets/styles/categoryPage.css'
 import type { Category } from "../assets/types/types";
 import { swalThemeConfig } from "../assets/ThemeData";
+import { ValidationError } from "../assets/errors";
 
 
 
@@ -43,8 +44,8 @@ export default function Categories() {
         try {
 
             // Notificacion (Se emite antes porque sino no hay feedback)
-            Swal.fire({
-                title: "completado!",
+            SwalNotification.fire({
+                title: "Completado!",
                 icon: "success",
                 text: "categoria creada con exito",
                 draggable: true
@@ -59,28 +60,16 @@ export default function Categories() {
 
         }
         catch (error) {   
-            switch (error) {
-                case "Introduzca un nombre para la categoría":
-                case "Seleccione una imagen para la categoría":
-                    SwalNotification.fire({
-                        title: "Ops...",
-                        icon: "error",
-                        text: error,
-                        draggable: true
-                    });
-                    break
-                default:
-                    Swal.fire({
-                        title: "Ops...",
-                        icon: "error",
-                        text: "Ocurrió un error inesperado",
-                        draggable: true
-                    });
-                    console.log(error)
+            if (error instanceof ValidationError) {
+                SwalNotification.fire({
+                    title: "Error",
+                    icon: "error",
+                    text: error.message,
+                    draggable: true
+                })
+            } else {
+                SwalUnexpectedError.fire({text: (error as Error).name})
             }
-            
-         
-
         }
     };
 
@@ -104,7 +93,7 @@ export default function Categories() {
                 initCategoriesList(categoriesList.filter((c: Category) => c.id !== categoryId));
             }
             catch (error) {
-                console.error("Error al eliminar la categoría", error);
+                SwalUnexpectedError.fire({text: (error as Error).name})
             }
         }
     };
