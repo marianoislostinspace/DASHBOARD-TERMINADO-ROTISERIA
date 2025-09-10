@@ -79,7 +79,7 @@ export const PopUpProvider = ({ children }: { children: React.ReactNode }) => {
         const { name, value } = target
         
         if (formType == "category") {
-            setFormDataCat({ ...formData, [name]: value })
+            setFormDataCat({ ...formDataCat, [name]: value })
         } else {
             setFormData({ ...formData, [name]: value })
         }

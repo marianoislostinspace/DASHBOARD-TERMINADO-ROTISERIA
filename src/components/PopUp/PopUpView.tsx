@@ -39,9 +39,9 @@ export const PopUpForm = ({ categories }: Props) => {
       })
       return
     }
-    
+
     // Add to Database
-    await ProductDB.add({...formData}, newImage)
+    await ProductDB.add({ ...formData }, newImage)
 
     // Close form
     handleCloseForm()
@@ -63,11 +63,38 @@ export const PopUpForm = ({ categories }: Props) => {
 
 
   // Se encarga de la edición de categorías
-  const handleEditCategory = (e: React.FormEvent) => {
+  const handleEditCategory = async(e: React.FormEvent) => {
     e.preventDefault()
 
-    CategoryDB.edit(formDataCat.id, formDataCat, newImageCat as File)
-  
+    e.preventDefault();
+
+    try {
+
+      // Notificacion (Se emite antes porque sino no hay feedback)
+      SwalNotification.fire({
+        title: "Completado!",
+        icon: "success",
+        text: "categoria actualizada con exito",
+        draggable: true
+      });
+
+      //  Actualizar backend
+      const categoryObject = await CategoryDB.edit(formDataCat.id, formDataCat, newImageCat as File)
+
+      // Actualizar local (El backend devuelve el objeto)
+      // if (categoryObject) {
+      //   initCategoriesList(
+      //     categoriesList.map((c: Category) =>
+      //       c.id === categoryObject.id ? categoryObject : c
+      //     )
+      //   )
+      // }
+
+
+    }
+    catch (error) {
+      console.error(error)
+    }
     handleCloseForm()
   }
 
@@ -193,7 +220,7 @@ export const PopUpForm = ({ categories }: Props) => {
         )}
       </div>
 
-      
+
     </div>
   )
 }

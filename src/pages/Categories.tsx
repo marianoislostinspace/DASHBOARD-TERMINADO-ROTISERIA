@@ -6,7 +6,7 @@ import { CategoryDB } from "../utils/DataBase";
 import { SwalNotification, SwalUnexpectedError } from "../utils/swalNotification";
 // Contextos
 import { ProductDataContext } from "../contexts/ProductsDataContext";
-import { usePopUpDispatch } from "../contexts/PopUpContext";
+import { usePopUpDispatch, usePopUpStates } from "../contexts/PopUpContext";
 // Estilos y tipos
 import '../assets/styles/categoryPage.css'
 import type { Category } from "../assets/types/types";
@@ -21,6 +21,8 @@ export default function Categories() {
 
     // Formulario de edición de categoría
     const { handleIsVisible, handleIsEditing, handleFormDataCat, handleFormType } = usePopUpDispatch()
+    const { isVisible, formData, formDataCat, formType } = usePopUpStates()
+
 
     // States
     const [newCategory, setNewCategory] = useState("");
@@ -59,7 +61,7 @@ export default function Categories() {
 
 
         }
-        catch (error) {   
+        catch (error) {
             if (error instanceof ValidationError) {
                 SwalNotification.fire({
                     title: "Error",
@@ -68,10 +70,62 @@ export default function Categories() {
                     draggable: true
                 })
             } else {
-                SwalUnexpectedError.fire({text: (error as Error).name})
+                SwalUnexpectedError.fire({ text: (error as Error).name })
             }
         }
     };
+
+
+
+
+
+
+    // Editar Categorías
+    const handleUpdateCategory = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        try {
+
+            // Notificacion (Se emite antes porque sino no hay feedback)
+            SwalNotification.fire({
+                title: "Completado!",
+                icon: "success",
+                text: "categoria actualizada con exito",
+                draggable: true
+            });
+
+            //  Actualizar backend
+            const categoryObject = await CategoryDB.edit(formDataCat.id, formDataCat, imgURL as File)
+
+            // Actualizar local (El backend devuelve el objeto)
+            if (categoryObject) {
+                initCategoriesList(
+                    categoriesList.map((c: Category) =>
+                        c.id === categoryObject.id ? categoryObject : c
+                    )
+                )
+            }
+
+
+        }
+        catch (error) {
+            if (error instanceof ValidationError) {
+                SwalNotification.fire({
+                    title: "Error",
+                    icon: "error",
+                    text: error.message,
+                    draggable: true
+                })
+            } else {
+                SwalUnexpectedError.fire({ text: (error as Error).name })
+            }
+        }
+    };
+
+
+
+
+    
 
     // Eliminar categorías
     const handleDeleteCategory = async (categoryId: string) => {
@@ -93,7 +147,7 @@ export default function Categories() {
                 initCategoriesList(categoriesList.filter((c: Category) => c.id !== categoryId));
             }
             catch (error) {
-                SwalUnexpectedError.fire({text: (error as Error).name})
+                SwalUnexpectedError.fire({ text: (error as Error).name })
             }
         }
     };

@@ -7,23 +7,36 @@ export const fetchApi = async (
   isFormData: boolean = false
 ) => {
   try {
+    const token = localStorage.getItem("token");
+
+    const headers: HeadersInit = {};
+    if (!isFormData) {
+      headers["Content-Type"] = "application/json";
+    }
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
     const options: RequestInit = {
       method,
-      headers: isFormData
-        ? {} // No se establece Content-Type si es FormData
-        : { "Content-Type": "application/json" },
+      headers,
       body: body ? (isFormData ? body : JSON.stringify(body)) : null,
     };
 
     const response = await fetch(`${API_URL}/${endpoint}`, options);
 
-    // 📌 Agregar logs para depuración
     console.log("🔹 FETCH URL:", `${API_URL}/${endpoint}`);
     console.log("🔹 FETCH OPTIONS:", options);
     console.log("🔹 RESPONSE STATUS:", response.status);
 
     if (!response.ok) {
-      const errorResponse = await response.text(); // Obtener el mensaje de error del servidor
+      // Manejo de expiración de token
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("token");
+        window.location.href = "/login"; // Redirigir a login
+      }
+
+      const errorResponse = await response.text();
       console.error("🔴 ERROR DEL SERVIDOR:", errorResponse);
       throw new Error(errorResponse || "Error en la petición");
     }

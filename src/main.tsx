@@ -20,4 +20,5 @@ createRoot(document.getElementById('root')!).render(
       </SocketProvider>
     </StrictMode>
   </PedidoProvider>
+
 )

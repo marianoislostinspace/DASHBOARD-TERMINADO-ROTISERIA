@@ -32,7 +32,7 @@ export const CategoryDB = {
     delete: async (categoryId: string) => {
         await fetchApi(`categorias/${categoryId}`, "DELETE");
     },
-    edit: async (categoryId: string, editedCategory: Category, newImage?: File) => {
+    edit: async (categoryId: string, editedCategory: Category, newImageCat?: File) => {
         const { nombre } = editedCategory
 
         // Errores de campos obligatorios
@@ -43,7 +43,7 @@ export const CategoryDB = {
         // Crear formulario de datos
         const formData = new FormData()
         formData.append("nombre", nombre)
-        if (newImage) formData.append("imagen", newImage);
+        if (newImageCat) formData.append("imagen", newImageCat);
 
         /* POST a la DB */
         await fetchApi(
