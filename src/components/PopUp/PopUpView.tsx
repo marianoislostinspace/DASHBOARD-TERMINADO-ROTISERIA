@@ -82,14 +82,15 @@ export const PopUpForm = ({ categories }: Props) => {
       const categoryObject = await CategoryDB.edit(formDataCat.id, formDataCat, newImageCat as File)
 
       // Actualizar local (El backend devuelve el objeto)
-      // if (categoryObject) {
-      //   initCategoriesList(
-      //     categoriesList.map((c: Category) =>
-      //       c.id === categoryObject.id ? categoryObject : c
-      //     )
-      //   )
-      // }
-
+      /*
+      if (categoryObject) {
+        initCategoriesList(
+        categoriesList.map((c: Category) =>
+        c.id === categoryObject.id ? categoryObject : c
+          )
+        )
+      }
+      */
 
     }
     catch (error) {

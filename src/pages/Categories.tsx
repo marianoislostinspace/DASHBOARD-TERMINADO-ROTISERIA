@@ -1,5 +1,5 @@
 // Librerias
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import Swal from 'sweetalert2'
 // Utils
 import { CategoryDB } from "../utils/DataBase";
@@ -21,12 +21,13 @@ export default function Categories() {
 
     // Formulario de edición de categoría
     const { handleIsVisible, handleIsEditing, handleFormDataCat, handleFormType } = usePopUpDispatch()
-    const { isVisible, formData, formDataCat, formType } = usePopUpStates()
+    const { formDataCat } = usePopUpStates()
 
 
     // States
     const [newCategory, setNewCategory] = useState("");
     const [imgURL, setImgURL] = useState<File | undefined>(undefined);
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     // -----------------------------------------------------------------------
 
@@ -43,15 +44,12 @@ export default function Categories() {
     const handleAddCategory = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        try {
+        SwalNotification.fire({
+            icon:"info",
+            title: "Cargando..."
+        })
 
-            // Notificacion (Se emite antes porque sino no hay feedback)
-            SwalNotification.fire({
-                title: "Completado!",
-                icon: "success",
-                text: "categoria creada con exito",
-                draggable: true
-            });
+        try {
 
             //  Actualizar backend
             const categoryObject = await CategoryDB.add(newCategory, imgURL as File)
@@ -59,7 +57,20 @@ export default function Categories() {
             // Actualizar local (El backend devuelve el objeto)
             if (categoryObject) initCategoriesList([...categoriesList, categoryObject])
 
-
+            // Limpiar formulario
+            setNewCategory("")
+            if (fileInputRef.current) {
+                fileInputRef.current.value = ""
+            } 
+            
+                        
+            // Notificacion (Se emite antes porque sino no hay feedback)
+            SwalNotification.fire({
+                title: "Completado!",
+                icon: "success",
+                text: "categoria creada con exito",
+                draggable: true
+            });
         }
         catch (error) {
             if (error instanceof ValidationError) {
@@ -74,10 +85,6 @@ export default function Categories() {
             }
         }
     };
-
-
-
-
 
 
     // Editar Categorías
@@ -123,10 +130,6 @@ export default function Categories() {
     };
 
 
-
-
-    
-
     // Eliminar categorías
     const handleDeleteCategory = async (categoryId: string) => {
         const result = await Swal.fire({
@@ -145,6 +148,13 @@ export default function Categories() {
 
                 // Edit Frontend
                 initCategoriesList(categoriesList.filter((c: Category) => c.id !== categoryId));
+
+                // Notification
+                SwalNotification.fire({
+                    title: "Eliminado correctamente",
+                    text: "Categoría eliminada con éxito",
+                    icon: "success"
+                })
             }
             catch (error) {
                 SwalUnexpectedError.fire({ text: (error as Error).name })
@@ -196,6 +206,7 @@ export default function Categories() {
                             accept="image/*" className="file"
                             onChange={handleFileChange}
                             placeholder="Nueva Categoría"
+                            ref={fileInputRef}
                         />
                         <button type="submit">Agregar</button>
                     </form>
