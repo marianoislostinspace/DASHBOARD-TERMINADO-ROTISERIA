@@ -1,13 +1,15 @@
 // Librerias
-import { useState } from "react"
+import { useContext, useState } from "react"
 // Context
 import { usePopUpDispatch, usePopUpStates } from "../../contexts/PopUpContext"
+import { ProductDataContext } from "../../contexts/ProductsDataContext"
 // Utils
-import { SwalNotification } from "../../utils/swalNotification"
+import { SwalNotification, SwalUnexpectedError } from "../../utils/swalNotification"
 import { ProductDB, CategoryDB } from "../../utils/DataBase"
 // Estilos y tipos
 import type { Category } from "../../assets/types/types"
 import "../../assets/styles/popUp.css"
+import { ValidationError } from "../../assets/errors"
 
 
 interface Props {
@@ -19,10 +21,10 @@ export const PopUpForm = ({ categories }: Props) => {
   const { handleIsEditing, handleIsVisible, handleInputChange, handleCategoryChange, handleFormDataCat } =
     usePopUpDispatch()
 
+  const { categoriesList, initCategoriesList } = useContext(ProductDataContext)
+  //
   const [newImage, setNewImage] = useState<File | null>(null)
   const [newImageCat, setNewImageCat] = useState<File | null>(null)
-
-  const [activeForm, setActiveForm] = useState<"product" | "category" | "add" | null>("product")
 
 
 
@@ -63,38 +65,48 @@ export const PopUpForm = ({ categories }: Props) => {
 
 
   // Se encarga de la edición de categorías
-  const handleEditCategory = async(e: React.FormEvent) => {
+  const handleEditCategory = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    e.preventDefault();
+    // Notificación de carga
+    SwalNotification.fire({
+                icon:"info",
+                title: "Cargando..."
+    })
 
     try {
+      //  Actualizar backend
+      const categoryObject = await CategoryDB.edit(formDataCat.id, formDataCat, newImageCat as File)
+
+      // Actualizar local (El backend devuelve el objeto)
+      if (categoryObject) {
+        initCategoriesList(
+          categoriesList.map((c: Category) => c.id === categoryObject.id
+            ? categoryObject
+            : c
+          )
+        )
+      }
 
       // Notificacion (Se emite antes porque sino no hay feedback)
       SwalNotification.fire({
         title: "Completado!",
         icon: "success",
-        text: "categoria actualizada con exito",
+        text: "Categoria actualizada con exito",
         draggable: true
       });
-
-      //  Actualizar backend
-      const categoryObject = await CategoryDB.edit(formDataCat.id, formDataCat, newImageCat as File)
-
-      // Actualizar local (El backend devuelve el objeto)
-      /*
-      if (categoryObject) {
-        initCategoriesList(
-        categoriesList.map((c: Category) =>
-        c.id === categoryObject.id ? categoryObject : c
-          )
-        )
-      }
-      */
-
     }
     catch (error) {
-      console.error(error)
+      if (error instanceof ValidationError) {
+        SwalNotification.fire({
+          title: "Error",
+          icon: "error",
+          text: error.message,
+          draggable: true
+        })
+      } else {
+        SwalUnexpectedError.fire({ text: (error as Error).name })
+      }
     }
     handleCloseForm()
   }

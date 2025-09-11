@@ -1,7 +1,8 @@
 :root {
     --bg-primary: var(--bg-primary);
     --bg-secondary: var(--bg-secondary);
-    
+
+    --border-color-primary: var(--border-color-primary);
     --btn-primary: var(--btn-primary);
     --btn-secondary: var(--btn-secondary);
     --btn-hover: var(--btn-hover);
@@ -11,8 +12,12 @@
 }
 
 
-/* Contenedor padre*/
+/* ---------- CATEGORÍAS ---------- */
+
 .categoriesContainer {
+    display: flex;
+    justify-content: center;
+    width: 100vw;
     max-width: 600px;
     margin: 30px auto;
     padding: 20px;
@@ -21,24 +26,61 @@
     border-radius: 12px;
 }
 
+.categories {
+    width: 50vw;
+    border: 2px solid var(--border-color-primary);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 40px;
+    text-align: center;
+}
+
+.categories input {
+    width: 250px;
+    height: 25px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.categories button {
+    width: 100px;
+    height: 40px;
+    margin-left: 10px;
+}
+
 .categories ul {
     padding-inline-start: 0px;
 }
 
+/* Items de la lista*/
 .categories li {
-  background: var(--bg-primary);
-  color: var(--text-color-primary);
-  padding: 0px 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between; /* texto a la izq, botones a la der */
-  align-items: center;
+    background: var(--bg-primary);
+    color: var(--text-color-primary);
+    padding: 0px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    /* texto a la izq, botones a la der */
+    align-items: center;
+}
+
+.categories li span {
+    width: 250px;
+    height: 70px;
+    align-content: start;
+    text-align: start;
+    text-wrap: nowrap;
+    overflow-x: auto;
 }
 
 .actions {
-  display: flex;
-  gap: 8px; /* espacio entre Editar y Eliminar */
+    display: flex;
+    gap: 8px;
+    /* espacio entre Editar y Eliminar */
 }
 
 .categories button {
@@ -85,7 +127,7 @@
 
     font-size: 14px;
     border-radius: 6px;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--border-color-primary);
     height: 60px;
     background: var(--bg-primary);
     color: var(--text-color-primary);

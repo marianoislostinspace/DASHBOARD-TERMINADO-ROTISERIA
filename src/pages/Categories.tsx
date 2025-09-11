@@ -44,6 +44,7 @@ export default function Categories() {
     const handleAddCategory = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Notificación de carga
         SwalNotification.fire({
             icon:"info",
             title: "Cargando..."
@@ -68,7 +69,7 @@ export default function Categories() {
             SwalNotification.fire({
                 title: "Completado!",
                 icon: "success",
-                text: "categoria creada con exito",
+                text: "Categoria creada con exito",
                 draggable: true
             });
         }
@@ -175,13 +176,12 @@ export default function Categories() {
     return (
         <div className="categoriesContainer">
             <div className="categories">
-                <div className="subCat">
-                    <h2>Categorías</h2>
+                <div className="subCat">   
                     {categoriesList && categoriesList.length > 0 ? (
                         <ul>
                             {categoriesList.map((category) => (
                                 <li key={category.id}>
-                                    {category.nombre}
+                                    <span>{category.nombre}</span>
                                     <div className="actions">
                                         <button className="deleteButton" onClick={() => handleDeleteCategory(category.id)}>Eliminar</button>
                                         <button className="editButton" onClick={() => handleEditFields(category)}>Editar</button>
