@@ -21,6 +21,9 @@ export const SideBar = ({sectionNameSetter}: Props) => {
             <li onClick={() => sectionNameSetter("Categorias")}>
               <Link  className="nav-link" to="/categories">Crear Categorias</Link>
             </li>
+            <li onClick={() => sectionNameSetter("historial de pedidos")}>
+              <Link  className="nav-link" to="/historial">historial de pedidos</Link>
+            </li>
           </ul>
           </div>
         </nav>

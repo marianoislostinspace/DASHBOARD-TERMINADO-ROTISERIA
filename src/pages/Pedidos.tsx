@@ -7,30 +7,48 @@ import { usePedidos } from '../contexts/PedidoContext';
 import '../assets/styles/orderPage.css'
 import type { Pedido } from '../assets/types/types';
 import { OrderCard } from '../components/OrderCard';
+import Swal from 'sweetalert2';
+
 
 export const Pedidos = () => {
   const API_URL = import.meta.env.VITE_API_URL;
 
   const [pedidosHistorial, setPedidosHistorial] = useState<Pedido[]>([]);
   const [estadosPedidos, setEstadosPedidos] = useState<{ [key: string]: string }>({});
-  const [error, setError] = useState(""); // ✅ ahora existe setError
+  const [error, setError] = useState(""); 
 
   const { agregarPedido, eliminarPedido } = usePedidos();
 
-  // 📡 Conexión a WebSocket
+  // Conexión a WebSocket
   useEffect(() => {
     const socket = io(API_URL);
 
     socket.on('nuevo-pedido', (data: Pedido) => {
-      agregarPedido(data);
+      setPedidosHistorial(prev => {
+        const yaExiste = prev.some(p => p.id === data.id);
+        if (!yaExiste) {
+          Swal.fire({
+            title: '📦 Nuevo pedido recibido',
+            text: `Cliente: ${data.cliente.nombre}`,
+            icon: 'info',
+            timer: 3000,
+            showConfirmButton: false
+          });
+          return [data, ...prev];
+        }
+        return prev;
+      });
     });
 
     return () => {
       socket.disconnect();
     };
-  }, [API_URL, agregarPedido]);
+  }, [API_URL]);
 
-  // 📥 Fetch de pedidos
+
+
+
+
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
@@ -74,7 +92,7 @@ export const Pedidos = () => {
     fetchPedidos();
   }, [API_URL]);
 
-  // 🔄 Cambiar estado del pedido
+  //  Cambiar estado del pedido
   const cambiarEstado = (id: string, nuevoEstado: string) => {
     const nuevosEstados = {
       ...estadosPedidos,

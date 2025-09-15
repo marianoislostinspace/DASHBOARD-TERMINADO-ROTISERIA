@@ -1,4 +1,5 @@
 import { useState } from "react";
+import '../assets/styles/login.css'
 
 export default function Login({ onLogin }: { onLogin: () => void }) {
     const [username, setUsername] = useState("");
@@ -29,35 +30,32 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
     };
 
     return (
-        <div className="flex justify-center items-center h-screen">
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white p-6 rounded shadow-md w-80"
-            >
-                <h2 className="text-xl font-bold mb-4">Login</h2>
+        <div className="LoginDiv">
+            <form onSubmit={handleSubmit}>
+                <h2 className="titulo">Panel de Administracion</h2>
 
-                {error && <p className="text-red-500">{error}</p>}
+                {error && <p>{error}</p>}
 
                 <input
                     type="text"
                     placeholder="Usuario"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full p-2 border mb-3 rounded"
+                    className="userInput"
                 />
                 <input
                     type="password"
                     placeholder="Contraseña"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full p-2 border mb-3 rounded"
+                    className="passInput"
                 />
 
                 <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+                    className="botonsuelo"
                 >
-                    Entrar
+                    Acceder
                 </button>
             </form>
         </div>
