@@ -16,6 +16,9 @@ export const CategoryDB = {
         if (!categoryName.trim()) {
             throw new ValidationError("Campo de nombre de categoría incompleto")
         }
+        if (categoryName.trim().length > 25){
+            throw new ValidationError("Exceso del límite de caracteres")
+        }
         if (!imgURL) {
             throw new ValidationError("Ninguna imagen seleccionada para la categoría")
         }
@@ -34,15 +37,22 @@ export const CategoryDB = {
     },
     edit: async (categoryId: string, editedCategory: Category, newImageCat?: File) => {
         const { nombre } = editedCategory
-
+        
         // Errores de campos obligatorios
         if (!nombre.trim()) {
             throw new ValidationError("Campo de nombre de categoría incompleto")
         }
+        if (nombre.trim().length > 25){
+            throw new ValidationError("Exceso del límite de caracteres")
+        }
+        // Se da formato al texto para que siempre la primera letra esté capitalizada.
+        let name = nombre.toLowerCase()
+        name = name.charAt(0).toUpperCase() + name.slice(1)
+
 
         // Crear formulario de datos
         const formData = new FormData()
-        formData.append("nombre", nombre)
+        formData.append("nombre", name) 
         if (newImageCat) formData.append("imagen", newImageCat);
 
         /* POST a la DB */
