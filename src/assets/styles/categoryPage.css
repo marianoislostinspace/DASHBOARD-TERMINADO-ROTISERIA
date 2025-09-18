@@ -35,7 +35,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 40px;
+    font-size: 32px;
     text-align: center;
 }
 
@@ -46,8 +46,8 @@
     padding: 10px;
 }
 
-.categories button {
-    width: 100px;
+.subCat>ul button {
+    width: 40px;
     height: 40px;
     margin-left: 10px;
 }
@@ -70,9 +70,9 @@
 }
 
 .categories li span {
-    width: 250px;
+    width: 350px;
     height: 70px;
-    align-content: start;
+    align-content: center;
     text-align: start;
     text-wrap: nowrap;
     overflow-x: auto;
@@ -87,7 +87,7 @@
 .categories button {
     color: var(--text-color-primary);
     border: none;
-    padding: 6px 12px;
+    padding: 2px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
@@ -95,12 +95,10 @@
 }
 
 
-
-
 .deleteButton {
     background-color: var(--btn-danger);
     border: none;
-    padding: 6px 12px;
+    padding: 2px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
@@ -110,7 +108,7 @@
 .editButton {
     background-color: var(--btn-secondary);
     border: none;
-    padding: 6px 12px;
+    padding: 2px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
@@ -118,7 +116,7 @@
 }
 
 
-
+/*Formulario*/
 
 .categories input[type="text"],
 .categories input[type="file"] {
@@ -155,4 +153,11 @@
 
 .categories form button[type="submit"]:hover {
     background-color: var(--btn-hover);
+}
+
+
+.errorLabel {
+    height: 18px;
+    font-size: 18px;
+    color: var(--btn-danger);
 }

@@ -1,6 +1,7 @@
 // Librerias
 import React, { useState, useContext, useRef } from "react";
 import Swal from 'sweetalert2'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // Utils
 import { CategoryDB } from "../utils/DataBase";
 import { SwalNotification, SwalUnexpectedError } from "../utils/swalNotification";
@@ -12,8 +13,8 @@ import '../assets/styles/categoryPage.css'
 import type { Category } from "../assets/types/types";
 import { swalThemeConfig } from "../assets/ThemeData";
 import { ValidationError } from "../assets/errors";
-
-
+// Icons
+import { faTrashCan, faPenToSquare } from '@fortawesome/free-solid-svg-icons'; // Example icons
 
 export default function Categories() {
 
@@ -183,8 +184,12 @@ export default function Categories() {
                                 <li key={category.id}>
                                     <span>{category.nombre}</span>
                                     <div className="actions">
-                                        <button className="deleteButton" onClick={() => handleDeleteCategory(category.id)}>Eliminar</button>
-                                        <button className="editButton" onClick={() => handleEditFields(category)}>Editar</button>
+                                        <button className="deleteButton" onClick={() => handleDeleteCategory(category.id)}>
+                                            <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
+                                        </button>
+                                        <button className="editButton" onClick={() => handleEditFields(category)}>
+                                            <FontAwesomeIcon icon={faPenToSquare}></FontAwesomeIcon>
+                                        </button>
                                     </div>
                                 </li>
                             ))}
@@ -195,12 +200,14 @@ export default function Categories() {
 
                     {/* Formulario para agregar nueva categoría */}
                     <form onSubmit={handleAddCategory} className="formulario">
+                        {newCategory.length > 25 && <label className="errorLabel">Texto demasiado largo</label>}
                         <input
                             type="text"
                             value={newCategory}
                             onChange={(e) => setNewCategory(e.target.value)}
                             placeholder="Nueva Categoría"
                         />
+                        
                         <input
                             type="file"
                             accept="image/*" className="file"
