@@ -33,7 +33,7 @@ export const fetchApi = async (
       // Manejo de expiración de token
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("token");
-        window.location.href = "/login"; // Redirigir a login
+        window.location.href = "/login";
       }
 
       const errorResponse = await response.text();

@@ -8,12 +8,12 @@
 }
 
 .container {
+  margin-top: 100px;
   border: 1px solid #ddd;
   border-left: 10px solid;
   border-radius: 12px;
   padding: 16px;
   width: 300px;
-  /* clave para que se pongan uno al lado del otro */
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
   font-family: 'Segoe UI', sans-serif;
   transition: transform 0.2s ease;

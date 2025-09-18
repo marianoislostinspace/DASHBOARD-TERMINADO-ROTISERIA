@@ -52,12 +52,10 @@ export const App = () => {
   return (
     <Router>
       <div className="app">
-        <SideBar sectionNameSetter={setSectionName} />
+        <SideBar/>
 
         <section className="content">
-          <div className="section-tittle">
-            <h1>{sectionName}</h1>
-          </div>
+   
 
           <Routes>
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
