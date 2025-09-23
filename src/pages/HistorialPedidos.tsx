@@ -18,8 +18,7 @@ export const HistorialPedidos = () => {
 
   useEffect(() => {
     const fetchPedidos = async () => {
-      const response = await fetch(`${API_URL}/pedidos`)
-      const data = await response.json()
+      const data = await fetchApi("pedidos")
 
       setpedidosHistorial(data)
       console.log(data)

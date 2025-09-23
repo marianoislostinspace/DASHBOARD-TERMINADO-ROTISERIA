@@ -47,3 +47,9 @@
     background-color: rgb(255, 255, 255);
     transform: scale(1.04);
 }
+
+.error{
+    color: red;
+    font-size: 30px;
+    margin-top: 30px;
+}

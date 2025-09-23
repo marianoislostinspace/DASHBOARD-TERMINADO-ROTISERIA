@@ -62,13 +62,13 @@ export const SideBar = () => {
       </nav>
 
       <div className={`side-menu ${isNavOpen ? 'open' : ''}`}>
-        <Link className="nav-link" to="/pedidos"><i className="fa-solid fa-receipt"></i>Pedidos Entrantes</Link>
+        <Link className="nav-link" to="/pedidos"><i className="fa-solid fa-receipt"></i>historial de pedidos</Link>
 
         <Link className="nav-link" to="/dashboard"><i className="fa-solid fa-box-open"></i>Productos en venta y Stock</Link>
 
         <Link className="nav-link" to="/categories"><i className="fa-solid fa-layer-group"></i>Crear Categorias</Link>
 
-        <Link className="nav-link" to="/historial"><i className="fa-solid fa-receipt"></i>historial de pedidos</Link>
+        <Link className="nav-link" to="/historial"><i className="fa-solid fa-receipt"></i>Pedidos entrantes</Link>
 
 
 

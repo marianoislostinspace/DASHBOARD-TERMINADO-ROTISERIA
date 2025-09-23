@@ -34,7 +34,7 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
             <form onSubmit={handleSubmit}>
                 <h2 className="titulo">Panel de Administracion</h2>
 
-                {error && <p>{error}</p>}
+                {error && <p className="error">{error}</p>}
 
                 <input
                     type="text"

@@ -11,6 +11,7 @@ import { emptyProduct, usePopUpDispatch } from "../contexts/PopUpContext";
 import type { Product } from "../assets/types/types";
 import { swalThemeConfig } from "../assets/ThemeData";
 import '../assets/styles/dashboardStyles.css'
+import { SwalNotification } from "../utils/swalNotification";
 
 
 
@@ -115,8 +116,10 @@ export const Dashboard = () => {
         precioExtra: optionExtraPrice || 0,
       };
 
-      await fetchApi(`opciones/categorias/${categoryId}/platos/${productId}/opciones`, "POST", newOption);
-      Swal.fire({
+      await fetchApi(`opciones/${categoryId}/${productId}`, "POST", newOption);
+
+
+      SwalNotification.fire({
         title: "Completado!",
         icon: "success",
         text: "opcion agregada correctamente",
@@ -124,6 +127,10 @@ export const Dashboard = () => {
       }); setOptionName("");
       setOptionExtraPrice("");
       setActiveOptionFormId(null);
+
+
+
+
     } catch (error) {
       console.error("Error al agregar la opción:", error); Swal.fire({
         icon: "error",
@@ -148,7 +155,15 @@ export const Dashboard = () => {
 
     if (result.isConfirmed) {
       try {
-        await fetchApi(`opciones/categorias/${categoriaId}/platos/${itemId}/opciones/${opcionId}`, "DELETE");
+        await fetchApi(`opciones/${categoriaId}/${itemId}/${opcionId}`, "DELETE");
+
+        SwalNotification.fire({
+          title: "Completado!",
+          icon: "success",
+          text: "opcion eliminada correctamente",
+          draggable: true
+        });
+
       } catch (error) {
         console.error("Error al eliminar la opción:", error);
       }
@@ -177,9 +192,9 @@ export const Dashboard = () => {
       <div className="addProduct" onClick={() => handleAddFields(emptyProduct)}>
         <h1>Agregar Productos</h1>
       </div>
-      
+
       {/* Lista de productos */}
-      
+
       <div className="itemContainer">
         {detalle ? (
           /// HTML del producto único
