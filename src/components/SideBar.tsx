@@ -2,6 +2,7 @@ import Swal from "sweetalert2"
 import "../assets/styles/sidebar.css"
 import { Link, useLocation } from "react-router"
 import { useEffect, useState } from "react"
+import { usePedidos } from "../contexts/PedidoContext"
 
 
 export const SideBar = () => {
@@ -9,6 +10,7 @@ export const SideBar = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   const toggleMenu = () => setIsNavOpen(prev => !prev);
+  const { nuevosPedidos, resetPedidos } = usePedidos()
 
 
   const location = useLocation()
@@ -54,8 +56,16 @@ export const SideBar = () => {
           ☰
         </button>
         <div className="textoMEdio"><Link className="homeNav" to="/"><h1 className="textoMid">{tituloActivo}</h1></Link></div>
+
         <div className="logo">
           <img src="img/sapo.jpg" alt="Logo" />
+
+          <div className="campana" onClick={resetPedidos}>
+            🔔
+            {nuevosPedidos > 0 && (
+              <span className="badge">{nuevosPedidos}</span>
+            )}
+          </div>
         </div>
 
 

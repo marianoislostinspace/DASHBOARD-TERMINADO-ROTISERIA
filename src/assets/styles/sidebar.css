@@ -10,6 +10,26 @@ html {
   font-family: sans-serif;
 }
 
+
+.campana{
+  float: left;
+  font-size: 40px;
+  transition: .2s;
+}
+
+.campana:hover{
+  cursor: pointer;
+  transform:scale(1.09);
+}
+
+.badge{
+  color: red;
+  position: absolute;
+  margin-left: -20px;
+}
+
+
+
 .navbar {
   position: fixed;
   top: 0;
@@ -28,6 +48,7 @@ html {
   height: 60px;
   cursor: pointer;
   border-radius: 50%;
+  margin-left: 50px;
 }
 
 .hamburger {
