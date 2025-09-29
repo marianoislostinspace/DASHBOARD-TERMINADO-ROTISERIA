@@ -111,33 +111,38 @@ export const Dashboard = () => {
     }
 
     try {
-      const newOption = {
+      const newOptionData  = {
         nombre: optionName,
         precioExtra: optionExtraPrice || 0,
       };
 
-      await fetchApi(`opciones/${categoryId}/${productId}`, "POST", newOption);
+      const dbRef = await fetchApi(
+        `opciones/${categoryId}/${productId}`,
+        "POST",
+        newOptionData
+      );
 
+      const newOption = { ...newOptionData, id: dbRef.id };
+
+      const updatedProducts = productsList.map((p) =>
+        p.id === productId
+          ? { ...p, opciones: [...(p.opciones || []), newOption] }
+          : p
+      );
+      initProductList(updatedProducts);
+
+      setOptionName("");
+      setOptionExtraPrice("");
+      setActiveOptionFormId(null);
 
       SwalNotification.fire({
         title: "Completado!",
         icon: "success",
-        text: "opcion agregada correctamente",
-        draggable: true
-      }); setOptionName("");
-      setOptionExtraPrice("");
-      setActiveOptionFormId(null);
-
-
-
-
-    } catch (error) {
-      console.error("Error al agregar la opción:", error); Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Hubo un error al agregar la opción!",
-        footer: '<a href="#">Why do I have this issue?</a>'
+        text: "Opción agregada correctamente",
       });
+    } catch (error) {
+      console.error("Error al agregar la opción:", error);
+      Swal.fire("Error", "No se pudo agregar la opción", "error");
     }
   };
 
