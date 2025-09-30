@@ -111,7 +111,7 @@ export const Dashboard = () => {
     }
 
     try {
-      const newOptionData  = {
+      const newOptionData = {
         nombre: optionName,
         precioExtra: optionExtraPrice || 0,
       };
