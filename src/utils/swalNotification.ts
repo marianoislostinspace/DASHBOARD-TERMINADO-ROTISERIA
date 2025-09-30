@@ -17,5 +17,6 @@ export const SwalNotification = Swal.mixin({
 export const SwalUnexpectedError = Swal.mixin({
     ...swalThemeConfig,
     icon: "error",
-    title: "Error Inesperado"
+    title: "Error Inesperado",
+    text: "Ocurrió un error inesperado, pruebe nuevamente o contacte a un administrador si el error persiste."
 })

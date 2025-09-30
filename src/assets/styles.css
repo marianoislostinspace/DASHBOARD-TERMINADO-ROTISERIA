@@ -1,15 +1,29 @@
 :root {
-  --bg-primary: #4a4853;
-  --bg-secondary: #1f1d27;
+  /* NO TOCAR - Colores por defecto de la página*/
+  --default-bg-primary: #4a4853;
+  --default-bg-secondary: #1f1d27;
 
-  --border-color-primary: #75358f;
+  --default-border-color-primary: #75358f;
 
-  --btn-primary: #5c2d6eff;
-  --btn-secondary: #501069;
-  --btn-hover: #059669;
-  --btn-danger: #b11010;
+  --default-btn-primary: #5c2d6eff;
+  --default-btn-secondary: #501069;
+  --default-btn-hover: #059669;
+  --default-btn-danger: #b11010;
 
-  --text-color-primary: #f5f5f5;
+  --default-text-color-primary: #f5f5f5;
+
+  /* Editar estos parametros para cambiar los colores de la página*/
+  --bg-primary: var(--default-bg-primary);
+  --bg-secondary: var(--default-bg-secondary);
+
+  --border-color-primary: var(--default-border-color-primary);
+
+  --btn-primary: var(--default-btn-primary);
+  --btn-secondary: var(--default-btn-secondary);
+  --btn-hover: var(--default-btn-hover);
+  --btn-danger: var(--default-btn-danger);
+
+  --text-color-primary: var(--default-text-color-primary);
 }
 
 /* ---------- FONDO GENERAL ---------- */
@@ -29,13 +43,21 @@ body {
 }
 
 .content {
-  margin-left: 10px;
-  height: 100vh
+  margin-left: 0px;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  transition: margin-left 0.8s ease-in-out;
 }
 
-.content > * {
+.content>* {
   display: flex;
   flex-wrap: wrap;
+}
+
+.sidebar-open {
+  margin-left: 300px;
 }
 
 .section-tittle {
@@ -119,7 +141,7 @@ body {
 }
 
 
-.item-card-input{
+.item-card-input {
   background-color: var(--bg-primary);
   color: var(--text-color-primary);
   width: 100%;
@@ -149,18 +171,22 @@ body {
 
 
 /* Botones */
-.item-card-btn{
+.item-card-btn {
   background-color: var(--btn-primary);
   color: var(--text-color-primary);
+
 }
 
 .item-card-btn:hover {
-  background-color: #059669;
+  background-color: var(--btn-hover);
 }
 
 .item-card-btn-danger {
   background-color: var(--btn-danger);
   color: var(--text-color-primary);
+  border: solid 1px black;
+  padding: 5px 8px;
+  border-radius: 5px;
 }
 
 .item-card-btn-danger:hover {
@@ -315,9 +341,10 @@ body {
   background-color: var(--bg-primary);
   padding: 0.7rem;
   border-radius: 0.5rem;
+  align-items: center;
 }
 
-.option-li p {
+.option-li span {
   color: var(--text-color-primary);
   margin: 0.2rem 0;
   font-size: 1rem;

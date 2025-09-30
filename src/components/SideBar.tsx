@@ -3,13 +3,22 @@ import "../assets/styles/sidebar.css"
 import { Link, useLocation } from "react-router"
 import { useEffect, useState } from "react"
 import { usePedidos } from "../contexts/PedidoContext"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faBell } from "@fortawesome/free-solid-svg-icons"
 
+interface prop {
+  onOpenStatusChange?: (isOpen: boolean) => void
+}
 
-export const SideBar = () => {
+export const SideBar = ({ onOpenStatusChange }: prop) => {
 
   const [isNavOpen, setIsNavOpen] = useState(false);
 
-  const toggleMenu = () => setIsNavOpen(prev => !prev);
+  const toggleMenu = () => {
+    setIsNavOpen(prev => !prev)
+    if (onOpenStatusChange) onOpenStatusChange(!isNavOpen)
+  }
+
   const { nuevosPedidos, resetPedidos } = usePedidos()
 
 
@@ -51,26 +60,6 @@ export const SideBar = () => {
 
   return (
     <>
-      <nav className="navbar">
-        <button className="hamburger" onClick={toggleMenu}>
-          ☰
-        </button>
-        <div className="textoMEdio"><Link className="homeNav" to="/"><h1 className="textoMid">{tituloActivo}</h1></Link></div>
-
-        <div className="logo">
-          <img src="img/sapo.jpg" alt="Logo" />
-
-          <div className="campana" onClick={resetPedidos}>
-            🔔
-            {nuevosPedidos > 0 && (
-              <span className="badge">{nuevosPedidos}</span>
-            )}
-          </div>
-        </div>
-
-
-      </nav>
-
       <div className={`side-menu ${isNavOpen ? 'open' : ''}`}>
         <Link className="nav-link" to="/pedidos"><i className="fa-solid fa-receipt"></i>historial de pedidos</Link>
 
@@ -88,6 +77,27 @@ export const SideBar = () => {
         </div>
 
       </div>
+      <nav className="navbar">
+        <button className="hamburger" onClick={toggleMenu}>
+          ☰
+        </button>
+        <div className="textoMEdio"><Link className="homeNav" to="/"><h1 className="textoMid">{tituloActivo}</h1></Link></div>
+
+        <div className="logo">
+          <img src="img/sapo.jpg" alt="Logo" />
+
+          <div className="campana" onClick={resetPedidos}>
+            <FontAwesomeIcon icon={faBell} style={{ color: "white" }}></FontAwesomeIcon>
+            {nuevosPedidos > 0 && (
+              <span className="badge">{nuevosPedidos}</span>
+            )}
+          </div>
+        </div>
+
+
+      </nav>
+
+
     </>
   )
 }

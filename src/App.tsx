@@ -27,6 +27,8 @@ export const App = () => {
   const { categoriesList, initCategoriesList, initProductList } = useContext(ProductDataContext);
   const [sectionName, setSectionName] = useState<string>("Pedidos");
   const [loggedIn, setLoggedIn] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   // Función que se pasa al login
   const handleLogin = async () => {
@@ -38,6 +40,7 @@ export const App = () => {
       const categories = await CategoryDB.getAll();
       initProductList(products);
       initCategoriesList(categories);
+      setIsDataLoaded(true)
     } catch (err) {
       console.error("Error al cargar productos o categorías", err);
     }
@@ -52,20 +55,28 @@ export const App = () => {
   return (
     <Router>
       <div className="app">
-        <SideBar/>
+        <SideBar onOpenStatusChange={setIsNavOpen} />
 
-        <section className="content">
-   
+        <section
+          className={`content ${isNavOpen ? 'sidebar-open' : ''}`}
+          style={isDataLoaded ? { "display": "block" } : { "display": "flex" }}>
 
-          <Routes>
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
-            <Route path="/pedidos" element={<ProtectedRoute><Pedidos /></ProtectedRoute>} />
-            <Route path="/historial" element={<ProtectedRoute><HistorialPedidos /></ProtectedRoute>} />
+          {!isDataLoaded
+            
+            ? <div className="spinner-border text-light" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+            
+            :<Routes>
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
+              <Route path="/pedidos" element={<ProtectedRoute><Pedidos /></ProtectedRoute>} />
+              <Route path="/historial" element={<ProtectedRoute><HistorialPedidos /></ProtectedRoute>} />
 
-            {/* Redirige a pedidos por defecto */}
-            <Route path="*" element={<Navigate to="/pedidos" />} />
-          </Routes>
+              {/* Redirige a pedidos por defecto */}
+              <Route path="*" element={<Navigate to="/pedidos" />} />
+            </Routes>
+          }
         </section>
       </div>
 

@@ -1,3 +1,14 @@
+:root {
+    --bg-primary: var(--bg-primary);
+    --bg-secondary: var(--bg-secondary);
+
+    --btn-danger: var(--btn-danger);
+    --btn-primary: var(--btn-primary);
+    --btn-secondary: var(--btn-secondary);
+    --btn-hover: var(--btn-hover);
+    --text-color-primary: var(--text-color-primary);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -23,9 +34,12 @@ html {
 }
 
 .badge{
-  color: red;
+  color: var(--text-color-primary);
+  font-size: 15px;
   position: absolute;
-  margin-left: -20px;
+  margin-left: -25px;
+  background-color: red;
+  border-radius: 50%;
 }
 
 
@@ -35,13 +49,13 @@ html {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #2b2b31;
+  background-color: var(--bg-secondary);
   height: 70px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  z-index: 1000;
+  /* z-index: 1000; */
 }
 
 .logo img {
@@ -56,12 +70,12 @@ html {
   background: none;
   border: none;
   cursor: pointer;
-  color: #ffd600;
+  color: var(--btn-primary);
 }
 
 .textoMid {
   font-family: 'Times New Roman', Times, serif;
-  color: rgb(255, 255, 255);
+  color: var(--text-color-primary);
   font-weight: 700;
 }
 
@@ -76,16 +90,14 @@ html {
   left: 0;
   width: 300px;
   height: 100%;
-  background-color: rgb(26, 26, 29);
+  background-color: var(--bg-secondary);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 80px 20px 20px 20px;
   transform: translateX(-100%);
   transition: transform 0.8s ease-in-out;
-  z-index: 999;
-  border-right: 5px solid rgb(0, 0, 0);
-
+  /* z-index: 999; */
 }
 
 
@@ -93,11 +105,12 @@ html {
   transform: translateX(0);
 }
 
+/* Text */
 .nav-link {
   position: relative;
   height: auto;
   width: 100%;
-  color: #ffffff;
+  color: var(--text-color-primary);
   text-decoration: none;
   font-weight: 700;
   font-size: 24px;
@@ -110,15 +123,19 @@ html {
 }
 
 .nav-link:hover {
-  color: #ffd600;
+  color: var(--btn-hover);
 }
 
+.nav-link:focus {
+  color: var(--btn-hover);
+}
+
+/* Icon */
 .nav-link i{
-  color: red;
+  color: var(--btn-primary);
   text-align: start;
   width: 45px;
 }
-
 
 
 
@@ -153,7 +170,7 @@ html {
   padding: 10px;
   font-weight: bold;
   cursor: pointer;
-  z-index: 1500;
+  /* z-index: 1500; */
   transform: translateX(4%);
   transition: transform 0.8s ease-in-out;
 
@@ -226,7 +243,7 @@ html {
     pointer-events: none;
     transform: translateY(-10px);
     transition: all 0.3s ease;
-    z-index: 10;
+    /* z-index: 10; */
   }
 
   .links.visible {
