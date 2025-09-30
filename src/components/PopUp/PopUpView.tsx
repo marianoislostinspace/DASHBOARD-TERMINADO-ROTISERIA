@@ -121,8 +121,13 @@ export const PopUpForm = ({ categories }: Props) => {
   if (!isVisible) return null
 
   return (
-    <div id="pf-popup-container">
-      <div className="pf-background" onClick={handleCloseForm}></div>
+    <div 
+      id="pf-popup-container">
+      <div 
+        className="pf-background" 
+        onClick={handleCloseForm}
+
+      ></div>
 
       <div className={`edit-form ${isVisible ? "open-form" : ""}`}>
 

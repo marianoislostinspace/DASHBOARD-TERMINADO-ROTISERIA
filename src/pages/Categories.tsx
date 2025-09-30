@@ -83,7 +83,7 @@ export default function Categories() {
                     draggable: true
                 })
             } else {
-                SwalUnexpectedError.fire({ text: (error as Error).name })
+                SwalUnexpectedError.fire()
             }
         }
     };

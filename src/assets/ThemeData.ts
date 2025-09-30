@@ -5,7 +5,8 @@ interface ThemeData {
     bgSecondary: string,
     btnPrimary: string,
     btnDanger: string,
-    textColor: string
+    textColor: string,
+    borderPrimary: string,
 }
 
 
@@ -14,7 +15,8 @@ export const darkTheme : ThemeData = {
     bgSecondary: "#1f1d27",
     btnPrimary:"#623075ff",
     btnDanger: "#b11010",
-    textColor: "#f5f5f5"
+    textColor: "#f5f5f5",
+    borderPrimary: "#75358f"
 } 
 
 export const swalThemeConfig : SweetAlertOptions = {
