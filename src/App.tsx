@@ -55,7 +55,7 @@ export const App = () => {
   return (
     <Router>
       <div className="app">
-        <SideBar onOpenStatusChange={setIsNavOpen} />
+        
 
         <section
           className={`content ${isNavOpen ? 'sidebar-open' : ''}`}
@@ -78,6 +78,8 @@ export const App = () => {
             </Routes>
           }
         </section>
+
+        <SideBar onOpenStatusChange={setIsNavOpen} />
       </div>
 
       <PopUpForm categories={categoriesList} />

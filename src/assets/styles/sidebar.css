@@ -6,6 +6,9 @@
     --btn-primary: var(--btn-primary);
     --btn-secondary: var(--btn-secondary);
     --btn-hover: var(--btn-hover);
+
+    --icon-primary: var(--icon-primary);
+
     --text-color-primary: var(--text-color-primary);
 }
 
@@ -43,7 +46,6 @@ html {
 }
 
 
-
 .navbar {
   position: fixed;
   top: 0;
@@ -70,7 +72,7 @@ html {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--btn-primary);
+  color: var(--icon-primary);
 }
 
 .textoMid {
@@ -132,7 +134,7 @@ html {
 
 /* Icon */
 .nav-link i{
-  color: var(--btn-primary);
+  color: var(--icon-primary);
   text-align: start;
   width: 45px;
 }

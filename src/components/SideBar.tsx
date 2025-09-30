@@ -26,7 +26,7 @@ export const SideBar = ({ onOpenStatusChange }: prop) => {
 
   const tituloRutas: Record<string, string> = {
     '/pedidos': 'Pedidos Entrantes',
-    '/dashboard': 'Productos en venta y stock',
+    '/dashboard': 'Productos y stock',
     '/categories': 'Admnistrar Categorias',
     '/historial': 'Historial de Pedidos'
   }
@@ -61,13 +61,13 @@ export const SideBar = ({ onOpenStatusChange }: prop) => {
   return (
     <>
       <div className={`side-menu ${isNavOpen ? 'open' : ''}`}>
-        <Link className="nav-link" to="/pedidos"><i className="fa-solid fa-receipt"></i>historial de pedidos</Link>
+        <Link className="nav-link" to="/pedidos"><i className="fa-solid fa-receipt"></i>Pedidos</Link>
 
-        <Link className="nav-link" to="/dashboard"><i className="fa-solid fa-box-open"></i>Productos en venta y Stock</Link>
+        <Link className="nav-link" to="/dashboard"><i className="fa-solid fa-box-open"></i>Productos y Stock</Link>
 
         <Link className="nav-link" to="/categories"><i className="fa-solid fa-layer-group"></i>Crear Categorias</Link>
 
-        <Link className="nav-link" to="/historial"><i className="fa-solid fa-receipt"></i>Pedidos entrantes</Link>
+        <Link className="nav-link" to="/historial"><i className="fa-solid fa-receipt"></i>Historial de Pedidos</Link>
 
 
 
@@ -81,7 +81,11 @@ export const SideBar = ({ onOpenStatusChange }: prop) => {
         <button className="hamburger" onClick={toggleMenu}>
           ☰
         </button>
-        <div className="textoMEdio"><Link className="homeNav" to="/"><h1 className="textoMid">{tituloActivo}</h1></Link></div>
+        <div className="textoMEdio">
+          <Link className="homeNav" to="/">
+            <h1 className="textoMid"></h1>
+          </Link>
+        </div>
 
         <div className="logo">
           <img src="img/sapo.jpg" alt="Logo" />

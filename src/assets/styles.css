@@ -5,6 +5,8 @@
 
   --default-border-color-primary: #75358f;
 
+  --default-icon-primary: #9140b1;
+
   --default-btn-primary: #5c2d6eff;
   --default-btn-secondary: #501069;
   --default-btn-hover: #059669;
@@ -17,6 +19,8 @@
   --bg-secondary: var(--default-bg-secondary);
 
   --border-color-primary: var(--default-border-color-primary);
+
+  --icon-primary: var(--default-icon-primary);
 
   --btn-primary: var(--default-btn-primary);
   --btn-secondary: var(--default-btn-secondary);
