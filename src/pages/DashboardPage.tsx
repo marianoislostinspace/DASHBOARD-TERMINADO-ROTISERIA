@@ -14,6 +14,7 @@ import { swalThemeConfig } from "../assets/ThemeData";
 import '../assets/styles/dashboardStyles.css'
 import { SwalNotification, SwalUnexpectedError } from "../utils/swalNotification";
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-solid-svg-icons'; // Example icons
+import { it } from "node:test";
 
 
 
@@ -166,7 +167,22 @@ export const Dashboard = () => {
 
     if (result.isConfirmed) {
       try {
-        await fetchApi(`opciones/${categoriaId}/${itemId}/${opcionId}`, "DELETE");
+        const dbRef = await fetchApi(`opciones/${categoriaId}/${itemId}/${opcionId}`, "DELETE");
+
+
+        const updatedProductsDelete = productsList.map((p) => {
+          if (p.id === itemId) {
+            return {
+              ...p,
+              opciones: p.opciones ? p.opciones.filter((o) => o.id !== opcionId) : []
+            }
+          }
+          return p;
+        })
+
+        initProductList(updatedProductsDelete)
+
+
 
         SwalNotification.fire({
           title: "Completado!",
@@ -174,6 +190,9 @@ export const Dashboard = () => {
           text: "Opción eliminada correctamente",
           draggable: true
         });
+
+
+
 
       } catch (error) {
         SwalUnexpectedError.fire()
@@ -245,7 +264,7 @@ export const Dashboard = () => {
 
                   <button className="item-card-btn-danger" onClick={() => handleDeleteItem(item.id, item.categoriaId)}>Eliminar</button>
                   <button className="item-card-btn" onClick={() => handleEditFields(item)}>Editar</button>
-                  <button className="item-card-btn" onClick={() => setActiveOptionFormId(item.id)}>Agregar opción</button>
+                  <button className="item-card-btn" onClick={() => setActiveOptionFormId(activeOptionFormId === item.id ? null : item.id)}>Agregar opción</button>
 
                   {/* Formulario para agregar opción */}
                   {activeOptionFormId === item.id && (
@@ -269,6 +288,7 @@ export const Dashboard = () => {
                         onClick={() => handleAddOption(item.id)}>Guardar opción</button>
                     </div>
                   )}
+
                 </div>
               ))
             )}
