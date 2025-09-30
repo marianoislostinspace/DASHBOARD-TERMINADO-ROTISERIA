@@ -4,10 +4,13 @@ import '../assets/styles/login.css'
 export default function Login({ onLogin }: { onLogin: () => void }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
     const [error, setError] = useState("");
+    // sopas
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
 
         try {
             const res = await fetch("https://backend-crud-firebase-production.up.railway.app/auth/login", {
