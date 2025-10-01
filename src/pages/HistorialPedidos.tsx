@@ -3,7 +3,7 @@ import '../assets/styles/historial.css'
 import { fetchApi } from '../utils/api';
 import Swal from 'sweetalert2'
 import type { Pedido } from '../assets/types/types';
-
+import { swalThemeConfig } from '../assets/ThemeData';
 
 export const HistorialPedidos = () => {
 
@@ -35,12 +35,11 @@ export const HistorialPedidos = () => {
 
   const eliminarPedido = async (pedidoId: string) => {
     const result = await Swal.fire({
+      ...swalThemeConfig,
       title: "¿Estás seguro que quieres eliminar este pedido?",
       text: "¡No hay vuelta atrás!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
       confirmButtonText: "Sí, eliminar"
     });
 
@@ -50,6 +49,7 @@ export const HistorialPedidos = () => {
         setpedidosHistorial(pedidosHistorial.filter((pedido) =>
           pedido.id !== pedidoId))
         Swal.fire({
+          ...swalThemeConfig,
           title: "Completado!",
           icon: "success",
           text: "pedido eliminado con exito",

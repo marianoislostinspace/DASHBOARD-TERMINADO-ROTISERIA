@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { usePedidos } from "../contexts/PedidoContext"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBell } from "@fortawesome/free-solid-svg-icons"
+import { swalThemeConfig } from "../assets/ThemeData"
 
 interface prop {
   onOpenStatusChange?: (isOpen: boolean) => void
@@ -37,6 +38,7 @@ export const SideBar = ({ onOpenStatusChange }: prop) => {
 
   const horarios = () => {
     Swal.fire({
+      ...swalThemeConfig,
       title: "🍔🍟",
       imageUrl: "img/horarios.png",
       imageWidth: 400,

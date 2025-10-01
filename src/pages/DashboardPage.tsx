@@ -13,8 +13,7 @@ import type { Product } from "../assets/types/types";
 import { swalThemeConfig } from "../assets/ThemeData";
 import '../assets/styles/dashboardStyles.css'
 import { SwalNotification, SwalUnexpectedError } from "../utils/swalNotification";
-import { faTrashCan, faPenToSquare } from '@fortawesome/free-solid-svg-icons'; // Example icons
-import { it } from "node:test";
+import { faTrashCan, faDollarSign } from '@fortawesome/free-solid-svg-icons'; // Example icons
 
 
 
@@ -64,8 +63,7 @@ export const Dashboard = () => {
 
 
       } catch (error) {
-        console.error("Error al eliminar el producto:", error);
-        Swal.fire("Error", "No se pudo eliminar el producto.", "error");
+        SwalUnexpectedError.fire()
       }
     }
 
@@ -95,6 +93,7 @@ export const Dashboard = () => {
 
     if (!optionName) {
       Swal.fire({
+        ...swalThemeConfig,
         icon: "error",
         title: "Oops...",
         text: "El nombre de la opcion es obligatorio!",
@@ -105,6 +104,7 @@ export const Dashboard = () => {
 
     if (!categoryId) {
       Swal.fire({
+        ...swalThemeConfig,
         icon: "error",
         title: "Oops...",
         text: "No se encontro la categoria del producto!",
@@ -226,53 +226,65 @@ export const Dashboard = () => {
         {/* Lista de productos */}
 
         <div className="itemContainer">
-          {detalle ? (
-            /// HTML del producto único
-            <div className="singleItem">
-              <h1>{singlePlato?.nombre}</h1>
-              <h3>{singlePlato?.descripcion}</h3>
-              <h2>${singlePlato?.precio}</h2>
-              <img src={singlePlato?.imagen} alt={singlePlato?.nombre} />
-              {singlePlato?.opciones?.map((opc, index) => (
-                <li key={index} className="option-li">
-                  {opc.precio && <p>Precio extra: ${opc.precio}</p>}
-                  <span>{opc.nombre}</span>
-                  <div className="actions">
-                    <button className="item-card-btn-danger"
-                      onClick={() => deleteOption(singlePlato.categoriaId, singlePlato.id, opc.id)}>
-                      <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
-                    </button>
-                  </div>
-                </li>
-              ))}
+          {detalle
 
+            ? (/// HTML del producto único
+              <div className="singleItem">
+                <h1>{singlePlato?.nombre}</h1>
+                <h3>{singlePlato?.descripcion}</h3>
+                <h2>${singlePlato?.precio}</h2>
+                <img src={singlePlato?.imagen} alt={singlePlato?.nombre} />
+                {singlePlato?.opciones?.map((opc, index) => (
+                  <li key={index} className="option-li">
+                    {opc.precio && <p>Precio extra: ${opc.precio}</p>}
+                    <span>{opc.nombre}</span>
+                    <div className="actions">
+                      <button className="item-card-btn-danger"
+                        onClick={() => deleteOption(singlePlato.categoriaId, singlePlato.id, opc.id)}>
+                        <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
+                      </button>
+                    </div>
+                  </li>
+                ))}
 
-              <button onClick={goBack} className='volverBtn'>Volver</button>
+                <button onClick={goBack} className='volverBtn'>Volver</button>
 
-            </div>
-          )
+              </div>
+            )
+
+            // ---------------------------------------------------
             : (
               /// HTML de la lista de productos
               productsList.map((item) => (
                 // Tarjetas
                 <div key={item.id} className="item-card">
                   <h3>{item.nombre}</h3>
-                  <p>{item.descripcion}</p>
-                  <p>Precio: ${item.precio}</p>
-                  <p>Precio de Descuento: ${item.precioDescuento}</p>
+                  <p className="item-desc">{item.descripcion}</p>
+                  <p className="item-price"> <FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon> {item.precio}</p>
+                  {/* <p>Precio de Descuento: ${item.precioDescuento}</p> */}
                   <img src={item.imagen} alt={item.nombre} onClick={() => getDetalles(item)} />
 
-                  <button className="item-card-btn-danger" onClick={() => handleDeleteItem(item.id, item.categoriaId)}>Eliminar</button>
-                  <button className="item-card-btn" onClick={() => handleEditFields(item)}>Editar</button>
-                  <button className="item-card-btn" onClick={() => setActiveOptionFormId(activeOptionFormId === item.id ? null : item.id)}>Agregar opción</button>
+                  
+                  
+                  {/* Botones de edición. No se ven cuando se toca "Agregar opción" */}
+                  {activeOptionFormId != item.id && (
+                    <>
+                      <button className="item-card-btn" onClick={() => setActiveOptionFormId(activeOptionFormId === item.id ? null : item.id)}>Agregar opción</button>
+                      <button className="item-card-btn" onClick={() => handleEditFields(item)}>Editar</button>
+                      <button className="item-card-btn-danger" onClick={() => handleDeleteItem(item.id, item.categoriaId)}>Eliminar</button>
+                    </>
+                  )}
 
                   {/* Formulario para agregar opción */}
                   {activeOptionFormId === item.id && (
-                    <div style={{ marginTop: "10px" }}>
+                    
+                    <div>
+                      <button className="item-card-btn-danger" onClick={() => setActiveOptionFormId(activeOptionFormId === item.id ? null : item.id)}>Cerrar</button>
                       <input
                         className="item-card-input"
                         type="text"
                         placeholder="Nombre de la opción"
+                        autoFocus
                         value={optionName}
                         onChange={(e) => setOptionName(e.target.value)}
                       />
@@ -288,7 +300,6 @@ export const Dashboard = () => {
                         onClick={() => handleAddOption(item.id)}>Guardar opción</button>
                     </div>
                   )}
-
                 </div>
               ))
             )}

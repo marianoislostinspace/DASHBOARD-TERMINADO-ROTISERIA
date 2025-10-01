@@ -5,6 +5,137 @@
 
 }
 
+
+.itemContainer {
+  width: 100%;
+
+  /* display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+
+/* 
+@media (min-width: 601px) and (max-width: 992px) {
+  Para tablets
+
+  .itemContainer {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {    
+  Para celulares
+
+  .itemContainer {
+    grid-template-columns: 1fr;
+    padding: 0.5rem;
+  }
+} */
+
+
+
+/* ---------- TARJETAS DE PRODUCTO ---------- */
+
+
+.item-card {
+  width: 320px;
+  height: 515px;
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  font-family: sans-serif;
+  color: var(--text-color-primary);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.item-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.item-card-input {
+  background-color: var(--bg-primary);
+  color: var(--text-color-primary);
+  width: 100%;
+}
+
+.item-card h3 {
+  /* Item Tittle */
+  font-size: 18px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.item-card p {
+  font-size: 14px;
+  margin: 4px 0;
+}
+
+.item-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 10px 0;
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+.item-desc {
+  height: 63px;
+}
+
+.item-price {
+  background-color: var(--bg-primary);
+  color: var(--text-color-primary);
+  text-align: center;
+  border-radius: 10px;
+}
+
+/* Botones */
+.item-card-btn {
+  background-color: var(--btn-primary);
+  color: var(--text-color-primary);
+
+}
+
+.item-card-btn:hover {
+  background-color: var(--btn-hover);
+}
+
+.item-card-btn-danger {
+  background-color: var(--btn-danger);
+  color: var(--text-color-primary);
+  border: solid 1px black;
+  padding: 5px 8px;
+  border-radius: 5px;
+}
+
+.item-card-btn-danger:hover {
+  background-color: #dc2626;
+}
+
+.item-card button {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: 2px solid black;
+}
+
+
+/* Formulario de agregar producto */
+
 .addProduct {
     width: 100%;
     height: 70px;

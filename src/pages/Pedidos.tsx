@@ -8,6 +8,7 @@ import '../assets/styles/orderPage.css'
 import type { Pedido } from '../assets/types/types';
 import { OrderCard } from '../components/OrderCard';
 import Swal from 'sweetalert2';
+import { swalThemeConfig } from '../assets/ThemeData';
 
 
 export const Pedidos = () => {
@@ -28,6 +29,7 @@ export const Pedidos = () => {
         const yaExiste = prev.some(p => p.id === data.id);
         if (!yaExiste) {
           Swal.fire({
+            ...swalThemeConfig,
             title: '📦 Nuevo pedido recibido',
             text: `Cliente: ${data.cliente.nombre}`,
             icon: 'info',
