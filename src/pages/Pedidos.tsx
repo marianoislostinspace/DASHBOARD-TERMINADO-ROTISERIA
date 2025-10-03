@@ -9,6 +9,7 @@ import type { Pedido } from '../assets/types/types';
 import { OrderCard } from '../components/OrderCard';
 import Swal from 'sweetalert2';
 import { swalThemeConfig } from '../assets/ThemeData';
+import { stateList } from '../hooks/useStateManager';
 
 
 export const Pedidos = () => {
@@ -18,7 +19,7 @@ export const Pedidos = () => {
   const [estadosPedidos, setEstadosPedidos] = useState<{ [key: string]: string }>({});
   const [error, setError] = useState(""); 
 
-  const { agregarPedido, eliminarPedido } = usePedidos();
+  const { pedidos, agregarPedido, eliminarPedido, initOrderStates } = usePedidos();
 
   // Conexión a WebSocket
   useEffect(() => {
@@ -48,9 +49,6 @@ export const Pedidos = () => {
   }, [API_URL]);
 
 
-
-
-
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
@@ -75,12 +73,19 @@ export const Pedidos = () => {
 
         if (Array.isArray(data)) {
           setPedidosHistorial(data);
+          (data as Pedido[]).forEach((order) => {
+            if (!order.state) {
+              order.state = stateList[0]
+            }
+            agregarPedido(order)
+          })
         } else {
           console.warn("La API devolvió un objeto en vez de un array:", data);
           setPedidosHistorial([]);
         }
 
         console.log("📦 Pedidos cargados:", data);
+        
       } catch (err: any) {
         setError(err.message);
       }
@@ -110,8 +115,8 @@ export const Pedidos = () => {
       {error && <p className="text-red-500">{error}</p>}
 
       <div className='pedidosWrapper'>
-        {pedidosHistorial.length > 0 ? (
-          pedidosHistorial.map((pedido) => (
+        {pedidos.length > 0 ? (
+          pedidos.map((pedido) => (
             <OrderCard order={pedido} key={pedido.id} />
           ))
         ) : (

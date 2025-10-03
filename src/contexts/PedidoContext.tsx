@@ -1,32 +1,17 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { io, Socket } from "socket.io-client";
-
-type Pedido = {
-  id: string;
-  cliente: { nombre: string; telefono: number };
-  total: number;
-  items: {
-    idPlato: string;
-    nombre: string;
-    precio: number;
-    cantidad: number;
-    opcionesSeleccionadas: {
-      id: string;
-      nombre: string;
-      precioExtra: number;
-    }[];
-    nota: string;
-  }[];
-  fecha: number;
-  pedidoId: string;
-};
+import type { Pedido } from "../assets/types/types";
+import { State, stateList } from "../hooks/useStateManager";
+import { OrdersDB } from "../utils/DataBase";
 
 type PedidoContextType = {
   pedidos: Pedido[];
   agregarPedido: (pedido: Pedido) => void;
   eliminarPedido: (id: string) => void;
   nuevosPedidos: number;
-  resetPedidos: () => void
+  resetPedidos: () => void;
+  changeState: (order : Pedido, state: State) => void;
+  initOrderStates: () => void;
 };
 
 const PedidoContext = createContext<PedidoContextType | undefined>(undefined);
@@ -45,6 +30,26 @@ export const PedidoProvider = ({ children }: { children: React.ReactNode }) => {
   const eliminarPedido = (id: string) => {
     setPedidos((prev) => prev.filter((p) => p.id !== id));
   };
+
+  const changeState = (order : Pedido, state: State) => {
+    const data = pedidos.map((o) => {
+        if (o.id === order.id) {
+          o.state = state
+        }
+        return order
+      })
+    let editedOrder : Pedido = order
+    
+    setPedidos(data)
+    
+    OrdersDB.edit(order.id, editedOrder)
+  }
+
+  const initOrderStates = () => {
+    pedidos.forEach((order) => {
+      changeState(order, stateList[0])
+    })
+  }
 
   const resetPedidos = () => setNuevosPedidos(0);
 
@@ -67,7 +72,7 @@ export const PedidoProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <PedidoContext.Provider
-      value={{ pedidos, agregarPedido, eliminarPedido, nuevosPedidos, resetPedidos }}
+      value={{ pedidos, agregarPedido, eliminarPedido, nuevosPedidos, resetPedidos, changeState, initOrderStates }}
     >
       {children}
     </PedidoContext.Provider>

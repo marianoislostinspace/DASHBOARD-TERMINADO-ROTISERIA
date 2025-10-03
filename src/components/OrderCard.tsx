@@ -5,26 +5,23 @@ import Swal from "sweetalert2"
 import { usePedidos } from "../contexts/PedidoContext"
 // Utils
 import { OrdersDB } from "../utils/DataBase"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { SwalNotification, SwalUnexpectedError } from "../utils/swalNotification"
 // Assets
 import { swalThemeConfig } from "../assets/ThemeData"
 import type { Pedido } from "../assets/types/types"
-import "../assets/styles/orderCard.css" 
+import "../assets/styles/orderCard.css"
+import { faPhone, faUserCircle, faDollarSign } from "@fortawesome/free-solid-svg-icons"
+import { stateList } from "../hooks/useStateManager"
 
 type Props = {
     order: Pedido
 }
-type OrderState = "new" | "on preparation" | "done" | "canceled"
 
-export const OrderCard = ({order} : Props) => {
+export const OrderCard = ({ order }: Props) => {
 
-    const [orderState, setOrderState] = useState<OrderState>("new")
-    const {eliminarPedido} = usePedidos()
+    const { eliminarPedido, changeState } = usePedidos()
 
-
-    const changeState = (id: string, state: OrderState) => {
-        setOrderState(state)
-    }
 
     const deleteOrder = async (id: string) => {
         // Confirmation notification
@@ -42,68 +39,79 @@ export const OrderCard = ({order} : Props) => {
 
         // Deletion
         try {
-                // Backend's delete
-                OrdersDB.delete(id)
+            // Backend's delete
+            OrdersDB.delete(id)
 
-                // Local update
-                eliminarPedido(id)
+            // Local update
+            eliminarPedido(id)
 
-                // Feedback
-                SwalNotification.fire({
-                    title: "Completado!",
-                    icon: "success",
-                    text: "pedido eliminado con exito",
-                    draggable: true
-                });
-            } catch (error) {
-                SwalUnexpectedError.fire({
-                    title: (error as Error).name
-                })
-            }
+            // Feedback
+            SwalNotification.fire({
+                title: "Completado!",
+                icon: "success",
+                text: "pedido eliminado con exito",
+                draggable: true
+            });
+        } catch (error) {
+            SwalUnexpectedError.fire({
+                title: (error as Error).name
+            })
+        }
     }
 
     return (
         <div className='container pedido'
             style={{
-                borderLeftColor:
-                    orderState === 'done' ? '#7bff00' :
-                        orderState === 'on preparation' ? '#ff9900' :
-                            orderState === 'canceled' ? '#ff0000' :
-                                ''
+                borderLeftColor: order.state.color,
+                borderTopColor: order.state.color
             }}
         >
-            Ingreso: {new Date(order.fecha).toLocaleString()}
+            <div className='estadoButtondiv'>
+                <select name="state" id="stateSelect" 
+                    style={{backgroundColor: order.state.color}}
+                    onChange={(e) => changeState(order, stateList[parseInt(e.target.value)])}>
+                    {stateList.map((state) => {
+                            return <option 
+                                value={state.getId()} 
+                                key={state.getId()} 
+                                selected={order.state._id === state._id}
+                                style={{backgroundColor: state.color}}
+                                >{state.toString()}</option>
+                    }) }
+                </select>
+                {/* <button className='pedido-btn'
+                    onClick={() => changeState(order, stateList[1])}>Preparando</button>
+                <button className='pedido-btn'
+                    onClick={() => changeState(order, stateList[2])}>Listo</button>
+                <button className='pedido-btn'
+                    onClick={() => changeState(order, stateList[3])}>Cancelado</button> */}
+            </div>
+
+            <FontAwesomeIcon icon={faUserCircle}></FontAwesomeIcon> {order.cliente.nombre}
             <br />
-            Cliente: {order.cliente.nombre}
-            <br />
-            Telefono: 📞  {order.cliente.telefono}
-            <br />
-            Pedido:
+            <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>  {order.cliente.telefono}
+
+
             <div className='pedidoSubContainer'>
-                 {order.items?.map((item) => (
-                    <div>
+                {order.items?.map((item) => (
+                    <div key={order.id}>
                         <h1>{item.nombre} - x{item.cantidad}</h1>
                         {item.opcionesSeleccionadas && item.opcionesSeleccionadas?.map((opc) => (
                             <ul key={opc.id} className='opciones'>
-                                <li>{opc.nombre} : {opc.precioExtra}</li>
+                                <li>{opc.nombre} : {opc.precio}</li>
                             </ul>
                         ))}
                     </div>
                 ))}
-                <h1>TOTAL: 🧾 ${order.total}</h1>
+                <h1><FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon>{order.total}</h1>
             </div>
+
             
-            <div className='estadoButtondiv'>
-                <button className='pedido-btn'
-                    onClick={() => changeState(order.id, 'on preparation')}>Preparando</button>
-                <button className='pedido-btn'
-                    onClick={() => changeState(order.id, 'done')}>Listo</button>
-                <button className='pedido-btn'
-                    onClick={() => changeState(order.id, 'canceled')}>Cancelado</button>
-            </div>
+            
 
             <button className='pedido-delete' onClick={() => deleteOrder(order.id)}>Eliminar pedido</button>
 
+            <p className="order-date">{new Date(order.fecha).toLocaleString()}</p>
         </div>
     )
 }

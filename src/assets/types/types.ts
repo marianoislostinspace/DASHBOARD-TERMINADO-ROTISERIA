@@ -1,19 +1,13 @@
-import { Interface } from "node:readline";
+import { State } from "../../hooks/useStateManager";
 
-export interface Option {
-  id: string
-  nombre: string;
-  precio?: number; // Opcional
-}
-
-export  interface Product {
+export interface Product {
   id: string;
   nombre: string;
   descripcion: string;
   precio: number;
   precioDescuento: number;
   imagen: string;
-  opciones: Option[]
+  opciones: OrderOption[]
   categoriaId: string;
 }
 
@@ -23,25 +17,26 @@ export interface Category {
   imagen: string;
 }
 
-export interface Pedido {
+export interface OrderOption {
+  id: string
+  nombre: string;
+  precio?: number; // Opcional
+}
+
+export interface OrderItem {
+  idPlato: string;
+  nombre: string;
+  precio: number;
+  cantidad: number;
+  opcionesSeleccionadas: OrderOption[];
+  nota: string;
+}
+export type Pedido = {
   id: string;
-  cliente: {
-    nombre: string;
-    telefono: number;
-  };
-  total: number;
-  items: {
-    idPlato: string;
-    nombre: string;
-    precio: number;
-    cantidad: number
-    opcionesSeleccionadas: {
-      id: string,
-      nombre: string,
-      precioExtra: number
-    }[];
-    nota: string;
-  }[];
-  fecha: number;
   pedidoId: string;
+  cliente: { nombre: string; telefono: number };
+  items: OrderItem[];
+  total: number;
+  fecha: number;
+  state: State;
 };
