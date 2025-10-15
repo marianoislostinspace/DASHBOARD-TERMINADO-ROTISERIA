@@ -21,13 +21,9 @@ export const ProductsDataProvider = ({ children }: { children: React.ReactNode }
     const [productsList, setProductsList] = useState<Product[]>([])
     const [categoriesList, setCategoriesList] = useState<Category[]>([])
 
-    const initCategoriesList = (list : Category[]) => {
-      setCategoriesList(list)
-    }
-
-    const initProductList = (list : Product[]) => {
-      setProductsList(list)
-    }
+    const initCategoriesList = (list : Category[]) => setCategoriesList(list)
+    const initProductList = (list : Product[]) => setProductsList(list)
+    
 
   return (
     <ProductDataContext.Provider value={{productsList, categoriesList, initCategoriesList, initProductList}}>

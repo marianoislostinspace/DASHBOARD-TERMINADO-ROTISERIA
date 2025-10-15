@@ -15,7 +15,8 @@ import { ProductDataContext } from "./contexts/ProductsDataContext";
 import { Dashboard } from "./pages/DashboardPage";
 import Categories from "./pages/Categories";
 import { Pedidos } from "./pages/Pedidos";
-import { HistorialPedidos } from "./pages/HistorialPedidos";
+import { HistorialPedidos } from "./pages/HistorialPedidos_deprecated";
+import { OrdersHistorial } from "./pages/OrdersHistorial/OrdersHistorialPage";
 
 // Helpers
 import { ProductDB, CategoryDB } from "./utils/DataBase";
@@ -51,6 +52,7 @@ export const App = () => {
     return <Login onLogin={handleLogin} />;
   }
 
+  
   // Si ya está logueado, renderizamos la app completa
   return (
     <Router>
@@ -59,7 +61,7 @@ export const App = () => {
 
         <section
           className={`content ${isNavOpen ? 'sidebar-open' : ''}`}
-          style={isDataLoaded ? { "display": "block" } : { "display": "flex" }}>
+          /*style={isDataLoaded ? { "display": "block" } : { "display": "flex" }}*/>
 
           {!isDataLoaded
             
@@ -71,7 +73,7 @@ export const App = () => {
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
               <Route path="/pedidos" element={<ProtectedRoute><Pedidos /></ProtectedRoute>} />
-              <Route path="/historial" element={<ProtectedRoute><HistorialPedidos /></ProtectedRoute>} />
+              <Route path="/historial" element={<ProtectedRoute><OrdersHistorial /></ProtectedRoute>} />
 
               {/* Redirige a pedidos por defecto */}
               <Route path="*" element={<Navigate to="/pedidos" />} />

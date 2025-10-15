@@ -1,5 +1,4 @@
 // Librerias
-import { useState } from "react"
 import Swal from "sweetalert2"
 // Context
 import { usePedidos } from "../contexts/PedidoContext"
@@ -11,7 +10,7 @@ import { SwalNotification, SwalUnexpectedError } from "../utils/swalNotification
 import { swalThemeConfig } from "../assets/ThemeData"
 import type { Pedido } from "../assets/types/types"
 import "../assets/styles/orderCard.css"
-import { faPhone, faUserCircle, faDollarSign } from "@fortawesome/free-solid-svg-icons"
+import { faPhone, faUserCircle, faDollarSign, faNoteSticky } from "@fortawesome/free-solid-svg-icons"
 import { stateList } from "../hooks/useStateManager"
 
 type Props = {
@@ -20,8 +19,7 @@ type Props = {
 
 export const OrderCard = ({ order }: Props) => {
 
-    const { eliminarPedido, changeState } = usePedidos()
-
+    const { OrdersStorage } = usePedidos()
 
     const deleteOrder = async (id: string) => {
         // Confirmation notification
@@ -39,11 +37,8 @@ export const OrderCard = ({ order }: Props) => {
 
         // Deletion
         try {
-            // Backend's delete
-            OrdersDB.delete(id)
-
-            // Local update
-            eliminarPedido(id)
+            // Storage update
+            OrdersStorage.delete(id)
 
             // Feedback
             SwalNotification.fire({
@@ -62,29 +57,25 @@ export const OrderCard = ({ order }: Props) => {
     return (
         <div className='container pedido'
             style={{
-                borderLeftColor: order.state.color,
                 borderTopColor: order.state.color
             }}
         >
             <div className='estadoButtondiv'>
-                <select name="state" id="stateSelect" 
-                    style={{backgroundColor: order.state.color}}
-                    onChange={(e) => changeState(order, stateList[parseInt(e.target.value)])}>
+                <select name="state" id="stateSelect"
+                    style={{ backgroundColor: order.state.color }}
+                    onChange={(e) => OrdersStorage.editState(order, stateList[parseInt(e.target.value)])}
+                    value={order.state._id}>
+
                     {stateList.map((state) => {
-                            return <option 
-                                value={state.getId()} 
-                                key={state.getId()} 
-                                selected={order.state._id === state._id}
-                                style={{backgroundColor: state.color}}
-                                >{state.toString()}</option>
-                    }) }
+                        return <option
+                            value={state.getId()}
+                            key={state.getId()}
+                            // selected={order.state._id === state._id}
+                            style={{ backgroundColor: state.color }}
+                        >{state.toString()}</option>
+                    })}
+
                 </select>
-                {/* <button className='pedido-btn'
-                    onClick={() => changeState(order, stateList[1])}>Preparando</button>
-                <button className='pedido-btn'
-                    onClick={() => changeState(order, stateList[2])}>Listo</button>
-                <button className='pedido-btn'
-                    onClick={() => changeState(order, stateList[3])}>Cancelado</button> */}
             </div>
 
             <FontAwesomeIcon icon={faUserCircle}></FontAwesomeIcon> {order.cliente.nombre}
@@ -93,21 +84,39 @@ export const OrderCard = ({ order }: Props) => {
 
 
             <div className='pedidoSubContainer'>
-                {order.items?.map((item) => (
-                    <div key={order.id}>
-                        <h1>{item.nombre} - x{item.cantidad}</h1>
-                        {item.opcionesSeleccionadas && item.opcionesSeleccionadas?.map((opc) => (
-                            <ul key={opc.id} className='opciones'>
-                                <li>{opc.nombre} : {opc.precio}</li>
-                            </ul>
-                        ))}
-                    </div>
-                ))}
-                <h1><FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon>{order.total}</h1>
+                <div className="order-items">
+                    {order.items?.map((item) => (
+                        <div key={order.id}>
+                            <h1><b>{item.nombre} - x{item.cantidad}</b></h1>
+
+                            {item.opcionesSeleccionadas &&
+                                <ul className='opciones'>
+
+                                    {item.opcionesSeleccionadas?.map((opc) => {
+                                        return <li key={opc.id}><b>{opc.nombre.trim()}</b></li>
+                                    })}
+
+                                </ul>}
+                            {item.nota &&
+                                <h1 className="order-item-note">
+                                    <b>
+                                        <FontAwesomeIcon icon={faNoteSticky}></FontAwesomeIcon>
+                                        {item.nota}
+                                    </b>
+                                </h1>}
+                        </div>
+                    ))}
+                </div>
+
+                <h1>
+                    ---------------------------
+                    <br />
+                    <FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon>{order.total}
+                </h1>
             </div>
 
-            
-            
+
+
 
             <button className='pedido-delete' onClick={() => deleteOrder(order.id)}>Eliminar pedido</button>
 

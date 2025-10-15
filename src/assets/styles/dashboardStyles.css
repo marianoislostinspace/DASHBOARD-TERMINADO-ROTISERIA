@@ -144,7 +144,6 @@
     display: flex;
     transition: .2s;
     border-bottom: 2px solid var(--bg-secondary);
-    margin-top: 70px;
 }
 
 .addProduct:hover{

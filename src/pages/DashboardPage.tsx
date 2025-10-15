@@ -137,6 +137,7 @@ export const Dashboard = () => {
           ? { ...p, opciones: [...(p.opciones || []), newOption] }
           : p
       );
+
       initProductList(updatedProducts);
 
       setOptionName("");

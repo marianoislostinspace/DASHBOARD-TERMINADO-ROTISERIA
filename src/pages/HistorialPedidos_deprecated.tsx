@@ -121,7 +121,7 @@ export const HistorialPedidos = () => {
                   <h1>Cantidad: x{item.cantidad}</h1>
                   Opciones: {item?.opcionesSeleccionadas?.map((opc) => (
                     <ul key={opc.id} className='opciones'>
-                      <li>{opc.nombre} : {opc.precioExtra}</li>
+                      <li>{opc.nombre} : {opc.precio}</li>
                     </ul>
                   ))}
                 </div>

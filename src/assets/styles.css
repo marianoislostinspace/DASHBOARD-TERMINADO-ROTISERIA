@@ -47,8 +47,9 @@ body {
 }
 
 .content {
+  margin-top: 70px;
   margin-left: 0px;
-  height: 100vh;
+  height: 100vh - 70px;
   align-items: center;
   justify-content: center;
   display: flex;
@@ -277,4 +278,11 @@ body {
 
 .listBtn:hover {
   background-color: #ed7535;
+}
+
+.pedidosWrapper {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }

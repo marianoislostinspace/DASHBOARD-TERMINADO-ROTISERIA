@@ -14,10 +14,11 @@
 .pedido {
     background: var(--bg-secondary);
     border: 1px solid #dcdde1;
-    border-left: 6px solid #00cec9;
+    
     border-radius: 12px;
     padding: 16px;
-    width: 400px;
+    width: 350px;
+    min-width: 350px;
     height: 600px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease;
@@ -47,11 +48,6 @@
     color: #2d3436;
 }
 
-.pedido ul {
-    padding-left: 20px;
-    margin-top: 8px;
-}
-
 .opcion {
     font-size: 13px;
     color: #555;
@@ -79,7 +75,7 @@
     height: 42px;
     border: none;
     text-align: center;
-    border-radius: 0px 10px 0px 0px ;
+    border-radius: 10px 10px 0px 0px ;
 }
 
 .pedido button {
@@ -126,4 +122,43 @@
 
 .order-date {
     text-align: end;
+}
+
+
+.pedidoSubContainer {
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 65%;
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 22px;
+  border: 1px dashed #b2bec3;
+}
+
+.pedidoSubContainer h1 {
+  align-self: flex-end;
+  font-size: 16px;
+  margin: 6px 0;
+  color: #2d3436;
+}
+
+.opciones {
+    margin-top: 8px;
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: auto auto;
+    text-align: center;
+    gap: 10px;
+    padding: 0px;
+}
+
+.opciones li {
+    display: inline-block;
+    color: rgb(158, 0, 0);
+}
+
+.order-item-note {
+    color: rgb(37, 151, 113) !important;
 }

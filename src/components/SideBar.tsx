@@ -20,7 +20,7 @@ export const SideBar = ({ onOpenStatusChange }: prop) => {
     if (onOpenStatusChange) onOpenStatusChange(!isNavOpen)
   }
 
-  const { nuevosPedidos, resetPedidos } = usePedidos()
+  const { newOrdersCounter, resetNewOrdersCounter } = usePedidos()
 
 
   const location = useLocation()
@@ -92,10 +92,10 @@ export const SideBar = ({ onOpenStatusChange }: prop) => {
         <div className="logo">
           <img src="img/sapo.jpg" alt="Logo" />
 
-          <div className="campana" onClick={resetPedidos}>
+          <div className="campana" onClick={resetNewOrdersCounter}>
             <FontAwesomeIcon icon={faBell} style={{ color: "white" }}></FontAwesomeIcon>
-            {nuevosPedidos > 0 && (
-              <span className="badge">{nuevosPedidos}</span>
+            {newOrdersCounter > 0 && (
+              <span className="badge">{newOrdersCounter}</span>
             )}
           </div>
         </div>
