@@ -9,24 +9,30 @@ import ProtectedRoute from "./components/protectedRoute";
 import Login from "./components/Login";
 
 // Context
-import { ProductDataContext } from "./contexts/ProductsDataContext";
+import { useProductsStorage } from "./contexts/ProductsContext";
+import { useCategoryStorage } from "./contexts/CategoriesContext";
+import { usePedidos } from "./contexts/PedidoContext";
 
 // Páginas
 import { Dashboard } from "./pages/DashboardPage";
 import Categories from "./pages/Categories";
 import { Pedidos } from "./pages/Pedidos";
-import { HistorialPedidos } from "./pages/HistorialPedidos_deprecated";
 import { OrdersHistorial } from "./pages/OrdersHistorial/OrdersHistorialPage";
 
 // Helpers
-import { ProductDB, CategoryDB } from "./utils/DataBase";
+import { ProductDB, CategoryDB, OrdersDB } from "./utils/DataBase";
 
 // Estilos
 import './assets/styles.css';
 
 export const App = () => {
-  const { categoriesList, initCategoriesList, initProductList } = useContext(ProductDataContext);
-  const [sectionName, setSectionName] = useState<string>("Pedidos");
+
+  // Models Contexts
+  const {ProductStorage} = useProductsStorage()
+  const {categoriesList, CategoryStorage} = useCategoryStorage()
+  const {OrderStorage} = usePedidos()
+
+  // Login states
   const [loggedIn, setLoggedIn] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -39,8 +45,12 @@ export const App = () => {
       // Traemos productos y categorías una vez que el usuario loguea
       const products = await ProductDB.getAll();
       const categories = await CategoryDB.getAll();
-      initProductList(products);
-      initCategoriesList(categories);
+      const orders = await OrdersDB.getAll();
+
+      ProductStorage.initialize(products)
+      CategoryStorage.initialize(categories)
+      OrderStorage({type: "INITIALIZE", payload: orders})
+
       setIsDataLoaded(true)
     } catch (err) {
       console.error("Error al cargar productos o categorías", err);

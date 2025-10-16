@@ -3,7 +3,7 @@ import { io, Socket } from "socket.io-client";
 import type { Pedido } from "../assets/types/types";
 import { State, stateList } from "../hooks/useStateManager";
 import { OrdersDB } from "../utils/DataBase";
-import { SwalNotification, SwalUnexpectedError } from "../utils/swalNotification";
+import { SwalNotification, Notifications } from "../utils/swalNotification";
 
 type PedidoContextType = {
   pedidos: Pedido[];
@@ -51,7 +51,7 @@ const ordersReducer = (initialState: Pedido[], action: Action): Pedido[] => {
 
       } catch (error) {
         // Falló al actualizar la base de datos
-        SwalUnexpectedError.fire("Hubo un error al actualizar el item")
+        Notifications.fireUnexpectedError("Hubo un error al actualizar el item")
 
         return initialState
       }
@@ -65,7 +65,7 @@ const ordersReducer = (initialState: Pedido[], action: Action): Pedido[] => {
         return initialState.filter((p) => p.id !== action.payload)
       } catch (error) {
         // Falló al actualizar la base de datos
-        SwalUnexpectedError.fire("Hubo un error al eliminar el item")
+        Notifications.fireUnexpectedError("Hubo un error al eliminar el item")
 
         return initialState
       }
@@ -76,69 +76,10 @@ const ordersReducer = (initialState: Pedido[], action: Action): Pedido[] => {
 }
 
 export const PedidoProvider = ({ children }: { children: React.ReactNode }) => {
-
-  const API_URL = import.meta.env.VITE_API_URL;
-
   const [pedidos, OrderStorage] = useReducer(ordersReducer, []);
 
   const [newOrdersCounter, setnewOrdersCounter] = useState(0);
   const resetNewOrdersCounter = () => setnewOrdersCounter(0);
-
-  // Fetch que trae todos los pedidos de la base de datos.
-  useEffect(() => {
-    const fetchPedidos = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          SwalUnexpectedError.fire("No hay token en localStorage");
-          return;
-        }
-
-        const response = await fetch(`${API_URL}/pedidos`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Error al traer pedidos");
-        }
-
-        const data = await response.json();
-
-
-        if (Array.isArray(data)) {
-
-          // Se asegura que cada pedido tiene un estado asignado
-          data.forEach((order) => {
-            if (!order.state) {
-              order.state = stateList[0]
-            }
-          })
-
-          OrderStorage({
-            type: "INITIALIZE",
-            payload: data
-          })
-
-        } else {
-          console.warn("La API devolvió un objeto en vez de un array:", data);
-          OrderStorage({
-            type: "INITIALIZE",
-            payload: []
-          })
-        }
-
-        console.log("📦 Pedidos cargados:", data);
-
-      } catch (err: any) {
-        SwalUnexpectedError.fire(err.message);
-      }
-    };
-
-    fetchPedidos();
-  }, [API_URL]);
 
   // Socket de recepción de nuevos pedidos. Se llama cada vez
   // que se genera un nuevo pedido en la base de datos.

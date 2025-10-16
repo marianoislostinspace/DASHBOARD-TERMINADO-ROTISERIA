@@ -1,5 +1,11 @@
 import { State } from "../../hooks/useStateManager";
 
+export interface ProductOption {
+  id: string
+  nombre: string;
+  precio: number | undefined; // Opcional
+}
+
 export interface Product {
   id: string;
   nombre: string;
@@ -7,7 +13,7 @@ export interface Product {
   precio: number;
   precioDescuento: number;
   imagen: string;
-  opciones: OrderOption[]
+  opciones: ProductOption[]
   categoriaId: string;
 }
 
@@ -17,18 +23,12 @@ export interface Category {
   imagen: string;
 }
 
-export interface OrderOption {
-  id: string
-  nombre: string;
-  precio?: number; // Opcional
-}
-
 export interface OrderItem {
   idPlato: string;
   nombre: string;
   precio: number;
   cantidad: number;
-  opcionesSeleccionadas: OrderOption[];
+  opcionesSeleccionadas: ProductOption[];
   nota: string;
 }
 export type Pedido = {

@@ -1,7 +1,8 @@
 // Utils
 import { fetchApi } from "./api"
 // Assets
-import type { Product, Category, Pedido } from "../assets/types/types"
+import type { Product, Category, Pedido, ProductOption } from "../assets/types/types"
+import { stateList } from "../hooks/useStateManager"
 import { ValidationError } from "../assets/errors"
 
 
@@ -16,7 +17,7 @@ export const CategoryDB = {
         if (!categoryName.trim()) {
             throw new ValidationError("Campo de nombre de categoría incompleto")
         }
-        if (categoryName.trim().length > 25){
+        if (categoryName.trim().length > 25) {
             throw new ValidationError("Exceso del límite de caracteres")
         }
         if (!imgURL) {
@@ -37,12 +38,12 @@ export const CategoryDB = {
     },
     edit: async (categoryId: string, editedCategory: Category, newImageCat?: File) => {
         const { nombre } = editedCategory
-        
+
         // Errores de campos obligatorios
         if (!nombre.trim()) {
             throw new ValidationError("Campo de nombre de categoría incompleto")
         }
-        if (nombre.trim().length > 25){
+        if (nombre.trim().length > 25) {
             throw new ValidationError("Exceso del límite de caracteres")
         }
         // Se da formato al texto para que siempre la primera letra esté capitalizada.
@@ -52,7 +53,7 @@ export const CategoryDB = {
 
         // Crear formulario de datos
         const formData = new FormData()
-        formData.append("nombre", name) 
+        formData.append("nombre", name)
         if (newImageCat) formData.append("imagen", newImageCat);
 
         /* POST a la DB */
@@ -142,7 +143,7 @@ export const ProductDB = {
 }
 
 export const OrdersDB = {
-    edit: async (id: string, formData : Pedido) => {
+    edit: async (id: string, formData: Pedido) => {
         await fetchApi(`pedidos/${id}`, "PATCH", formData)
     },
     delete: async (id: string) => {
@@ -150,6 +151,33 @@ export const OrdersDB = {
     },
     getAll: async () => {
         const ordersData: Pedido[] = await fetchApi(`pedidos`)
-        return ordersData
+
+        if (Array.isArray(ordersData)) {
+            // Se asegura que cada pedido tiene un estado asignado
+            ordersData.forEach((order) => {
+                if (!order.state) {
+                    order.state = stateList[0]
+                }
+            })
+
+            return ordersData
+        }
+
+        return []
+    }
+}
+
+export const ProductOptionsDB = {
+    add: async (product: Product, newOption: ProductOption) => {
+        const option = await fetchApi(
+            `opciones/${product.categoriaId}/${product.id}`,
+            "POST",
+            newOption
+        );
+
+        return option
+    },
+    delete: async (product: Product, optionId: string) => {
+        await fetchApi(`opciones/${product.categoriaId}/${product.id}/${optionId}`, "DELETE");
     }
 }

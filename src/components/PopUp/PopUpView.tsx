@@ -1,10 +1,11 @@
 // Librerias
-import { useContext, useState } from "react"
+import { useState } from "react"
 // Context
 import { usePopUpDispatch, usePopUpStates } from "../../contexts/PopUpContext"
-import { ProductDataContext } from "../../contexts/ProductsDataContext"
+import { useProductsStorage } from "../../contexts/ProductsContext"
+import { useCategoryStorage } from "../../contexts/CategoriesContext"
 // Utils
-import { SwalNotification, SwalUnexpectedError } from "../../utils/swalNotification"
+import { SwalNotification, Notifications } from "../../utils/swalNotification"
 import { ProductDB, CategoryDB } from "../../utils/DataBase"
 // Estilos y tipos
 import type { Category } from "../../assets/types/types"
@@ -21,7 +22,9 @@ export const PopUpForm = ({ categories }: Props) => {
   const { handleIsEditing, handleIsVisible, handleInputChange, handleCategoryChange, handleFormDataCat } =
     usePopUpDispatch()
 
-  const { categoriesList, initCategoriesList } = useContext(ProductDataContext)
+  const {ProductStorage} = useProductsStorage()
+  const {categoriesList, CategoryStorage} = useCategoryStorage()
+
   //
   const [newImage, setNewImage] = useState<File | null>(null)
   const [newImageCat, setNewImageCat] = useState<File | null>(null)
@@ -42,8 +45,8 @@ export const PopUpForm = ({ categories }: Props) => {
       return
     }
 
-    // Add to Database
-    await ProductDB.add({ ...formData }, newImage)
+    // Add to storage
+    ProductStorage.add({ ...formData}, newImage)
 
     // Close form
     handleCloseForm()
@@ -54,10 +57,8 @@ export const PopUpForm = ({ categories }: Props) => {
   const handleEditItem = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Actualiza la base de datos
-    ProductDB.edit(formData.id, formData, newImage as File)
-
-    // TODO: Actualiza local
+    // Actualiza la información
+    ProductStorage.edit(formData, newImage as File)
 
     // Cierra el formulario
     handleCloseForm()
@@ -68,46 +69,14 @@ export const PopUpForm = ({ categories }: Props) => {
   const handleEditCategory = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Notificación de carga
-    SwalNotification.fire({
-                icon:"info",
-                title: "Cargando..."
-    })
-
     try {
       //  Actualizar backend
-      const categoryObject = await CategoryDB.edit(formDataCat.id, formDataCat, newImageCat as File)
-
-      // Actualizar local (El backend devuelve el objeto)
-      if (categoryObject) {
-        initCategoriesList(
-          categoriesList.map((c: Category) => c.id === categoryObject.id
-            ? categoryObject
-            : c
-          )
-        )
-      }
-
-      // Notificacion (Se emite antes porque sino no hay feedback)
-      SwalNotification.fire({
-        title: "Completado!",
-        icon: "success",
-        text: "Categoria actualizada con exito",
-        draggable: true
-      });
+      CategoryStorage.edit(formDataCat, newImageCat as File)
     }
     catch (error) {
-      if (error instanceof ValidationError) {
-        SwalNotification.fire({
-          title: "Error",
-          icon: "error",
-          text: error.message,
-          draggable: true
-        })
-      } else {
-        SwalUnexpectedError.fire({ text: (error as Error).name })
-      }
+      
     }
+
     handleCloseForm()
   }
 

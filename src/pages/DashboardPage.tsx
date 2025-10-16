@@ -1,25 +1,23 @@
 // Librerias
-import { useState, useContext } from "react";
+import { useState } from "react";
 import Swal from 'sweetalert2'
 //Helpers
-import { fetchApi } from "../utils/api";
-import { ProductDB } from "../utils/DataBase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // Contextos
-import { ProductDataContext } from "../contexts/ProductsDataContext";
+import { useProductsStorage } from "../contexts/ProductsContext";
 import { emptyProduct, usePopUpDispatch } from "../contexts/PopUpContext";
 // Tipos y Estilos
-import type { Product } from "../assets/types/types";
+import type { Product, ProductOption } from "../assets/types/types";
 import { swalThemeConfig } from "../assets/ThemeData";
 import '../assets/styles/dashboardStyles.css'
-import { SwalNotification, SwalUnexpectedError } from "../utils/swalNotification";
+import { SwalNotification, Notifications } from "../utils/swalNotification";
 import { faTrashCan, faDollarSign } from '@fortawesome/free-solid-svg-icons'; // Example icons
 
 
 
 export const Dashboard = () => {
   // Contextos
-  const { productsList, initProductList } = useContext(ProductDataContext)
+  const { productsList, ProductStorage } = useProductsStorage()
   const { handleIsVisible, handleIsEditing, handleFormData, handleFormType } = usePopUpDispatch()
 
   const [detalle, setdetalle] = useState<Boolean>(false)
@@ -28,46 +26,8 @@ export const Dashboard = () => {
   // Estados para agregar opción
   const [activeOptionFormId, setActiveOptionFormId] = useState<string | null>(null);
   const [optionName, setOptionName] = useState("");
-  const [optionExtraPrice, setOptionExtraPrice] = useState<number | "">("");
+  const [optionExtraPrice, setOptionExtraPrice] = useState<number | undefined>()
 
-
-  // Elimina un archivo de la base de datos
-  const handleDeleteItem = async (itemId: string, categoriaId: string) => {
-    const result = await Swal.fire({
-      ...swalThemeConfig,
-      title: "¿Estás seguro que quieres eliminar este producto?",
-      text: "¡No hay vuelta atrás!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sí, eliminar"
-    });
-
-    // Delete Logic
-
-    if (result.isConfirmed) {
-      try {
-
-        ProductDB.delete(itemId, categoriaId)
-
-        // Edicion local
-        initProductList(productsList.filter((p) => {
-          return p.id != itemId
-        }))
-
-        Swal.fire({
-          ...swalThemeConfig,
-          title: "Eliminado",
-          text: "Producto eliminado exitosamente.",
-          icon: "success"
-        });
-
-
-      } catch (error) {
-        SwalUnexpectedError.fire()
-      }
-    }
-
-  };
 
   /* Editar productos (Abre el formulario de productos) */
   const handleEditFields = (item: Product) => {
@@ -76,7 +36,6 @@ export const Dashboard = () => {
     handleIsVisible(true)
     handleFormType("product")
   }
-
 
   // Agregar productos (Abre formulario de productos)
   const handleAddFields = (item: Product) => {
@@ -87,126 +46,31 @@ export const Dashboard = () => {
   }
 
   // Funcion para agregar opciones al plato
-  const handleAddOption = async (productId: string) => {
-    const product = productsList.find(item => item.id === productId);
-    const categoryId = product ? product.categoriaId : null;
-
+  const handleAddOption = async (product: Product) => {
     if (!optionName) {
-      Swal.fire({
-        ...swalThemeConfig,
-        icon: "error",
-        title: "Oops...",
-        text: "El nombre de la opcion es obligatorio!",
-        footer: '<a href="#">Why do I have this issue?</a>'
-      });
+      Notifications.fireError("El nombre de la opcion es obligatorio!");
       return;
     }
 
-    if (!categoryId) {
-      Swal.fire({
-        ...swalThemeConfig,
-        icon: "error",
-        title: "Oops...",
-        text: "No se encontro la categoria del producto!",
-        footer: '<a href="#">Why do I have this issue?</a>'
-      });
-      return;
-    }
+    const newOption: ProductOption = {
+      id: "",
+      nombre: optionName,
+      precio: optionExtraPrice
+    };
 
-    SwalNotification.fire({
-      title: "Cargando...",
-      icon: "info"
-    });
 
-    try {
-      const newOptionData = {
-        nombre: optionName,
-        precioExtra: optionExtraPrice || 0,
-      };
+    ProductStorage.addOption(product, newOption)
 
-      const dbRef = await fetchApi(
-        `opciones/${categoryId}/${productId}`,
-        "POST",
-        newOptionData
-      );
+    setOptionName("");
+    setOptionExtraPrice(undefined);
+    setActiveOptionFormId(null);
 
-      const newOption = { ...newOptionData, id: dbRef.id };
-
-      const updatedProducts = productsList.map((p) =>
-        p.id === productId
-          ? { ...p, opciones: [...(p.opciones || []), newOption] }
-          : p
-      );
-
-      initProductList(updatedProducts);
-
-      setOptionName("");
-      setOptionExtraPrice("");
-      setActiveOptionFormId(null);
-
-      SwalNotification.fire({
-        title: "Completado!",
-        icon: "success",
-        text: "Opción agregada correctamente",
-      });
-    } catch (error) {
-      console.error("Error al agregar la opción:", error);
-      Swal.fire("Error", "No se pudo agregar la opción", "error");
-    }
   };
-
-  // Borrar opciones del plato
-  const deleteOption = async (categoriaId: string, itemId: string, opcionId: string) => {
-    const result = await Swal.fire({
-      ...swalThemeConfig,
-      title: "¿Estás seguro que quieres eliminar esta categoria?",
-      text: "¡No hay vuelta atrás!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sí, eliminar"
-    });
-
-    if (result.isConfirmed) {
-      try {
-        const dbRef = await fetchApi(`opciones/${categoriaId}/${itemId}/${opcionId}`, "DELETE");
-
-
-        const updatedProductsDelete = productsList.map((p) => {
-          if (p.id === itemId) {
-            return {
-              ...p,
-              opciones: p.opciones ? p.opciones.filter((o) => o.id !== opcionId) : []
-            }
-          }
-          return p;
-        })
-
-        initProductList(updatedProductsDelete)
-
-
-
-        SwalNotification.fire({
-          title: "Completado!",
-          icon: "success",
-          text: "Opción eliminada correctamente",
-          draggable: true
-        });
-
-
-
-
-      } catch (error) {
-        SwalUnexpectedError.fire()
-      }
-    }
-
-  }
 
   // Abrir detalles
   const getDetalles = (plato: Product) => {
     setsinglePlato(plato)
     setdetalle(true)
-
   }
 
   // Cerrar detalles
@@ -241,7 +105,7 @@ export const Dashboard = () => {
                     <span>{opc.nombre}</span>
                     <div className="actions">
                       <button className="item-card-btn-danger"
-                        onClick={() => deleteOption(singlePlato.categoriaId, singlePlato.id, opc.id)}>
+                        onClick={() => ProductStorage.deleteOption(singlePlato, opc.id)}>
                         <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
                       </button>
                     </div>
@@ -265,20 +129,20 @@ export const Dashboard = () => {
                   {/* <p>Precio de Descuento: ${item.precioDescuento}</p> */}
                   <img src={item.imagen} alt={item.nombre} onClick={() => getDetalles(item)} />
 
-                  
-                  
+
+
                   {/* Botones de edición. No se ven cuando se toca "Agregar opción" */}
                   {activeOptionFormId != item.id && (
                     <>
                       <button className="item-card-btn" onClick={() => setActiveOptionFormId(activeOptionFormId === item.id ? null : item.id)}>Agregar opción</button>
                       <button className="item-card-btn" onClick={() => handleEditFields(item)}>Editar</button>
-                      <button className="item-card-btn-danger" onClick={() => handleDeleteItem(item.id, item.categoriaId)}>Eliminar</button>
+                      <button className="item-card-btn-danger" onClick={() => ProductStorage.delete(item.id, item.categoriaId)}>Eliminar</button>
                     </>
                   )}
 
                   {/* Formulario para agregar opción */}
                   {activeOptionFormId === item.id && (
-                    
+
                     <div>
                       <button className="item-card-btn-danger" onClick={() => setActiveOptionFormId(activeOptionFormId === item.id ? null : item.id)}>Cerrar</button>
                       <input
@@ -298,7 +162,7 @@ export const Dashboard = () => {
                       />
                       <button
                         className="item-card-btn"
-                        onClick={() => handleAddOption(item.id)}>Guardar opción</button>
+                        onClick={() => handleAddOption(item)}>Guardar opción</button>
                     </div>
                   )}
                 </div>

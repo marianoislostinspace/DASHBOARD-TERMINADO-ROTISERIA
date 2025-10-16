@@ -4,7 +4,7 @@ import Swal from "sweetalert2"
 import { usePedidos } from "../contexts/PedidoContext"
 // Utils
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { SwalNotification, SwalUnexpectedError } from "../utils/swalNotification"
+import { SwalNotification, Notifications } from "../utils/swalNotification"
 // Assets
 import { swalThemeConfig } from "../assets/ThemeData"
 import type { Pedido } from "../assets/types/types"
@@ -47,7 +47,7 @@ export const OrderCard = ({ order }: Props) => {
                 draggable: true
             });
         } catch (error) {
-            SwalUnexpectedError.fire({
+            Notifications.fireUnexpectedError({
                 title: (error as Error).name
             })
         }

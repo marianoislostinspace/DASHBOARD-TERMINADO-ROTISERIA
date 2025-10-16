@@ -1,29 +1,25 @@
 // Librerias
-import React, { useState, useContext, useRef } from "react";
-import Swal from 'sweetalert2'
+import React, { useState, useRef } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// Utils
-import { CategoryDB } from "../utils/DataBase";
-import { SwalNotification, SwalUnexpectedError } from "../utils/swalNotification";
+
 // Contextos
-import { ProductDataContext } from "../contexts/ProductsDataContext";
+import { useCategoryStorage } from "../contexts/CategoriesContext";
 import { usePopUpDispatch, usePopUpStates } from "../contexts/PopUpContext";
 // Estilos y tipos
 import '../assets/styles/categoryPage.css'
 import type { Category } from "../assets/types/types";
-import { swalThemeConfig } from "../assets/ThemeData";
-import { ValidationError } from "../assets/errors";
+
 // Icons
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-solid-svg-icons'; // Example icons
 
 export default function Categories() {
 
-    const { categoriesList, initCategoriesList } = useContext(ProductDataContext)
+    // Model
+    const { categoriesList, CategoryStorage } = useCategoryStorage()
 
     // Formulario de edición de categoría
     const { handleIsVisible, handleIsEditing, handleFormDataCat, handleFormType } = usePopUpDispatch()
     const { formDataCat } = usePopUpStates()
-
 
     // States
     const [newCategory, setNewCategory] = useState("");
@@ -45,46 +41,12 @@ export default function Categories() {
     const handleAddCategory = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Notificación de carga
-        SwalNotification.fire({
-            icon:"info",
-            title: "Cargando..."
-        })
+        CategoryStorage.add(newCategory, imgURL as File)
 
-        try {
-
-            //  Actualizar backend
-            const categoryObject = await CategoryDB.add(newCategory, imgURL as File)
-
-            // Actualizar local (El backend devuelve el objeto)
-            if (categoryObject) initCategoriesList([...categoriesList, categoryObject])
-
-            // Limpiar formulario
-            setNewCategory("")
-            if (fileInputRef.current) {
-                fileInputRef.current.value = ""
-            } 
-            
-                        
-            // Notificacion (Se emite antes porque sino no hay feedback)
-            SwalNotification.fire({
-                title: "Completado!",
-                icon: "success",
-                text: "Categoria creada con exito",
-                draggable: true
-            });
-        }
-        catch (error) {
-            if (error instanceof ValidationError) {
-                SwalNotification.fire({
-                    title: "Error",
-                    icon: "error",
-                    text: error.message,
-                    draggable: true
-                })
-            } else {
-                SwalUnexpectedError.fire()
-            }
+        // Limpiar formulario
+        setNewCategory("")
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ""
         }
     };
 
@@ -93,75 +55,14 @@ export default function Categories() {
     const handleUpdateCategory = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        try {
-
-            // Notificacion (Se emite antes porque sino no hay feedback)
-            SwalNotification.fire({
-                title: "Completado!",
-                icon: "success",
-                text: "categoria actualizada con exito",
-                draggable: true
-            });
-
-            //  Actualizar backend
-            const categoryObject = await CategoryDB.edit(formDataCat.id, formDataCat, imgURL as File)
-
-            // Actualizar local (El backend devuelve el objeto)
-            if (categoryObject) {
-                initCategoriesList(
-                    categoriesList.map((c: Category) =>
-                        c.id === categoryObject.id ? categoryObject : c
-                    )
-                )
-            }
-
-
-        }
-        catch (error) {
-            if (error instanceof ValidationError) {
-                SwalNotification.fire({
-                    title: "Error",
-                    icon: "error",
-                    text: error.message,
-                    draggable: true
-                })
-            } else {
-                SwalUnexpectedError.fire({ text: (error as Error).name })
-            }
-        }
+        CategoryStorage.edit(formDataCat, imgURL as File)
+        
     };
 
 
     // Eliminar categorías
     const handleDeleteCategory = async (categoryId: string) => {
-        const result = await Swal.fire({
-            ...swalThemeConfig,
-            title: "¿Estás seguro que quieres eliminar esta categoria?",
-            text: "¡No hay vuelta atrás!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Sí, eliminar"
-        });
-
-        if (result.isConfirmed) {
-            try {
-                // Edit Backend
-                CategoryDB.delete(categoryId)
-
-                // Edit Frontend
-                initCategoriesList(categoriesList.filter((c: Category) => c.id !== categoryId));
-
-                // Notification
-                SwalNotification.fire({
-                    title: "Eliminado correctamente",
-                    text: "Categoría eliminada con éxito",
-                    icon: "success"
-                })
-            }
-            catch (error) {
-                SwalUnexpectedError.fire({ text: (error as Error).name })
-            }
-        }
+        CategoryStorage.delete(categoryId)
     };
 
 
@@ -177,7 +78,7 @@ export default function Categories() {
     return (
         <div className="categoriesContainer">
             <div className="categories">
-                <div className="subCat">   
+                <div className="subCat">
                     {categoriesList && categoriesList.length > 0 ? (
                         <ul>
                             {categoriesList.map((category) => (
@@ -207,7 +108,7 @@ export default function Categories() {
                             onChange={(e) => setNewCategory(e.target.value)}
                             placeholder="Nueva Categoría"
                         />
-                        
+
                         <input
                             type="file"
                             accept="image/*" className="file"

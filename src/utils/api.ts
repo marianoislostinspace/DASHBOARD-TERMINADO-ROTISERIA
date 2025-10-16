@@ -5,7 +5,9 @@ export const fetchApi = async (
   method: string = "GET",
   body?: any,
   isFormData: boolean = false
+
 ) => {
+
   try {
     const token = localStorage.getItem("token");
 
@@ -37,13 +39,14 @@ export const fetchApi = async (
       }
 
       const errorResponse = await response.text();
-      console.error("🔴 ERROR DEL SERVIDOR:", errorResponse);
-      throw new Error(errorResponse || "Error en la petición");
+      const error = new Error(errorResponse || "Error en la petición")
+      error.name = response.status.toString()
+      throw error;
     }
 
     return await response.json();
   } catch (error) {
-    console.error("API Error:", error);
+    console.error("🔴 ERROR DEL SERVIDOR:", error);
     throw error;
   }
 };
