@@ -3,7 +3,6 @@ import Swal from "sweetalert2"
 // Context
 import { usePedidos } from "../contexts/PedidoContext"
 // Utils
-import { OrdersDB } from "../utils/DataBase"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { SwalNotification, SwalUnexpectedError } from "../utils/swalNotification"
 // Assets
@@ -19,7 +18,7 @@ type Props = {
 
 export const OrderCard = ({ order }: Props) => {
 
-    const { OrdersStorage } = usePedidos()
+    const { OrderStorage } = usePedidos()
 
     const deleteOrder = async (id: string) => {
         // Confirmation notification
@@ -38,7 +37,7 @@ export const OrderCard = ({ order }: Props) => {
         // Deletion
         try {
             // Storage update
-            OrdersStorage.delete(id)
+            OrderStorage({type: "DELETE", payload: id})
 
             // Feedback
             SwalNotification.fire({
@@ -63,7 +62,8 @@ export const OrderCard = ({ order }: Props) => {
             <div className='estadoButtondiv'>
                 <select name="state" id="stateSelect"
                     style={{ backgroundColor: order.state.color }}
-                    onChange={(e) => OrdersStorage.editState(order, stateList[parseInt(e.target.value)])}
+                    onChange={(e) => 
+                        OrderStorage({type: "EDIT STATE", payload:  {order, state: stateList[parseInt(e.target.value)]}})}
                     value={order.state._id}>
 
                     {stateList.map((state) => {
