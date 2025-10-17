@@ -1,12 +1,8 @@
-// Librerias
-import Swal from "sweetalert2"
 // Context
 import { usePedidos } from "../contexts/PedidoContext"
 // Utils
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { SwalNotification, Notifications } from "../utils/swalNotification"
 // Assets
-import { swalThemeConfig } from "../assets/ThemeData"
 import type { Pedido } from "../assets/types/types"
 import "../assets/styles/orderCard.css"
 import { faPhone, faUserCircle, faDollarSign, faNoteSticky } from "@fortawesome/free-solid-svg-icons"
@@ -20,35 +16,8 @@ export const OrderCard = ({ order }: Props) => {
 
     const { OrderStorage } = usePedidos()
 
-    const deleteOrder = async (id: string) => {
-        // Confirmation notification
-        const result = await Swal.fire({
-            ...swalThemeConfig,
-            title: "¿Estás seguro que quieres eliminar este pedido?",
-            text: "¡No hay vuelta atrás!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Sí, eliminar"
-        });
-        if (!result.isConfirmed) {
-            return
-        }
-
-        // Deletion
-        try {
-            // Storage update
-            OrderStorage({type: "DELETE", payload: id})
-
-            // Feedback
-            SwalNotification.fire({
-                title: "Completado!",
-                icon: "success",
-                text: "pedido eliminado con exito",
-                draggable: true
-            });
-        } catch (error) {
-            Notifications.fireUnexpectedError((error as Error).name)
-        }
+    const deleteOrder = async (id: number | string) => {
+        OrderStorage.delete(id.toString())
     }
 
     return (
@@ -61,14 +30,13 @@ export const OrderCard = ({ order }: Props) => {
                 <select name="state" id="stateSelect"
                     style={{ backgroundColor: order.state.color }}
                     onChange={(e) => 
-                        OrderStorage({type: "EDIT STATE", payload:  {order, state: stateList[parseInt(e.target.value)]}})}
+                        OrderStorage.editState(order, stateList[parseInt(e.target.value)])}
                     value={order.state._id}>
 
                     {stateList.map((state) => {
                         return <option
                             value={state.getId()}
                             key={state.getId()}
-                            // selected={order.state._id === state._id}
                             style={{ backgroundColor: state.color }}
                         >{state.toString()}</option>
                     })}
@@ -118,6 +86,7 @@ export const OrderCard = ({ order }: Props) => {
 
             <button className='pedido-delete' onClick={() => deleteOrder(order.id)}>Eliminar pedido</button>
 
+            <p>{order.id}</p>
             <p className="order-date">{new Date(order.fecha).toLocaleString()}</p>
         </div>
     )

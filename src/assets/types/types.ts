@@ -34,7 +34,6 @@ export interface OrderItem {
 }
 export type Pedido = {
   id: string;
-  pedidoId: string;
   cliente: { nombre: string; telefono: number };
   items: OrderItem[];
   total: number;

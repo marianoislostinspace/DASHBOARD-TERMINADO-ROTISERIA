@@ -1,6 +1,5 @@
 // Librerias
 import { useState } from "react";
-import Swal from 'sweetalert2'
 //Helpers
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // Contextos
@@ -10,7 +9,7 @@ import { emptyProduct, usePopUpDispatch } from "../contexts/PopUpContext";
 import type { Product, ProductOption } from "../assets/types/types";
 import '../assets/styles/dashboardStyles.css'
 import { Notifications } from "../utils/swalNotification";
-import { faTrashCan, faDollarSign } from '@fortawesome/free-solid-svg-icons'; // Example icons
+import { faTrashCan, faDollarSign, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'; // Example icons
 
 
 
@@ -129,11 +128,17 @@ export const Dashboard = () => {
                   <p className="item-desc">
                     {item.descripcion}
 
-                    {item.esVisible ?
-                    <button onClick={() => {ProductStorage.edit({...item, esVisible: !item.esVisible})}}>O</button>
-                    : 
-                    <button onClick={() => {ProductStorage.edit({...item, esVisible: !item.esVisible})}}>-</button>
-                  }
+                    
+                    <button 
+                      style={item.esVisible ? {backgroundColor: "green"} : {backgroundColor: "red"}}
+                      onClick={() => {ProductStorage.edit({...item, esVisible: !item.esVisible})}}>
+                      {item.esVisible ?
+                      <FontAwesomeIcon icon={faEye}></FontAwesomeIcon>
+                       : 
+                       <FontAwesomeIcon icon={faEyeSlash}></FontAwesomeIcon>
+                      }
+                    </button>
+                  
                     
                   </p>
                   <p className="item-price"> <FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon> {item.precio}</p>

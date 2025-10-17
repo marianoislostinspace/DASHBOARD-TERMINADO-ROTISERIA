@@ -42,16 +42,15 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
           
           dispatch({ type: "ADD", payload: { newObject: product } })
 
-          console.log(newProduct)
-          console.log(product)
           Notifications.fireSuccess()
         }).catch(handleBackendError)
 
+      
     },
     // Agrega una opción de producto
     addOption: async (product: Product, newOption: ProductOption) => {
       Notifications.fireLoading()
-
+      
       await ProductOptionsDB.add(product, newOption)
         .then(({id}) => {
           newOption.id = id

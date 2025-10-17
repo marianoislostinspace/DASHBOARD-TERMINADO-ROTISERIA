@@ -164,10 +164,10 @@ export const OrdersDB = {
     add: async (order : any) => {
         await fetchApi(`pedidos/`, "POST", order)
     },
-    edit: async (id: string, formData: Pedido) => {
+    edit: async (id: number | string, formData: Pedido) => {
         await fetchApi(`pedidos/${id}`, "PATCH", formData)
     },
-    delete: async (id: string) => {
+    delete: async (id: number | string) => {
         await fetchApi(`pedidos/${id}`, "DELETE")
     },
     getAll: async () => {

@@ -49,7 +49,7 @@ export const App = () => {
 
       ProductStorage.initialize(products)
       CategoryStorage.initialize(categories)
-      OrderStorage({type: "INITIALIZE", payload: orders})
+      OrderStorage.initialize(orders)
 
       setIsDataLoaded(true)
     } catch (err) {

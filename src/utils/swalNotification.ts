@@ -62,7 +62,7 @@ export const Notifications = {
       text: "¡No hay vuelta atrás!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sí, eliminar"
+      confirmButtonText: "Sí"
     });
 
     return result
