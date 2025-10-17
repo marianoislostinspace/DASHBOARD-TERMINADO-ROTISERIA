@@ -6,11 +6,9 @@ import { useProductsStorage } from "../../contexts/ProductsContext"
 import { useCategoryStorage } from "../../contexts/CategoriesContext"
 // Utils
 import { SwalNotification, Notifications } from "../../utils/swalNotification"
-import { ProductDB, CategoryDB } from "../../utils/DataBase"
 // Estilos y tipos
 import type { Category } from "../../assets/types/types"
 import "../../assets/styles/popUp.css"
-import { ValidationError } from "../../assets/errors"
 
 
 interface Props {
@@ -46,7 +44,7 @@ export const PopUpForm = ({ categories }: Props) => {
     }
 
     // Add to storage
-    ProductStorage.add({ ...formData}, newImage)
+    ProductStorage.add({ ...formData, esVisible: true}, newImage)
 
     // Close form
     handleCloseForm()
@@ -69,13 +67,7 @@ export const PopUpForm = ({ categories }: Props) => {
   const handleEditCategory = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    try {
-      //  Actualizar backend
-      CategoryStorage.edit(formDataCat, newImageCat as File)
-    }
-    catch (error) {
-      
-    }
+    CategoryStorage.edit(formDataCat, newImageCat as File)
 
     handleCloseForm()
   }

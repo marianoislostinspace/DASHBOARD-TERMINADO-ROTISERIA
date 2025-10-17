@@ -8,9 +8,8 @@ import { useProductsStorage } from "../contexts/ProductsContext";
 import { emptyProduct, usePopUpDispatch } from "../contexts/PopUpContext";
 // Tipos y Estilos
 import type { Product, ProductOption } from "../assets/types/types";
-import { swalThemeConfig } from "../assets/ThemeData";
 import '../assets/styles/dashboardStyles.css'
-import { SwalNotification, Notifications } from "../utils/swalNotification";
+import { Notifications } from "../utils/swalNotification";
 import { faTrashCan, faDollarSign } from '@fortawesome/free-solid-svg-icons'; // Example icons
 
 
@@ -123,8 +122,20 @@ export const Dashboard = () => {
               productsList.map((item) => (
                 // Tarjetas
                 <div key={item.id} className="item-card">
-                  <h3>{item.nombre}</h3>
-                  <p className="item-desc">{item.descripcion}</p>
+                  <h3>
+                    {item.nombre} 
+                    
+                  </h3>
+                  <p className="item-desc">
+                    {item.descripcion}
+
+                    {item.esVisible ?
+                    <button onClick={() => {ProductStorage.edit({...item, esVisible: !item.esVisible})}}>O</button>
+                    : 
+                    <button onClick={() => {ProductStorage.edit({...item, esVisible: !item.esVisible})}}>-</button>
+                  }
+                    
+                  </p>
                   <p className="item-price"> <FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon> {item.precio}</p>
                   {/* <p>Precio de Descuento: ${item.precioDescuento}</p> */}
                   <img src={item.imagen} alt={item.nombre} onClick={() => getDetalles(item)} />

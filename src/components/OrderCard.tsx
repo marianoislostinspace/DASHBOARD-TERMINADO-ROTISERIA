@@ -47,9 +47,7 @@ export const OrderCard = ({ order }: Props) => {
                 draggable: true
             });
         } catch (error) {
-            Notifications.fireUnexpectedError({
-                title: (error as Error).name
-            })
+            Notifications.fireUnexpectedError((error as Error).name)
         }
     }
 

@@ -15,6 +15,7 @@ export interface Product {
   imagen: string;
   opciones: ProductOption[]
   categoriaId: string;
+  esVisible: boolean;
 }
 
 export interface Category {

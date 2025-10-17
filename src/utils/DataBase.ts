@@ -4,6 +4,7 @@ import { fetchApi } from "./api"
 import type { Product, Category, Pedido, ProductOption } from "../assets/types/types"
 import { stateList } from "../hooks/useStateManager"
 import { ValidationError } from "../assets/errors"
+import { isBooleanObject } from "util/types"
 
 
 /// IMPORTANTE: Aquí no se hace ningún manejo de errores. 
@@ -77,7 +78,7 @@ export const CategoryDB = {
 
 export const ProductDB = {
     add: async (newProduct: Product, newImage: File) => {
-        const { nombre, precio, descripcion, categoriaId, imagen } = newProduct;
+        const { nombre, precio, descripcion, categoriaId } = newProduct;
 
         // Errores de campos obligatorios
         if (!nombre || !descripcion || !precio || !categoriaId) {
@@ -90,7 +91,11 @@ export const ProductDB = {
         formData.append("descripcion", descripcion)
         formData.append("precio", String(precio))
         formData.append("categoriaId", categoriaId)
+        formData.append("esVisible", String(newProduct.esVisible))
+
         if (newImage) formData.append("imagen", newImage);
+
+        console.log(formData)
 
         const response = await fetchApi(
             `platos/categorias/${categoriaId}/platos`,
@@ -120,6 +125,7 @@ export const ProductDB = {
         formData.append("descripcion", descripcion)
         formData.append("precio", String(precio))
         formData.append("categoriaId", categoriaId)
+        formData.append("esVisible", String(editedProduct.esVisible))
 
         if (precioDescuento) formData.append("precioDescuento", String(precioDescuento));
         if (newImage) formData.append("imagen", newImage);
@@ -138,6 +144,18 @@ export const ProductDB = {
     },
     getAll: async () => {
         const itemsData: Product[] = await fetchApi("platos");
+
+        // Preprocesado de la información antes de meterla al front.
+        itemsData.forEach((product) => {
+            if (typeof(product.esVisible) == "string"){
+                if (product.esVisible == "true"){
+                    product.esVisible = true
+                } else {
+                    product.esVisible = false
+                }
+            }
+        })
+
         return itemsData
     }
 }

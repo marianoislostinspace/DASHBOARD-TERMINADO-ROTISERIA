@@ -15,7 +15,7 @@ interface ProductsContext {
   ProductStorage: {
     add: (newProduct: Product, image: File) => void,
     addOption: (product: Product, newOption: ProductOption) => void,
-    edit: (editedProduct: Product, newImage: File) => void,
+    edit: (editedProduct: Product, newImage?: File) => void,
     delete: (productId: string, categoryid: string) => void,
     deleteOption: (product: Product, optionId: string) => void,
     initialize: (productList: Product[]) => void
@@ -42,6 +42,8 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
           
           dispatch({ type: "ADD", payload: { newObject: product } })
 
+          console.log(newProduct)
+          console.log(product)
           Notifications.fireSuccess()
         }).catch(handleBackendError)
 
@@ -61,7 +63,7 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
         .catch(handleBackendError)
     },
     // Edita un producto
-    edit: (editedProduct: Product, newImage: File) => {
+    edit: (editedProduct: Product, newImage?: File) => {
       Notifications.fireLoading()
 
       ProductDB.edit(editedProduct.id, editedProduct, newImage)
@@ -107,6 +109,21 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
         .catch(handleBackendError)
     },
     initialize: (productsList: Product[]) => dispatch({ type: "INITIALIZE", payload: productsList })
+  }
+
+  function setAllProductsVisible(productList: Product[]){
+    productList.forEach((product) => {
+      product.esVisible = true;
+      ProductStorage.edit(product)
+    }) 
+
+    dispatch({ type: "INITIALIZE", payload: productsList })
+  }
+
+  function logProducts(productList: Product[]){
+    console.log(productList)
+
+    dispatch({ type: "INITIALIZE", payload: productsList })
   }
 
   return (

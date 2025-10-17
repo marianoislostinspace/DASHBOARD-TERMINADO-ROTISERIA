@@ -36,7 +36,8 @@ export const emptyProduct: Product = {
     imagen: "",
     opciones: [],
     precio: 0,
-    precioDescuento: 0
+    precioDescuento: 0,
+    esVisible: true
 }
 
 
