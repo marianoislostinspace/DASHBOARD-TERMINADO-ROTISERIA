@@ -143,6 +143,9 @@ export const ProductDB = {
 }
 
 export const OrdersDB = {
+    add: async (order : any) => {
+        await fetchApi(`pedidos/`, "POST", order)
+    },
     edit: async (id: string, formData: Pedido) => {
         await fetchApi(`pedidos/${id}`, "PATCH", formData)
     },

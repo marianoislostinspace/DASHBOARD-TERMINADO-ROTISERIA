@@ -27,11 +27,11 @@ const ordersReducer = (initialState: Pedido[], action: Action): Pedido[] => {
   switch (action.type) {
     case "INITIALIZE":
       // Se usa en el Fetch inicial 
-      return action.payload
-
+      let sorted = action.payload.sort((a, b) => b.fecha - a.fecha)
+      return sorted
     case "ADD":
       // Se usa en el socket al recibir un pedido. La base de datos la actualiza el backend.
-      return [...initialState, action.payload]
+      return [action.payload, ...initialState]
       
     case "EDIT STATE":
       // Edita el objeto correspondiente en el estado.

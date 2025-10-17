@@ -6,6 +6,7 @@ import { usePedidos } from "../contexts/PedidoContext"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBell } from "@fortawesome/free-solid-svg-icons"
 import { swalThemeConfig } from "../assets/ThemeData"
+import { createTestOrder } from "../utils/testing"
 
 interface prop {
   onOpenStatusChange?: (isOpen: boolean) => void
@@ -82,6 +83,9 @@ export const SideBar = ({ onOpenStatusChange }: prop) => {
       <nav className="navbar">
         <button className="hamburger" onClick={toggleMenu}>
           ☰
+        </button>
+        <button className="hamburger" onClick={createTestOrder}>
+          +
         </button>
         <div className="textoMEdio">
           <Link className="homeNav" to="/">

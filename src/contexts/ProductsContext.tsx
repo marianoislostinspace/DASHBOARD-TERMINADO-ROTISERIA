@@ -37,8 +37,10 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
 
       ProductDB.add(newProduct, image)
         .then((serverResponse) => {
-
-          dispatch({ type: "ADD", payload: { newObject: serverResponse } })
+          let product : Product = serverResponse.nuevoPlato
+          product.id = serverResponse.id
+          
+          dispatch({ type: "ADD", payload: { newObject: product } })
 
           Notifications.fireSuccess()
         }).catch(handleBackendError)
