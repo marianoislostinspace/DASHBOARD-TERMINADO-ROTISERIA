@@ -16,11 +16,7 @@ export const OrderCard = ({ order }: Props) => {
 
     const { OrderStorage } = usePedidos()
 
-    const deleteOrder = async (id: number | string) => {
-        OrderStorage.delete(id.toString())
-    }
-
-    if (order.estaArchivado) return 
+    if (order.estaArchivado) return
 
     return (
         <div className='container pedido'
@@ -30,8 +26,11 @@ export const OrderCard = ({ order }: Props) => {
         >
             <div className='estadoButtondiv'>
                 <select name="state" id="stateSelect"
-                    style={{ backgroundColor: order.state.color }}
-                    onChange={(e) => 
+                    style={{
+                        backgroundColor: order.state.color,
+                        WebkitAppearance: "none"
+                    }}
+                    onChange={(e) =>
                         OrderStorage.editState(order, stateList[parseInt(e.target.value)])}
                     value={order.state._id}>
 
@@ -46,12 +45,73 @@ export const OrderCard = ({ order }: Props) => {
                 </select>
             </div>
 
-            <FontAwesomeIcon icon={faUserCircle}></FontAwesomeIcon> {order.cliente.nombre}
-            <br />
-            <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>  {order.cliente.telefono}
+            <div className="client-data-container">
+                <div>
+                    {/* <FontAwesomeIcon icon={faUserCircle}></FontAwesomeIcon>*/}
+                    {order.cliente.nombre}
+                </div>
+                <div>
+                    <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>  {order.cliente.telefono}
+                </div>
+            </div>
 
 
-            <div className='pedidoSubContainer'>
+
+            <div className='order-container'>
+                <table className="order-table">
+                    <colgroup>
+                        <col style={{ width: "20%" }} />
+                        <col style={{ width: "50%" }} />
+                        <col style={{ width: "30%" }} />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Cant.</th>
+                            <th>Orden</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[0, 1, 2, 3, 4, 5, 6].map((value) => {
+                            return <tr>
+                                <td>{value}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            /*<>{
+                                order.items[value] 
+                                ?  <></>
+                                : <></>
+                            }</>*/
+                        })}
+                        {order.items?.map((item) => (
+                            <>
+                                <tr>
+                                    <td>{item.cantidad}</td>
+                                    <td>{item.nombre}</td>
+                                    <td>{item.precio}</td>
+                                </tr>
+                                {item.opcionesSeleccionadas &&
+                                    <>
+                                        {item.opcionesSeleccionadas.map((option) => {
+                                            <tr>
+                                                <td></td>
+                                                <td>{option.nombre}</td>
+                                                <td></td>
+                                            </tr>
+                                        })}
+                                    </>
+                                }
+                            </>
+
+
+                        ))}
+
+                    </tbody>
+                </table>
+                {/* 
+                
+                
                 <div className="order-items">
                     {order.items?.map((item) => (
                         <div key={order.id}>
@@ -75,7 +135,7 @@ export const OrderCard = ({ order }: Props) => {
                         </div>
                     ))}
                 </div>
-
+                */}
                 <h1>
                     ---------------------------
                     <br />
@@ -88,8 +148,8 @@ export const OrderCard = ({ order }: Props) => {
 
             <button className='pedido-delete' onClick={() => OrderStorage.setArchivate(order, true)}>Archivar</button>
 
-            <p>{order.id}</p>
-            <p className="order-date">{new Date(order.fecha).toLocaleString()}</p>
+            <span>{order.id}</span>
+            <span className="order-date">{new Date(order.fecha).toLocaleString()}</span>
         </div>
     )
 }

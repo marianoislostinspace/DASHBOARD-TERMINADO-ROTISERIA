@@ -125,23 +125,33 @@
 }
 
 
-.pedidoSubContainer {
+.order-container {
   background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 65%;
   border-radius: 10px;
-  padding: 12px;
   margin-top: 22px;
   border: 1px dashed #b2bec3;
+  overflow: clip;
 }
 
-.pedidoSubContainer h1 {
+.order-container h1 {
   align-self: flex-end;
   font-size: 16px;
   margin: 6px 0;
   color: #2d3436;
+}
+
+.order-table {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    color: black;
+}
+
+.order-table tr {
+    background-color: #f9f9f9;
 }
 
 .opciones {
@@ -161,4 +171,19 @@
 
 .order-item-note {
     color: rgb(37, 151, 113) !important;
+}
+
+.client-data-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#stateSelect{
+    font-size:larger;
+}
+
+#stateSelect:hover {
+    border: 3px solid black;
 }
