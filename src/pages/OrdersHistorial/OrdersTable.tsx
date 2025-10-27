@@ -1,4 +1,5 @@
 import type { Pedido } from "../../assets/types/types"
+import { usePedidos } from "../../contexts/PedidoContext"
 import "../../assets/styles/ordersHistorial.css"
 interface Props {
     filteredOrders: Pedido[]
@@ -17,8 +18,10 @@ export const OrdersTable = ({ filteredOrders }: Props) => {
         <table>
             <thead>
                 <tr>
+                    <th>Id</th>
                     <th>Fecha</th>
                     <th>Cliente</th>
+                    <th>Telefono</th>
                     <th>Estado</th>
                     <th>Total</th>
                     <th>Acciones</th>
@@ -38,14 +41,18 @@ interface ContentRowProps {
 }
 
 const ContentRow = ({ order, dateFormater }: ContentRowProps) => {
+    const {OrderStorage} = usePedidos()
     return (
         <>
             <tr>
+                <td>{order.id}</td>
                 <td className="date-cell">{dateFormater(order.fecha)}</td>
                 <td className="client-cell">{order.cliente.nombre}</td>
+                <td>{order.cliente.telefono}</td>
                 <td className="state-cell">{order.state.name}</td>
                 <td className="price-cell">$ {order.total}</td>
-                <td className="actions-cell">Boton</td>
+                <td className="actions-cell"><button
+                    onClick={() => OrderStorage.setArchivate(order, false)}>{">"}</button></td>
             </tr>
         </>
     )

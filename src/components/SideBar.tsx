@@ -6,7 +6,7 @@ import { usePedidos } from "../contexts/PedidoContext"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBell } from "@fortawesome/free-solid-svg-icons"
 import { swalThemeConfig } from "../assets/ThemeData"
-import { createTestOrder } from "../utils/testing"
+import { createTestOrder } from "../utils/__test__/createTestOrder"
 
 interface prop {
   onOpenStatusChange?: (isOpen: boolean) => void

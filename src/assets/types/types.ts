@@ -39,4 +39,5 @@ export type Pedido = {
   total: number;
   fecha: number;
   state: State;
+  estaArchivado: boolean;
 };

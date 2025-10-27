@@ -20,6 +20,8 @@ export const OrderCard = ({ order }: Props) => {
         OrderStorage.delete(id.toString())
     }
 
+    if (order.estaArchivado) return 
+
     return (
         <div className='container pedido'
             style={{
@@ -84,7 +86,7 @@ export const OrderCard = ({ order }: Props) => {
 
 
 
-            <button className='pedido-delete' onClick={() => deleteOrder(order.id)}>Eliminar pedido</button>
+            <button className='pedido-delete' onClick={() => OrderStorage.setArchivate(order, true)}>Archivar</button>
 
             <p>{order.id}</p>
             <p className="order-date">{new Date(order.fecha).toLocaleString()}</p>

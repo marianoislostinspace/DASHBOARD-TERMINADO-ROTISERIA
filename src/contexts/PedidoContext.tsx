@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect, useReducer } from "react";
 import { io, Socket } from "socket.io-client";
-import type { Pedido } from "../assets/types/types";
+import type { Pedido, Product } from "../assets/types/types";
 import { State, stateList } from "../hooks/useStateManager";
 import { OrdersDB } from "../utils/DataBase";
 import { SwalNotification, Notifications } from "../utils/swalNotification";
@@ -15,7 +15,8 @@ type PedidoContextType = {
       add: (order: Pedido) => void,
       editState: (order: Pedido, newState: State) => void,
       delete: (orderId: string) => void,
-      initialize: (productList: Pedido[]) => void
+      initialize: (productList: Pedido[]) => void,
+      setArchivate: (order: Pedido, value: boolean) => void
     }
 };
 
@@ -67,6 +68,19 @@ export const PedidoProvider = ({ children }: { children: React.ReactNode }) => {
             Notifications.fireSuccess()
           })
           .catch(handleBackendError)
+      },
+      setArchivate: (order: Pedido, value: boolean) => {
+        Notifications.fireLoading()
+        order.estaArchivado = value
+        
+        OrdersDB.edit(order.id, order)
+          .then(() => {
+            dispatch({type: "EDIT", payload: {editedObject: order}})
+            Notifications.fireSuccess()
+          })
+          .catch(handleBackendError)
+        
+
       },
       initialize: (productsList: Pedido[]) => dispatch({ type: "INITIALIZE", payload: productsList })
     }

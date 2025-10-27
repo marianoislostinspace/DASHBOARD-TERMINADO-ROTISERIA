@@ -1,6 +1,6 @@
 // App.tsx
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 // Componentes
 import { SideBar } from "./components/SideBar";
@@ -18,6 +18,7 @@ import { Dashboard } from "./pages/DashboardPage";
 import Categories from "./pages/Categories";
 import { Pedidos } from "./pages/Pedidos";
 import { OrdersHistorial } from "./pages/OrdersHistorial/OrdersHistorialPage";
+import { TestingPage } from "./pages/__test__/TestingPage";
 
 // Helpers
 import { ProductDB, CategoryDB, OrdersDB } from "./utils/DataBase";
@@ -84,6 +85,7 @@ export const App = () => {
               <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
               <Route path="/pedidos" element={<ProtectedRoute><Pedidos /></ProtectedRoute>} />
               <Route path="/historial" element={<ProtectedRoute><OrdersHistorial /></ProtectedRoute>} />
+              <Route path="/test617" element={<ProtectedRoute><TestingPage /></ProtectedRoute>} />
 
               {/* Redirige a pedidos por defecto */}
               <Route path="*" element={<Navigate to="/pedidos" />} />

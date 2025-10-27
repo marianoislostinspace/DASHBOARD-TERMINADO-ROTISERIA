@@ -1,6 +1,6 @@
-import type { OrderItem, Pedido } from "../assets/types/types"
-import { stateList } from "../hooks/useStateManager"
-import { OrdersDB } from "./DataBase"
+import type { OrderItem, Pedido } from "../../assets/types/types"
+import { stateList } from "../../hooks/useStateManager"
+import { OrdersDB } from "../DataBase"
 
 
 // Usado para hacer testing desde dashboard.
