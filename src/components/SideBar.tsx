@@ -21,7 +21,7 @@ export const SideBar = ({ onOpenStatusChange }: prop) => {
     if (onOpenStatusChange) onOpenStatusChange(!isNavOpen)
   }
 
-  const { newOrdersCounter, resetNewOrdersCounter } = usePedidos()
+  const { OrderStorage, newOrdersCounter, resetNewOrdersCounter } = usePedidos()
 
 
   const location = useLocation()
@@ -84,7 +84,7 @@ export const SideBar = ({ onOpenStatusChange }: prop) => {
         <button className="hamburger" onClick={toggleMenu}>
           ☰
         </button>
-        <button className="hamburger" onClick={createTestOrder}>
+        <button className="hamburger" onClick={() => OrderStorage.add(createTestOrder())}>
           +
         </button>
         <div className="textoMEdio">

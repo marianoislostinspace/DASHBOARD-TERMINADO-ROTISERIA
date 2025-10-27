@@ -35,6 +35,9 @@ export const PedidoProvider = ({ children }: { children: React.ReactNode }) => {
         Notifications.fireLoading()
   
         OrdersDB.add(newOrder)
+          .then((data) => {
+            console.log(data)
+          })
           .catch(handleBackendError)
         
       },
