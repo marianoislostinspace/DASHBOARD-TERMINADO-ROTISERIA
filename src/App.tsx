@@ -71,8 +71,7 @@ export const App = () => {
         
 
         <section
-          className={`content ${isNavOpen ? 'sidebar-open' : ''}`}
-          /*style={isDataLoaded ? { "display": "block" } : { "display": "flex" }}*/>
+          className={`content ${isNavOpen ? 'sidebar-open' : ''}`}>
 
           {!isDataLoaded
             

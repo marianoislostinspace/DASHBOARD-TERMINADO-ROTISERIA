@@ -32,7 +32,6 @@
 
 /* ---------- FONDO GENERAL ---------- */
 body {
-  /*background: linear-gradient(135deg, #e6af48, #c0aea6c5, #a5531d); */
   background-color: var(--bg-primary);
   background-position: center;
   background-repeat: no-repeat;
@@ -48,7 +47,7 @@ body {
 
 .content {
   margin-top: 70px;
-  margin-left: 0px;
+  margin-left: 100px;
   height: 100vh - 70px;
   align-items: center;
   justify-content: center;
@@ -59,10 +58,6 @@ body {
 .content>* {
   display: flex;
   flex-wrap: wrap;
-}
-
-.sidebar-open {
-  margin-left: 300px;
 }
 
 .section-tittle {
