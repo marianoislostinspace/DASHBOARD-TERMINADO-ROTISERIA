@@ -19,12 +19,9 @@ export const OrderCard = ({ order }: Props) => {
     if (order.estaArchivado) return
 
     return (
-        <div className='container pedido'
-            style={{
-                borderTopColor: order.state.color
-            }}
-        >
-            <div className='estadoButtondiv'>
+        <div className='container pedido'>
+
+            <div className='select-container'>
                 <select name="state" id="stateSelect"
                     style={{
                         backgroundColor: order.state.color,
@@ -45,9 +42,9 @@ export const OrderCard = ({ order }: Props) => {
                 </select>
             </div>
 
-            <div className="client-data-container">
+            <div className="data-container">
+                    <div className="client-data-container">
                 <div>
-                    {/* <FontAwesomeIcon icon={faUserCircle}></FontAwesomeIcon>*/}
                     {order.cliente.nombre}
                 </div>
                 <div>
@@ -56,9 +53,8 @@ export const OrderCard = ({ order }: Props) => {
             </div>
 
 
-
             <div className='order-container'>
-                <table className="order-table">
+                <table className="orders-table">
                     <colgroup>
                         <col style={{ width: "20%" }} />
                         <col style={{ width: "50%" }} />
@@ -78,11 +74,6 @@ export const OrderCard = ({ order }: Props) => {
                                 <td></td>
                                 <td></td>
                             </tr>
-                            /*<>{
-                                order.items[value] 
-                                ?  <></>
-                                : <></>
-                            }</>*/
                         })}
                         {order.items?.map((item) => (
                             <>
@@ -109,38 +100,19 @@ export const OrderCard = ({ order }: Props) => {
 
                     </tbody>
                 </table>
-                {/* 
-                
-                
-                <div className="order-items">
-                    {order.items?.map((item) => (
-                        <div key={order.id}>
-                            <h1><b>{item.nombre} - x{item.cantidad}</b></h1>
 
-                            {item.opcionesSeleccionadas &&
-                                <ul className='opciones'>
 
-                                    {item.opcionesSeleccionadas?.map((opc) => {
-                                        return <li key={opc.id}><b>{opc.nombre.trim()}</b></li>
-                                    })}
+                <h1>Total</h1>
+                <table className="total-table">
+                    <tbody>
+                        <tr style={{ backgroundColor: "white" }}>
+                            <td style={{ color: "black" }}>
+                                <FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon>{order.total}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                                </ul>}
-                            {item.nota &&
-                                <h1 className="order-item-note">
-                                    <b>
-                                        <FontAwesomeIcon icon={faNoteSticky}></FontAwesomeIcon>
-                                        {item.nota}
-                                    </b>
-                                </h1>}
-                        </div>
-                    ))}
-                </div>
-                */}
-                <h1>
-                    ---------------------------
-                    <br />
-                    <FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon>{order.total}
-                </h1>
             </div>
 
 
@@ -148,8 +120,13 @@ export const OrderCard = ({ order }: Props) => {
 
             <button className='pedido-delete' onClick={() => OrderStorage.setArchivate(order, true)}>Archivar</button>
 
-            <span>{order.id}</span>
-            <span className="order-date">{new Date(order.fecha).toLocaleString()}</span>
+            <div className="order-data">
+                <span>{order.id}</span>
+                <span className="order-date">{new Date(order.fecha).toLocaleString()}</span>
+            </div>
+            </div>
+            
+
         </div>
     )
 }

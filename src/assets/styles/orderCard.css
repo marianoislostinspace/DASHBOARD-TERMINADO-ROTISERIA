@@ -1,4 +1,4 @@
-/* --- Estilos de la Tarjeta del pedido --- */
+/* ----- Estilos de la Tarjeta del pedido ----- */
 
 :root {
     --bg-primary: var(--bg-primary);
@@ -10,13 +10,11 @@
     --text-color-primary: var(--text-color-primary);
 }
 
-/* */
+/*  ----- Tarjeta entera (Contenedor completo) ----- */
 .pedido {
     background: var(--bg-secondary);
-    border: 1px solid #dcdde1;
-    
     border-radius: 12px;
-    padding: 16px;
+    padding: 0px;
     width: 350px;
     min-width: 350px;
     height: 600px;
@@ -25,165 +23,145 @@
     color: var(--text-color-primary);
 }
 
+.data-container{
+    height: 93%;
+    border-width: 0px 1px 1px;
+    border-style: solid;
+    border-color: #dcdde1;
+    border-radius: 0px 0px 12px 12px;
+}
+
+/* Efectos al poner el mouse encima de la tarjeta */
 .pedido:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
 }
 
-.pedido h2 {
-    font-size: 18px;
-    margin-bottom: 8px;
-    color: #0984e3;
-}
+/*Contenedor del boton de selección de estado*/
 
-.pedido p {
-    font-size: 14px;
-    margin: 4px 0;
-    color: #636e72;
-}
-
-.pedido h3 {
-    font-size: 16px;
-    margin-top: 10px;
-    color: #2d3436;
-}
-
-.opcion {
-    font-size: 13px;
-    color: #555;
-    background: #f9f9f9;
-    padding: 6px;
-    border-radius: 6px;
-    margin-bottom: 4px;
-    border-left: 3px solid #74b9ff;
-}
-
-/* Botones */
-
-
-.estadoButtondiv {
+.select-container {
     display: flex;
-    margin: -16px -17px;
-    margin-bottom: 16px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    height: 7%;
 }
+
+/* Boton de selección de estado */
 
 #stateSelect {
     width: 100%;
-    height: 42px;
+    height: 100%;
     border: none;
+    font-size: larger;
     text-align: center;
-    border-radius: 10px 10px 0px 0px ;
+    border-radius: 10px 10px 0px 0px;
 }
 
-.pedido button {
-
-    display: block;
-    border: none;
-    border-radius: 6px;
-
-    margin: 5px;
-    margin-top: 10px;
-    padding: 8px 12px;
-    
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    
-    height: 48px;
-    border-radius: 10px;
-    font-size: 18px;
-    font-weight: 700;
-    transition: 0.3s;
+#stateSelect:hover {
+    border: 3px solid black;
 }
 
-.pedido-btn {
-    background-color: var(--btn-primary);
-    color: var(--text-color-primary);
-    width: 120px;
-
-}
-
-.pedido-btn:hover {
-    background-color: var(--btn-hover);
-}
-
-.pedido-delete {
-    background-color: var(--btn-danger);
-    color: var(--text-color-primary);
-    width: 100%;
-}
-
-.pedido-delete:hover {
-    background-color: crimson;
-}
-
-.order-date {
-    text-align: end;
-}
-
-
-.order-container {
-  background-color: #f9f9f9;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 65%;
-  border-radius: 10px;
-  margin-top: 22px;
-  border: 1px dashed #b2bec3;
-  overflow: clip;
-}
-
-.order-container h1 {
-  align-self: flex-end;
-  font-size: 16px;
-  margin: 6px 0;
-  color: #2d3436;
-}
-
-.order-table {
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    color: black;
-}
-
-.order-table tr {
-    background-color: #f9f9f9;
-}
-
-.opciones {
-    margin-top: 8px;
-    list-style-type: none;
-    display: grid;
-    grid-template-columns: auto auto;
-    text-align: center;
-    gap: 10px;
-    padding: 0px;
-}
-
-.opciones li {
-    display: inline-block;
-    color: rgb(158, 0, 0);
-}
-
-.order-item-note {
-    color: rgb(37, 151, 113) !important;
-}
+/* ----- Contenedor de información del cliente ----- */
 
 .client-data-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    padding: 8px 16px 0px;
 }
 
-#stateSelect{
-    font-size:larger;
+
+/* -------- Contenedor con los pedidos --------- */
+.order-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+
+    height: 68%;
+    margin: 16px;
+    
+    border-radius: 10px;
+    border: 1px dashed #b2bec3;
+    overflow: clip;
 }
 
-#stateSelect:hover {
-    border: 3px solid black;
+.order-container h1 {
+    align-self: flex-end;
+    font-size: 16px;
+    margin: 6px 0;
+    color: #2d3436;
+}
+
+/* Tabla dentro del contenedor*/
+.orders-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: clip;
+}
+
+/* Filas de la tabla */
+tr {
+    background-color: #f9f9f9;
+    color: black;
+}
+
+/* Tabla del total (Celda única) */
+.total-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: clip;
+
+    width: 30%;
+    align-self: center;
+}
+
+.total-table tbody,
+.total-table tr,
+.total-table tbody td {
+    /* Quita bordes internos */
+    border: 0px;
+}
+
+
+/* ----- Botones (Boton Archivar) ----- */
+.pedido button {
+    display: block;
+    border: none;
+    border-radius: 10px;
+
+    height: 48px;
+    width: 80%;
+    margin: auto;
+    padding: 8px 12px;
+
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    
+    font-size: 18px;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+/* Boton "Archivar" */
+.pedido-delete {
+    background-color: var(--btn-danger);
+    color: var(--text-color-primary);
+}
+
+/* Efecto del boton "Archivar" al poner el cursor encima */
+.pedido-delete:hover {
+    background-color: crimson;
+}
+
+/* ----- Contenedor de información ----- */
+.order-data {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 10px;
 }
