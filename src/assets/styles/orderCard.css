@@ -8,6 +8,15 @@
     --btn-primary: var(--btn-primary);
     --btn-hover: var(--btn-hover);
     --text-color-primary: var(--text-color-primary);
+
+    /* Colores del componente */
+
+    --card-border-color: #566E7A;
+    --card-shadow-color: rgba(0, 0, 0, 0.5);
+
+    --table-outside-border-color: #566E7A;
+    --table-inside-border-color: #566E7A;
+    --table-background-color: #f9f9f9;
 }
 
 /*  ----- Tarjeta entera (Contenedor completo) ----- */
@@ -18,7 +27,7 @@
     width: 350px;
     min-width: 350px;
     height: 600px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 10px 8px 8px var(--card-shadow-color);
     transition: transform 0.2s ease;
     color: var(--text-color-primary);
 }
@@ -27,14 +36,14 @@
     height: 93%;
     border-width: 0px 1px 1px;
     border-style: solid;
-    border-color: #dcdde1;
+    border-color: var(--card-border-color);
     border-radius: 0px 0px 12px 12px;
 }
 
 /* Efectos al poner el mouse encima de la tarjeta */
 .pedido:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 10px 8px 8px var(--card-shadow-color);
 }
 
 /*Contenedor del boton de selección de estado*/
@@ -71,61 +80,68 @@
     justify-content: center;
     align-items: center;
 
-    padding: 8px 16px 0px;
+    padding: 16px 16px;
 }
 
 
 /* -------- Contenedor con los pedidos --------- */
 .order-container {
-    display: flex;
-    flex-direction: column;
-    background-color: #f9f9f9;
-
-    height: 68%;
+    height: 290px;
     margin: 16px;
     
     border-radius: 10px;
-    border: 1px dashed #b2bec3;
-    overflow: clip;
+    border: 3px solid;
+    border-color: var(--table-outside-border-color);
+    overflow: hidden;
 }
 
-.order-container h1 {
-    align-self: flex-end;
-    font-size: 16px;
-    margin: 6px 0;
-    color: #2d3436;
-}
 
 /* Tabla dentro del contenedor*/
 .orders-table {
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 10px;
-    overflow: clip;
+    border-collapse: collapse;
+
+    border: hidden;
+    width: 100%;    
+    margin-bottom: 16px;
+}
+
+.orders-table thead tr {
+    text-align: center;
 }
 
 /* Filas de la tabla */
 tr {
-    background-color: #f9f9f9;
+    background-color: var(--table-background-color);
     color: black;
+    height: 36px;
+    min-height: 36px;
 }
 
-/* Tabla del total (Celda única) */
+/* Tamaño y color de los bordes internos  */
+.orders-table th, 
+.orders-table td {
+    border: 1px solid;
+    border-color: var(--table-inside-border-color);
+}
+
+/* --- Tabla del total (Celda única) --- */
 .total-table {
     border-collapse: separate;
     border-spacing: 0;
     border-radius: 10px;
     overflow: clip;
 
-    width: 30%;
-    align-self: center;
+    margin: 0px 25px 16px 0px;
+    width: 55%;
+    justify-self: end;
 }
 
 .total-table tbody,
 .total-table tr,
 .total-table tbody td {
-    /* Quita bordes internos */
+    /* Quita bordes internos y agranda la letra */
     border: 0px;
+    font-size: medium;
 }
 
 
@@ -163,5 +179,6 @@ tr {
 .order-data {
     display: flex;
     justify-content: space-between;
+    margin-top: 24px;
     padding: 0px 10px;
 }

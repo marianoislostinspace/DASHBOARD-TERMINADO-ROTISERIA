@@ -15,17 +15,17 @@
   --default-text-color-primary: #f5f5f5;
 
   /* Editar estos parametros para cambiar los colores de la página*/
-  --bg-primary: var(--default-bg-primary);
-  --bg-secondary: var(--default-bg-secondary);
+  --bg-primary: #B0BFC6;
+  --bg-secondary: #36474F;
 
-  --border-color-primary: var(--default-border-color-primary);
+  --border-color-primary: #607D8B;
 
-  --icon-primary: var(--default-icon-primary);
+  --icon-primary: #24739b;
 
-  --btn-primary: var(--default-btn-primary);
-  --btn-secondary: var(--default-btn-secondary);
-  --btn-hover: var(--default-btn-hover);
-  --btn-danger: var(--default-btn-danger);
+  --btn-primary: #607D8B;
+  --btn-secondary: #38383a;
+  --btn-hover: #607D8B;
+  --btn-danger: #ee4848;
 
   --text-color-primary: var(--default-text-color-primary);
 }

@@ -15,6 +15,12 @@ type Props = {
 export const OrderCard = ({ order }: Props) => {
 
     const { OrderStorage } = usePedidos()
+    const itemsLength = order.items.length
+    const range : number[] = []
+
+    for (let index = 0; index < 7 - itemsLength; index++) {
+        range.push(0)
+    }
 
     if (order.estaArchivado) return
 
@@ -43,18 +49,17 @@ export const OrderCard = ({ order }: Props) => {
             </div>
 
             <div className="data-container">
-                    <div className="client-data-container">
-                <div>
-                    {order.cliente.nombre}
+                <div className="client-data-container">
+                    <div>
+                        {order.cliente.nombre}
+                    </div>
+                    <div>
+                        <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>  {order.cliente.telefono}
+                    </div>
                 </div>
-                <div>
-                    <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>  {order.cliente.telefono}
-                </div>
-            </div>
 
-
-            <div className='order-container'>
-                <table className="orders-table">
+                <div className="order-container">
+<table className="orders-table">
                     <colgroup>
                         <col style={{ width: "20%" }} />
                         <col style={{ width: "50%" }} />
@@ -68,13 +73,6 @@ export const OrderCard = ({ order }: Props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {[0, 1, 2, 3, 4, 5, 6].map((value) => {
-                            return <tr>
-                                <td>{value}</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        })}
                         {order.items?.map((item) => (
                             <>
                                 <tr>
@@ -93,39 +91,51 @@ export const OrderCard = ({ order }: Props) => {
                                         })}
                                     </>
                                 }
+
+                                
                             </>
 
-
                         ))}
+                        { 
+                                
+                                range.map((value) => {
+                                    return <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                })}
 
                     </tbody>
                 </table>
+                </div>
+                
+
+                <div className="total-div">
+
+                    <table className="total-table">
+                        <tbody>
+                            <tr style={{ backgroundColor: "white" }}>
+                                <td>TOTAL</td>
+                                <td style={{ color: "black" }}>
+                                    <FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon>{order.total}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
 
-                <h1>Total</h1>
-                <table className="total-table">
-                    <tbody>
-                        <tr style={{ backgroundColor: "white" }}>
-                            <td style={{ color: "black" }}>
-                                <FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon>{order.total}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                </div>
 
+
+                <button className='pedido-delete' onClick={() => OrderStorage.setArchivate(order, true)}>Archivar</button>
+
+                <div className="order-data">
+                    <span>{order.id}</span>
+                    <span className="order-date">{new Date(order.fecha).toLocaleString()}</span>
+                </div>
             </div>
 
-
-
-
-            <button className='pedido-delete' onClick={() => OrderStorage.setArchivate(order, true)}>Archivar</button>
-
-            <div className="order-data">
-                <span>{order.id}</span>
-                <span className="order-date">{new Date(order.fecha).toLocaleString()}</span>
-            </div>
-            </div>
-            
 
         </div>
     )

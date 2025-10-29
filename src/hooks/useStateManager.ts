@@ -26,10 +26,10 @@ interface statefullObject {
     }
 
 export const stateList = [
-    new State("Nuevo", "#ffffff", 0),
-    new State("En Preparación", "#ff9900", 1),
-    new State("Listo", "#7bff00", 2),
-    new State("Cancelado", "#ff0000", 3)
+    new State("Nuevo", "#ecf2faff", 0),
+    new State("En Preparación", "#f5b505ff", 1),
+    new State("Listo", "#1cda7bff", 2),
+    new State("Cancelado", "#ee4848", 3)
 ]
 
 
