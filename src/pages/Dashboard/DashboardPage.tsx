@@ -1,22 +1,26 @@
 // Librerias
-import { useState } from "react";
+import { useEffect, useState } from "react";
 //Helpers
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// Componentes
+import { DashboardButtons } from "./DashboardButtons";
 // Contextos
-import { useProductsStorage } from "../contexts/ProductsContext";
-import { emptyProduct, usePopUpDispatch } from "../contexts/PopUpContext";
+import { useProductsStorage } from "../../contexts/ProductsContext";
+import { emptyProduct, usePopUpDispatch } from "../../contexts/PopUpContext";
+import { useNavBar } from "../../contexts/NavbarContext";
 // Tipos y Estilos
-import type { Product, ProductOption } from "../assets/types/types";
-import '../assets/styles/dashboardStyles.css'
-import { Notifications } from "../utils/swalNotification";
-import { faTrashCan, faDollarSign, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'; // Example icons
+import type { Product, ProductOption } from "../../assets/types/types";
+import '../../assets/styles/dashboardStyles.css'
+import { Notifications } from "../../utils/swalNotification";
+import { faTrashCan, faDollarSign, faEye, faEyeSlash, faPlus } from '@fortawesome/free-solid-svg-icons'; // Example icons
 
 
 
 export const Dashboard = () => {
   // Contextos
   const { productsList, ProductStorage } = useProductsStorage()
-  const { handleIsVisible, handleIsEditing, handleFormData, handleFormType } = usePopUpDispatch()
+  const {handleIsVisible, handleIsEditing, handleFormData, handleFormType } = usePopUpDispatch()
+  const {setButtons} = useNavBar()
 
   const [detalle, setdetalle] = useState<Boolean>(false)
   const [singlePlato, setsinglePlato] = useState<Product | null>(null)
@@ -36,7 +40,7 @@ export const Dashboard = () => {
   }
 
   // Agregar productos (Abre formulario de productos)
-  const handleAddFields = (item: Product) => {
+  const handleAddFields = () => {
     handleIsEditing(true)
     handleFormData(emptyProduct)
     handleIsVisible(true)
@@ -76,18 +80,18 @@ export const Dashboard = () => {
     setdetalle(false)
   }
 
-
+  useEffect(() => {
+    setButtons(DashboardButtons({onClickFunction: handleAddFields}))
+    
+    return () => {
+      setButtons(<></>)
+    }
+  },[])
 
   return (
     <>
       <div>
-        {/* Boton de agregar producto */}
-        <div className="addProduct" onClick={() => handleAddFields(emptyProduct)}>
-          <h1>Agregar Productos</h1>
-        </div>
-
         {/* Lista de productos */}
-
         <div className="itemContainer">
           {detalle
 

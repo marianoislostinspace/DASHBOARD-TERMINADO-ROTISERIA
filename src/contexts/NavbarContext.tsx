@@ -1,17 +1,24 @@
-import { createContext, useContext } from "react"
+import { useState, createContext, useContext } from "react"
 
 interface NavbarContext {
-    buttons : React.ReactNode,
-    setButtons : React.ReactNode
+    buttonsBar : React.ReactNode,
+    setButtons : (value: React.ReactNode) => void
 }
 
-export const NavbarContext = createContext(undefined)
+export const NavbarContext = createContext<NavbarContext | undefined>(undefined)
 
-export const NavbarProvider = ({childen} : {childen : React.ReactNode}) => {
+export const NavbarProvider = ({children} : {children : React.ReactNode}) => {
+
+  const [buttonsBar, setButtonsBarr] = useState<React.ReactNode>()
+
+  function setButtons(value: React.ReactNode){
+    
+    setButtonsBarr(value)
+  }
 
   return (
-    <NavbarContext.Provider value={undefined}>
-        {childen}
+    <NavbarContext.Provider value={{buttonsBar, setButtons}}>
+        {children}
     </NavbarContext.Provider>
   )
 }

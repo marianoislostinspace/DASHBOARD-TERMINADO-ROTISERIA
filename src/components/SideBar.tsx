@@ -4,13 +4,14 @@ import { Link, useLocation } from "react-router"
 import { useEffect, useState } from "react"
 // Contexts
 import { usePedidos } from "../contexts/PedidoContext"
+import { useNavBar } from "../contexts/NavbarContext"
 // Utils
 import { createTestOrder } from "../utils/__test__/createTestOrder"
+import { Tooltip } from "@mui/material"
 // Styles
 import "../assets/styles/sidebar.css"
-import { swalThemeConfig } from "../assets/ThemeData"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBell, faReceipt, faBoxOpen, faLayerGroup, faHamburger, faBars, faPlus } from "@fortawesome/free-solid-svg-icons"
+import { faBell, faReceipt, faBoxOpen, faLayerGroup, faBars, faPlus } from "@fortawesome/free-solid-svg-icons"
 
 
 
@@ -18,47 +19,11 @@ export const SideBar = (p: { onOpenStatusChange?: (isOpen: boolean) => void }) =
 
   const { onOpenStatusChange } = p
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const location = useLocation()
-
 
   const toggleMenu = () => {
     setIsNavOpen(prev => !prev)
     if (onOpenStatusChange) onOpenStatusChange(!isNavOpen)
   }
-
-
-
-  const tituloRutas: Record<string, string> = {
-    '/pedidos': 'Pedidos Entrantes',
-    '/dashboard': 'Productos y stock',
-    '/categories': 'Admnistrar Categorias',
-    '/historial': 'Historial de Pedidos'
-  }
-
-  const tituloActivo = tituloRutas[location.pathname] || 'Pagina'
-
-  const horarios = () => {
-    Swal.fire({
-      ...swalThemeConfig,
-      title: "🍔🍟",
-      imageUrl: "img/horarios.png",
-      imageWidth: 400,
-      imageHeight: 650,
-      imageAlt: "schedule image"
-    });
-  }
-
-  const [año, setaño] = useState(2025)
-
-  useEffect(() => {
-    const añofunc = () => {
-      const añoActual = new Date().getFullYear()
-      setaño(añoActual)
-    }
-    añofunc()
-  }, [])
-
-
 
   return (
     <>
@@ -66,8 +31,6 @@ export const SideBar = (p: { onOpenStatusChange?: (isOpen: boolean) => void }) =
       <IconSideBar></IconSideBar>
 
       <Navbar toggleMenu={toggleMenu}></Navbar>
-
-      <FullSideBar isOpen={isNavOpen} toggleMenu={toggleMenu}></FullSideBar>
 
     </>
   )
@@ -81,16 +44,23 @@ const Navbar = (p: { toggleMenu: () => void }) => {
 
   return (
     <nav className="navbar">
-      <div className="buttons-container">
-        <button className="hamburger" onClick={p.toggleMenu}>
+      <div className="left-container">
+
+        <img className="logo" src="img/sapo.jpg" alt="Logo" />
+
+        {/* <button className="hamburger" onClick={p.toggleMenu}>
           <FontAwesomeIcon icon={faBars}></FontAwesomeIcon>
         </button>
 
         <button className="nav-btn hamburger" onClick={() => OrderStorage.add(createTestOrder())}>
          <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
-        </button>
-      </div>
+        </button> */}
 
+        <div className="buttons-container">
+          {useNavBar().buttonsBar}
+        </div>
+
+      </div>
 
       <div className="logo">
         <div className="campana" onClick={resetNewOrdersCounter}>
@@ -99,8 +69,6 @@ const Navbar = (p: { toggleMenu: () => void }) => {
             <span className="badge">{newOrdersCounter}</span>
           )}
         </div>
-
-        <img src="img/sapo.jpg" alt="Logo" />
       </div>
 
     </nav>
@@ -112,23 +80,34 @@ const IconSideBar = () => {
   return (
     <div className="icon-sidebar">
       <div className="links-container">
-      <Link className="nav-link" to="/pedidos">
-        <FontAwesomeIcon className="nav-icon-color" icon={faReceipt}></FontAwesomeIcon>
-      </Link>
+        <Tooltip title="Pedidos">
+          <Link className="nav-link" to="/pedidos">
+            <FontAwesomeIcon className="nav-icon-color" icon={faReceipt}></FontAwesomeIcon>
+          </Link>
+        </Tooltip>
 
-      <Link className="nav-link" to="/dashboard">
-        <FontAwesomeIcon className="nav-icon-color" icon={faBoxOpen}></FontAwesomeIcon>
-      </Link>
+        <Tooltip title="Productos">
+          <Link className="nav-link" to="/dashboard">
+            <FontAwesomeIcon className="nav-icon-color" icon={faBoxOpen}></FontAwesomeIcon>
+          </Link>
+        </Tooltip>
 
-      <Link className="nav-link" to="/categories">
-        <FontAwesomeIcon className="nav-icon-color" icon={faLayerGroup}></FontAwesomeIcon>
-      </Link>
 
-      <Link className="nav-link" to="/historial">
-        <FontAwesomeIcon className="nav-icon-color" icon={faReceipt}></FontAwesomeIcon>
-      </Link>
+        <Tooltip title="Categorias">
+          <Link className="nav-link" to="/categories">
+            <FontAwesomeIcon className="nav-icon-color" icon={faLayerGroup}></FontAwesomeIcon>
+          </Link>
+        </Tooltip>
+
+
+        <Tooltip title="Historial">
+          <Link className="nav-link" to="/historial">
+            <FontAwesomeIcon className="nav-icon-color" icon={faReceipt}></FontAwesomeIcon>
+          </Link>
+        </Tooltip>
+
       </div>
-      
+
 
     </div>
   )

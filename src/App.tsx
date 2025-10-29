@@ -14,9 +14,9 @@ import { useCategoryStorage } from "./contexts/CategoriesContext";
 import { usePedidos } from "./contexts/PedidoContext";
 
 // Páginas
-import { Dashboard } from "./pages/DashboardPage";
+import { Dashboard } from "./pages/Dashboard/DashboardPage";
 import Categories from "./pages/Categories";
-import { Pedidos } from "./pages/Pedidos";
+import { Pedidos } from "./pages/Pedidos/Pedidos";
 import { OrdersHistorial } from "./pages/OrdersHistorial/OrdersHistorialPage";
 import { TestingPage } from "./pages/__test__/TestingPage";
 
