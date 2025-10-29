@@ -43,16 +43,16 @@ export const PedidoProvider = ({ children }: { children: React.ReactNode }) => {
       },
       // Edita un producto
       editState: (order: Pedido, newState: State) => {
-        Notifications.fireLoading()
-        
+        let oldStateBackup = order.state
         order.state = newState
 
+        dispatch({type: "EDIT", payload: {editedObject: order}})
         OrdersDB.edit(order.id, order)
-          .then(() => {
+          .catch( (error) => {
+            order.state = oldStateBackup
             dispatch({type: "EDIT", payload: {editedObject: order}})
-            Notifications.fireSuccess()
+            handleBackendError(error)
           })
-          .catch(handleBackendError)
         
       },
       // Elimina un producto
