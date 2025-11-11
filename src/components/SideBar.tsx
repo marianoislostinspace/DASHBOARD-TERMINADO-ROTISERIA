@@ -1,11 +1,10 @@
 // Librerias
 import { Link } from "react-router"
 import { useState } from "react"
+import { Tooltip } from 'bootstrap'
 // Contexts
 import { usePedidos } from "../contexts/PedidoContext"
 import { useNavBar } from "../contexts/NavbarContext"
-// Utils
-import { Tooltip } from "@mui/material"
 // Styles
 import "../assets/styles/sidebar.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -38,11 +37,14 @@ export const SideBar = (p: { onOpenStatusChange?: (isOpen: boolean) => void }) =
 export const Navbar = () => {
   const { newOrdersCounter, resetNewOrdersCounter } = usePedidos()
 
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl))
+
   return (
     <nav className="navbar navbar-expand fixed-top">
       <div className="container-fluid">
 
-        <a className="navbar-brand me-4">
+        <a className="navbar-brand me-5">
           <img src="img/sapo.jpg" alt="Logo"
             width={52} height={52} style={{ borderRadius: "50%" }} />
         </a>
@@ -55,9 +57,9 @@ export const Navbar = () => {
         </div>
 
         <div className="campana " onClick={resetNewOrdersCounter}>
-          
-          <FontAwesomeIcon icon={faBell} 
-            style={{ color: "white" }}/>
+
+          <FontAwesomeIcon icon={faBell}
+            style={{ color: "white" }} />
 
           {newOrdersCounter > 0 && (
             <span className="badge">{newOrdersCounter}</span>
@@ -71,34 +73,44 @@ export const Navbar = () => {
 
 
 const IconSideBar = () => {
+
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl))
+
   return (
     <div className="icon-sidebar">
       <div className="links-container">
-        <Tooltip title="Pedidos">
-          <Link className="nav-link" to="/pedidos">
-            <FontAwesomeIcon className="nav-icon-color" icon={faReceipt}></FontAwesomeIcon>
-          </Link>
-        </Tooltip>
 
-        <Tooltip title="Productos">
-          <Link className="nav-link" to="/dashboard">
-            <FontAwesomeIcon className="nav-icon-color" icon={faBoxOpen}></FontAwesomeIcon>
-          </Link>
-        </Tooltip>
+        <Link className="nav-link" to="/pedidos" 
+          data-bs-toggle="tooltip" data-bs-placement="right"
+          data-bs-title="Pedidos">
+          <FontAwesomeIcon className="nav-icon-color" icon={faReceipt}></FontAwesomeIcon>
+        </Link>
 
-
-        <Tooltip title="Categorias">
-          <Link className="nav-link" to="/categories">
-            <FontAwesomeIcon className="nav-icon-color" icon={faLayerGroup}></FontAwesomeIcon>
-          </Link>
-        </Tooltip>
+        <Link className="nav-link" to="/dashboard" 
+          data-bs-toggle="tooltip" data-bs-placement="right"
+          data-bs-title="Productos">
+          <FontAwesomeIcon className="nav-icon-color" icon={faBoxOpen}></FontAwesomeIcon>
+        </Link>
 
 
-        <Tooltip title="Historial">
-          <Link className="nav-link" to="/historial">
-            <FontAwesomeIcon className="nav-icon-color" icon={faReceipt}></FontAwesomeIcon>
-          </Link>
-        </Tooltip>
+
+
+        <Link className="nav-link" to="/categories" 
+          data-bs-toggle="tooltip" data-bs-placement="right"
+          data-bs-title="Categorias" >
+          <FontAwesomeIcon className="nav-icon-color" icon={faLayerGroup}></FontAwesomeIcon>
+        </Link>
+
+
+
+
+        <Link className="nav-link" to="/historial" 
+          data-bs-toggle="tooltip" data-bs-placement="right"
+          data-bs-title="Historial">
+          <FontAwesomeIcon className="nav-icon-color" icon={faReceipt}></FontAwesomeIcon>
+        </Link>
+
 
       </div>
 
