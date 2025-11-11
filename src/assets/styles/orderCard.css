@@ -32,18 +32,18 @@
     color: var(--text-color-primary);
 }
 
+/* Efectos al poner el mouse encima de la tarjeta */
+.pedido:hover {
+    transform: translateY(-4px);
+    box-shadow: 10px 8px 8px var(--card-shadow-color);
+}
+
 .data-container{
     height: 93%;
     border-width: 0px 1px 1px;
     border-style: solid;
     border-color: var(--card-border-color);
     border-radius: 0px 0px 12px 12px;
-}
-
-/* Efectos al poner el mouse encima de la tarjeta */
-.pedido:hover {
-    transform: translateY(-4px);
-    box-shadow: 10px 8px 8px var(--card-shadow-color);
 }
 
 /*Contenedor del boton de selección de estado*/

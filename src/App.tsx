@@ -7,6 +7,7 @@ import { SideBar } from "./components/SideBar";
 import { PopUpForm } from "./components/PopUp/PopUpView";
 import ProtectedRoute from "./components/protectedRoute";
 import Login from "./components/Login";
+import { Navbar } from "./components/SideBar";
 
 // Context
 import { useProductsStorage } from "./contexts/ProductsContext";
@@ -29,9 +30,9 @@ import './assets/styles.css';
 export const App = () => {
 
   // Models Contexts
-  const {ProductStorage} = useProductsStorage()
-  const {categoriesList, CategoryStorage} = useCategoryStorage()
-  const {OrderStorage} = usePedidos()
+  const { ProductStorage } = useProductsStorage()
+  const { categoriesList, CategoryStorage } = useCategoryStorage()
+  const { OrderStorage } = usePedidos()
 
   // Login states
   const [loggedIn, setLoggedIn] = useState(false);
@@ -63,36 +64,43 @@ export const App = () => {
     return <Login onLogin={handleLogin} />;
   }
 
-  
+
   // Si ya está logueado, renderizamos la app completa
   return (
     <Router>
-      <div className="app">
-        
+      <div className="app container-fluid">
 
-        <section
-          className={`content ${isNavOpen ? 'sidebar-open' : ''}`}>
+        <Navbar></Navbar>
 
-          {!isDataLoaded
-            
-            ? <div className="spinner-border text-light" role="status">
-              <span className="sr-only">Loading...</span>
-            </div>
-            
-            :<Routes>
-              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
-              <Route path="/pedidos" element={<ProtectedRoute><Pedidos /></ProtectedRoute>} />
-              <Route path="/historial" element={<ProtectedRoute><OrdersHistorial /></ProtectedRoute>} />
-              <Route path="/test617" element={<ProtectedRoute><TestingPage /></ProtectedRoute>} />
+        <div className="row">
 
-              {/* Redirige a pedidos por defecto */}
-              <Route path="*" element={<Navigate to="/pedidos" />} />
-            </Routes>
-          }
-        </section>
+          <SideBar onOpenStatusChange={setIsNavOpen} />
 
-        <SideBar onOpenStatusChange={setIsNavOpen} />
+          <section
+            className="content order-1">
+
+            {!isDataLoaded
+
+              ? <div className="spinner-border text-light" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+
+              : <Routes>
+                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
+                <Route path="/pedidos" element={<ProtectedRoute><Pedidos /></ProtectedRoute>} />
+                <Route path="/historial" element={<ProtectedRoute><OrdersHistorial /></ProtectedRoute>} />
+                <Route path="/test617" element={<ProtectedRoute><TestingPage /></ProtectedRoute>} />
+
+                
+                <Route path="*" element={<Navigate to="/pedidos" />} />
+              </Routes>
+            }
+          </section>
+        </div>
+
+
+
       </div>
 
       <PopUpForm categories={categoriesList} />

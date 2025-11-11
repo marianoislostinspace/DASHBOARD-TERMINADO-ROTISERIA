@@ -1,12 +1,10 @@
 // Librerias
-import Swal from "sweetalert2"
-import { Link, useLocation } from "react-router"
-import { useEffect, useState } from "react"
+import { Link } from "react-router"
+import { useState } from "react"
 // Contexts
 import { usePedidos } from "../contexts/PedidoContext"
 import { useNavBar } from "../contexts/NavbarContext"
 // Utils
-import { createTestOrder } from "../utils/__test__/createTestOrder"
 import { Tooltip } from "@mui/material"
 // Styles
 import "../assets/styles/sidebar.css"
@@ -30,8 +28,6 @@ export const SideBar = (p: { onOpenStatusChange?: (isOpen: boolean) => void }) =
 
       <IconSideBar></IconSideBar>
 
-      <Navbar toggleMenu={toggleMenu}></Navbar>
-
     </>
   )
 }
@@ -39,38 +35,36 @@ export const SideBar = (p: { onOpenStatusChange?: (isOpen: boolean) => void }) =
 
 
 
-const Navbar = (p: { toggleMenu: () => void }) => {
-  const { OrderStorage, newOrdersCounter, resetNewOrdersCounter } = usePedidos()
+export const Navbar = () => {
+  const { newOrdersCounter, resetNewOrdersCounter } = usePedidos()
 
   return (
-    <nav className="navbar">
-      <div className="left-container">
+    <nav className="navbar navbar-expand fixed-top">
+      <div className="container-fluid">
 
-        <img className="logo" src="img/sapo.jpg" alt="Logo" />
+        <a className="navbar-brand me-4">
+          <img src="img/sapo.jpg" alt="Logo"
+            width={52} height={52} style={{ borderRadius: "50%" }} />
+        </a>
 
-        {/* <button className="hamburger" onClick={p.toggleMenu}>
-          <FontAwesomeIcon icon={faBars}></FontAwesomeIcon>
-        </button>
 
-        <button className="nav-btn hamburger" onClick={() => OrderStorage.add(createTestOrder())}>
-         <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
-        </button> */}
-
-        <div className="buttons-container">
-          {useNavBar().buttonsBar}
+        <div className="collapse navbar-collapse">
+          <form className="navbar-nav buttons-container">
+            {useNavBar().buttonsBar}
+          </form>
         </div>
 
-      </div>
+        <div className="campana " onClick={resetNewOrdersCounter}>
+          
+          <FontAwesomeIcon icon={faBell} 
+            style={{ color: "white" }}/>
 
-      <div className="logo">
-        <div className="campana" onClick={resetNewOrdersCounter}>
-          <FontAwesomeIcon icon={faBell} style={{ color: "white" }}></FontAwesomeIcon>
           {newOrdersCounter > 0 && (
             <span className="badge">{newOrdersCounter}</span>
           )}
+
         </div>
       </div>
-
     </nav>
   )
 }

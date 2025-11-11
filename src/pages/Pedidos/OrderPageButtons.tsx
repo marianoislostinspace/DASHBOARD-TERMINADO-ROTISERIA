@@ -6,13 +6,13 @@ export const OrderPageButtons = () => {
   return (
     <>
       <Tooltip title="Agregar pedido nuevo">
-        <button>
+        <button className="nav-item">
           <FontAwesomeIcon icon={faPlus} />
         </button>
       </Tooltip>
 
       <Tooltip title="Pedir cafe">
-        <button >
+        <button className="nav-item">
           <FontAwesomeIcon icon={faCoffee} />
         </button>
       </Tooltip>
