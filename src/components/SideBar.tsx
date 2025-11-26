@@ -1,15 +1,15 @@
 // Librerias
 import { Link } from "react-router"
 import { useState } from "react"
-import { Tooltip } from 'bootstrap'
 // Contexts
 import { usePedidos } from "../contexts/PedidoContext"
 import { useNavBar } from "../contexts/NavbarContext"
+// Components
+import { OverlayTooltip } from "./UI/OverlayTooltip"
 // Styles
 import "../assets/styles/sidebar.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBell, faReceipt, faBoxOpen, faLayerGroup, faBars, faPlus } from "@fortawesome/free-solid-svg-icons"
-
+import { faBell, faReceipt, faBoxOpen, faLayerGroup, faBars } from "@fortawesome/free-solid-svg-icons"
 
 
 export const SideBar = (p: { onOpenStatusChange?: (isOpen: boolean) => void }) => {
@@ -36,15 +36,11 @@ export const SideBar = (p: { onOpenStatusChange?: (isOpen: boolean) => void }) =
 
 export const Navbar = () => {
   const { newOrdersCounter, resetNewOrdersCounter } = usePedidos()
-
-  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl))
-
   return (
     <nav className="navbar navbar-expand fixed-top">
       <div className="container-fluid">
 
-        <a className="navbar-brand me-5">
+        <a className="navbar-brand ms-2 me-3">
           <img src="img/sapo.jpg" alt="Logo"
             width={52} height={52} style={{ borderRadius: "50%" }} />
         </a>
@@ -74,42 +70,47 @@ export const Navbar = () => {
 
 const IconSideBar = () => {
 
-  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl))
 
   return (
     <div className="icon-sidebar">
       <div className="links-container">
 
-        <Link className="nav-link" to="/pedidos" 
-          data-bs-toggle="tooltip" data-bs-placement="right"
-          data-bs-title="Pedidos">
-          <FontAwesomeIcon className="nav-icon-color" icon={faReceipt}></FontAwesomeIcon>
-        </Link>
+        <OverlayTooltip key="sidebarOrdersBtn" placement="right"
+          text="Pedidos">
 
-        <Link className="nav-link" to="/dashboard" 
-          data-bs-toggle="tooltip" data-bs-placement="right"
-          data-bs-title="Productos">
-          <FontAwesomeIcon className="nav-icon-color" icon={faBoxOpen}></FontAwesomeIcon>
-        </Link>
+          <Link className="nav-link" to="/pedidos">
+            <FontAwesomeIcon className="nav-icon-color" icon={faReceipt}></FontAwesomeIcon>
+          </Link>
+        </OverlayTooltip>
 
+        <OverlayTooltip key="sidebarDashBtn" placement="right"
+          text="Productos">
 
-
-
-        <Link className="nav-link" to="/categories" 
-          data-bs-toggle="tooltip" data-bs-placement="right"
-          data-bs-title="Categorias" >
-          <FontAwesomeIcon className="nav-icon-color" icon={faLayerGroup}></FontAwesomeIcon>
-        </Link>
+          <Link className="nav-link" to="/dashboard">
+            <FontAwesomeIcon className="nav-icon-color" icon={faBoxOpen}></FontAwesomeIcon>
+          </Link>
+        </OverlayTooltip>
 
 
+        <OverlayTooltip key="sidebarCategoryBtn" placement="right"
+          text="Categorias">
+
+          <Link className="nav-link" to="/categories">
+            <FontAwesomeIcon className="nav-icon-color" icon={faLayerGroup}></FontAwesomeIcon>
+          </Link>
+        </OverlayTooltip>
 
 
-        <Link className="nav-link" to="/historial" 
-          data-bs-toggle="tooltip" data-bs-placement="right"
-          data-bs-title="Historial">
-          <FontAwesomeIcon className="nav-icon-color" icon={faReceipt}></FontAwesomeIcon>
-        </Link>
+
+        <OverlayTooltip key="sidebarHistoryBtn" placement="right"
+          text="Historial">
+
+          <Link className="nav-link" to="/historial">
+            <FontAwesomeIcon className="nav-icon-color" icon={faReceipt}></FontAwesomeIcon>
+          </Link>
+        </OverlayTooltip>
+
+
 
 
       </div>

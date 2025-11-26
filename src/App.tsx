@@ -72,36 +72,35 @@ export const App = () => {
 
         <Navbar></Navbar>
 
-        <div className="row">
-
-          <SideBar onOpenStatusChange={setIsNavOpen} />
-
-          <section
-            className="content order-1">
-
-            {!isDataLoaded
-
-              ? <div className="spinner-border text-light" role="status">
-                <span className="sr-only">Loading...</span>
-              </div>
-
-              : <Routes>
-                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
-                <Route path="/pedidos" element={<ProtectedRoute><Pedidos /></ProtectedRoute>} />
-                <Route path="/historial" element={<ProtectedRoute><OrdersHistorial /></ProtectedRoute>} />
-                <Route path="/test617" element={<ProtectedRoute><TestingPage /></ProtectedRoute>} />
-
-                
-                <Route path="*" element={<Navigate to="/pedidos" />} />
-              </Routes>
-            }
-          </section>
-        </div>
 
 
+        <SideBar onOpenStatusChange={setIsNavOpen} />
 
+        <section
+          className="content order-1">
+
+          {!isDataLoaded
+
+            ? <div className="spinner-border text-light" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+
+            : <Routes>
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
+              <Route path="/pedidos" element={<ProtectedRoute><Pedidos /></ProtectedRoute>} />
+              <Route path="/historial" element={<ProtectedRoute><OrdersHistorial /></ProtectedRoute>} />
+              <Route path="/test617" element={<ProtectedRoute><TestingPage /></ProtectedRoute>} />
+
+
+              <Route path="*" element={<Navigate to="/pedidos" />} />
+            </Routes>
+          }
+        </section>
       </div>
+
+
+
 
       <PopUpForm categories={categoriesList} />
     </Router>
