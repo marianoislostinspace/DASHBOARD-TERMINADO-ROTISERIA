@@ -81,8 +81,10 @@ export const App = () => {
 
           {!isDataLoaded
 
-            ? <div className="spinner-border text-light" role="status">
-              <span className="sr-only">Loading...</span>
+            ? <div className="justify-content-center align-items-center" style={{ width: "100%", height: "100%", display: "flex" }}>
+              <div className="spinner-border text-light" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
             </div>
 
             : <Routes>
@@ -95,6 +97,7 @@ export const App = () => {
 
               <Route path="*" element={<Navigate to="/pedidos" />} />
             </Routes>
+
           }
         </section>
       </div>

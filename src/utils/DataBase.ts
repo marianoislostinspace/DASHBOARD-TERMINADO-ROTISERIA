@@ -25,8 +25,12 @@ export const CategoryDB = {
             throw new ValidationError("Ninguna imagen seleccionada para la categoría")
         }
 
+        // Se da formato al texto para que siempre la primera letra esté capitalizada.
+        let name = categoryName.toLowerCase()
+        name = name.charAt(0).toUpperCase() + name.slice(1)
+
         const formData = new FormData();
-        formData.append("nombre", categoryName);
+        formData.append("nombre", name);
         formData.append("imagen", imgURL);
 
         // Actualizar backend

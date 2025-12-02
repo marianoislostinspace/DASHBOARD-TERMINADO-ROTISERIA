@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // Componentes
 import { DashboardButtons } from "./DashboardButtons";
+import { ProductCard } from "./ProductCard";
+import Col from "react-bootstrap/Col"
+import Row from "react-bootstrap/Row"
+import Container from "react-bootstrap/Container"
 // Contextos
 import { useProductsStorage } from "../../contexts/ProductsContext";
 import { emptyProduct, usePopUpDispatch } from "../../contexts/PopUpContext";
@@ -19,8 +23,8 @@ import { faTrashCan, faDollarSign, faEye, faEyeSlash, faPlus } from '@fortawesom
 export const Dashboard = () => {
   // Contextos
   const { productsList, ProductStorage } = useProductsStorage()
-  const {handleIsVisible, handleIsEditing, handleFormData, handleFormType } = usePopUpDispatch()
-  const {setButtons} = useNavBar()
+  const { handleIsVisible, handleIsEditing, handleFormData, handleFormType } = usePopUpDispatch()
+  const { setButtons } = useNavBar()
 
   const [detalle, setdetalle] = useState<Boolean>(false)
   const [singlePlato, setsinglePlato] = useState<Product | null>(null)
@@ -81,115 +85,64 @@ export const Dashboard = () => {
   }
 
   useEffect(() => {
-    setButtons(DashboardButtons({onClickFunction: handleAddFields}))
-    
+    setButtons(DashboardButtons({ onClickFunction: handleAddFields }))
+
     return () => {
       setButtons(<></>)
     }
-  },[])
+  }, [])
 
   return (
     <>
-      <div>
-        {/* Lista de productos */}
-        <div className="itemContainer">
-          {detalle
+      <Container fluid="sm" >
+        {
+          detalle ?
+            // HTML del producto único
+            (
+              <div className="itemContainer" >
+                <div className="singleItem">
+                  <h1>{singlePlato?.nombre}</h1>
+                  <h3>{singlePlato?.descripcion}</h3>
+                  <h2>${singlePlato?.precio}</h2>
+                  <img src={singlePlato?.imagen} alt={singlePlato?.nombre} />
+                  {singlePlato?.opciones?.map((opc, index) => (
+                    <li key={index} className="option-li">
+                      {opc.precio && <p>Precio extra: ${opc.precio}</p>}
+                      <span>{opc.nombre}</span>
+                      <div className="actions">
+                        <button className="item-card-btn-danger"
+                          onClick={() => ProductStorage.deleteOption(singlePlato, opc.id)}>
+                          <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
+                        </button>
+                      </div>
+                    </li>
+                  ))}
 
-            ? (/// HTML del producto único
-              <div className="singleItem">
-                <h1>{singlePlato?.nombre}</h1>
-                <h3>{singlePlato?.descripcion}</h3>
-                <h2>${singlePlato?.precio}</h2>
-                <img src={singlePlato?.imagen} alt={singlePlato?.nombre} />
-                {singlePlato?.opciones?.map((opc, index) => (
-                  <li key={index} className="option-li">
-                    {opc.precio && <p>Precio extra: ${opc.precio}</p>}
-                    <span>{opc.nombre}</span>
-                    <div className="actions">
-                      <button className="item-card-btn-danger"
-                        onClick={() => ProductStorage.deleteOption(singlePlato, opc.id)}>
-                        <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
-                      </button>
-                    </div>
-                  </li>
-                ))}
+                  <button onClick={goBack} className='volverBtn'>Volver</button>
 
-                <button onClick={goBack} className='volverBtn'>Volver</button>
-
+                </div>
               </div>
             )
 
             // ---------------------------------------------------
-            : (
-              /// HTML de la lista de productos
-              productsList.map((item) => (
-                // Tarjetas
-                <div key={item.id} className="item-card">
-                  <h3>
-                    {item.nombre} 
-                    
-                  </h3>
-                  <p className="item-desc">
-                    {item.descripcion}
 
-                    
-                    <button 
-                      style={item.esVisible ? {backgroundColor: "green"} : {backgroundColor: "red"}}
-                      onClick={() => {ProductStorage.edit({...item, esVisible: !item.esVisible})}}>
-                      {item.esVisible ?
-                      <FontAwesomeIcon icon={faEye}></FontAwesomeIcon>
-                       : 
-                       <FontAwesomeIcon icon={faEyeSlash}></FontAwesomeIcon>
-                      }
-                    </button>
-                  
-                    
-                  </p>
-                  <p className="item-price"> <FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon> {item.precio}</p>
-                  {/* <p>Precio de Descuento: ${item.precioDescuento}</p> */}
-                  <img src={item.imagen} alt={item.nombre} onClick={() => getDetalles(item)} />
+            : /// HTML de la lista de productos      
+            (
+              <Row className="justify-content-center pt-3" xs={"auto"}>
+              {productsList.map((item, index) => (
+    
+                <Col className="justify-content-center mb-3" style={{ display: "flex" }}>
+                  <ProductCard item={item}></ProductCard>
+                </Col>
+              
+            ))}
+            </Row>
+            )
+
+        }
+      </Container >
 
 
-
-                  {/* Botones de edición. No se ven cuando se toca "Agregar opción" */}
-                  {activeOptionFormId != item.id && (
-                    <>
-                      <button className="item-card-btn" onClick={() => setActiveOptionFormId(activeOptionFormId === item.id ? null : item.id)}>Agregar opción</button>
-                      <button className="item-card-btn" onClick={() => handleEditFields(item)}>Editar</button>
-                      <button className="item-card-btn-danger" onClick={() => ProductStorage.delete(item.id, item.categoriaId)}>Eliminar</button>
-                    </>
-                  )}
-
-                  {/* Formulario para agregar opción */}
-                  {activeOptionFormId === item.id && (
-
-                    <div>
-                      <button className="item-card-btn-danger" onClick={() => setActiveOptionFormId(activeOptionFormId === item.id ? null : item.id)}>Cerrar</button>
-                      <input
-                        className="item-card-input"
-                        type="text"
-                        placeholder="Nombre de la opción"
-                        autoFocus
-                        value={optionName}
-                        onChange={(e) => setOptionName(e.target.value)}
-                      />
-                      <input
-                        className="item-card-input"
-                        type="number"
-                        placeholder="Precio extra (opcional)"
-                        value={optionExtraPrice}
-                        onChange={(e) => setOptionExtraPrice(Number(e.target.value))}
-                      />
-                      <button
-                        className="item-card-btn"
-                        onClick={() => handleAddOption(item)}>Guardar opción</button>
-                    </div>
-                  )}
-                </div>
-              ))
-            )}
-        </div>
-      </div>
     </>
   );
 };

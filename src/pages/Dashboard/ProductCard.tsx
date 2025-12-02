@@ -1,0 +1,112 @@
+// Componentes
+import Card from "react-bootstrap/Card"
+import Button from "react-bootstrap/Button"
+// Contextos
+import { useProductsStorage } from '../../contexts/ProductsContext'
+// Utils
+import { formatPrice } from "../../utils/formatPrice"
+// Tipos y estilos
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash, faDollarSign, faTrash, faPen } from '@fortawesome/free-solid-svg-icons'
+import { Product } from '../../assets/types/types'
+
+
+
+export const ProductCard = ({ item }: { item: Product }) => {
+  return (
+    <Card className="item-card">
+      <Card.Header className="d-flex justify-content-between" >
+        <div style={{ alignContent: "center" }}>
+          {item.nombre}
+        </div>
+
+        <Button className="visibility-btn btn-dark">
+          {item.esVisible ?
+            <FontAwesomeIcon icon={faEye} />
+            : <FontAwesomeIcon icon={faEyeSlash} />
+          }
+        </Button>
+
+      </Card.Header>
+      <Card.Body>
+        <Card.Subtitle className="item-price">{formatPrice(item.precio)}</Card.Subtitle>
+        <Card.Img src={item.imagen}></Card.Img>
+        <div className="btn-group">
+          <Button className="btn-success"><FontAwesomeIcon icon={faPen}/></Button>
+          <Button className="btn-danger"><FontAwesomeIcon icon={faTrash}/></Button>
+        </div>
+
+      </Card.Body>
+    </Card>)
+
+}
+
+
+export const OldProductCard = (item: Product) => {
+  const { ProductStorage } = useProductsStorage()
+  return (
+    <div key={item.id} className="item-card">
+      <h3>
+        {item.nombre}
+
+      </h3>
+      <p className="item-desc">
+        {item.descripcion}
+
+
+        <button
+          style={item.esVisible ? { backgroundColor: "green" } : { backgroundColor: "red" }}
+          onClick={() => { ProductStorage.edit({ ...item, esVisible: !item.esVisible }) }}>
+          {item.esVisible ?
+            <FontAwesomeIcon icon={faEye}></FontAwesomeIcon>
+            :
+            <FontAwesomeIcon icon={faEyeSlash}></FontAwesomeIcon>
+          }
+        </button>
+
+
+      </p>
+      <p className="item-price"> <FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon> {item.precio}</p>
+      {/* <p>Precio de Descuento: ${item.precioDescuento}</p> */}
+      {/* <img src={item.imagen} alt={item.nombre} onClick={() => getDetalles(item)} /> */}
+
+
+
+      {/* Botones de edición. No se ven cuando se toca "Agregar opción" */}
+      {/* {activeOptionFormId != item.id && (
+                    <>
+                      <button className="item-card-btn" onClick={() => setActiveOptionFormId(activeOptionFormId === item.id ? null : item.id)}>Agregar opción</button>
+                      <button className="item-card-btn" onClick={() => handleEditFields(item)}>Editar</button>
+                      <button className="item-card-btn-danger" onClick={() => ProductStorage.delete(item.id, item.categoriaId)}>Eliminar</button>
+                    </>
+                  )} */}
+
+      {/* Formulario para agregar opción */}
+      {/* {activeOptionFormId === item.id && (
+
+                    <div>
+                      <button className="item-card-btn-danger" onClick={() => setActiveOptionFormId(activeOptionFormId === item.id ? null : item.id)}>Cerrar</button>
+                      <input
+                        className="item-card-input"
+                        type="text"
+                        placeholder="Nombre de la opción"
+                        autoFocus
+                        value={optionName}
+                        onChange={(e) => setOptionName(e.target.value)}
+                      />
+                      <input
+                        className="item-card-input"
+                        type="number"
+                        placeholder="Precio extra (opcional)"
+                        value={optionExtraPrice}
+                        onChange={(e) => setOptionExtraPrice(Number(e.target.value))}
+                      />
+                      <button
+                        className="item-card-btn"
+                        onClick={() => handleAddOption(item)}>Guardar opción</button>
+                    </div>
+                  )} */}
+    </div>
+  )
+}
+
