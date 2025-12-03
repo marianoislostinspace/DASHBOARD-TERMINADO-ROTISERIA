@@ -147,10 +147,6 @@ body {
     width: 100%;
     margin: 10px 0 0 0;
   }
-
-  .item-card img {
-    height: 150px;
-  }
 }
 
 /* Tablets (601px a 992px) */
@@ -182,9 +178,6 @@ body {
     width: 100%;
   }
 
-  .item-card img {
-    height: 160px;
-  }
 }
 
 .singleItem {

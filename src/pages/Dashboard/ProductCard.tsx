@@ -5,14 +5,20 @@ import Button from "react-bootstrap/Button"
 import { useProductsStorage } from '../../contexts/ProductsContext'
 // Utils
 import { formatPrice } from "../../utils/formatPrice"
+import { createRangeArray } from "../../utils/createRangeArray"
 // Tipos y estilos
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faDollarSign, faTrash, faPen } from '@fortawesome/free-solid-svg-icons'
 import { Product } from '../../assets/types/types'
 
+interface Props {
+  item: Product,
+  onEdit: (item: Product) => void,
+  onShowDetails?: () => void
+}
 
-
-export const ProductCard = ({ item }: { item: Product }) => {
+export const ProductCard = ({ item, onEdit }: Props) => {
+  const { ProductStorage } = useProductsStorage()
   return (
     <Card className="item-card">
       <Card.Header className="d-flex justify-content-between" >
@@ -20,7 +26,9 @@ export const ProductCard = ({ item }: { item: Product }) => {
           {item.nombre}
         </div>
 
-        <Button className="visibility-btn btn-dark">
+        <Button className="visibility-btn btn-dark"
+          onClick={() => { ProductStorage.edit({ ...item, esVisible: !item.esVisible }) }}
+        >
           {item.esVisible ?
             <FontAwesomeIcon icon={faEye} />
             : <FontAwesomeIcon icon={faEyeSlash} />
@@ -32,9 +40,35 @@ export const ProductCard = ({ item }: { item: Product }) => {
         <Card.Subtitle className="item-price">{formatPrice(item.precio)}</Card.Subtitle>
         <Card.Img src={item.imagen}></Card.Img>
         <div className="btn-group">
-          <Button className="btn-success"><FontAwesomeIcon icon={faPen}/></Button>
-          <Button className="btn-danger"><FontAwesomeIcon icon={faTrash}/></Button>
+          <Button className="btn-success" onClick={() => { onEdit(item) }}><FontAwesomeIcon icon={faPen} /></Button>
+          <Button className="btn-danger"
+            onClick={() => ProductStorage.delete(item.id, item.categoriaId)}>
+            <FontAwesomeIcon icon={faTrash} />
+          </Button>
         </div>
+
+        {
+          item.opciones.length < 6 &&
+          createRangeArray(0, 4).map((value) => <>{
+            value < item.opciones.length ?
+              <div className="item-option d-flex justify-content-between w-100 mt-1 px-2   ">
+                <span>{item.opciones[value].nombre}</span>
+                <span>
+                  {item.opciones[value].precio ?
+                    formatPrice(item.opciones[value].precio)
+                    : "$ 0,00"}
+                </span>
+              </div>
+              : 
+              <div className="item-option d-flex justify-content-between w-100 mt-1 px-2   ">
+                <span>----------</span>
+                <span>
+                  {"$ 0,00"}
+                </span>
+              </div>
+          }</>
+          )
+        }
 
       </Card.Body>
     </Card>)

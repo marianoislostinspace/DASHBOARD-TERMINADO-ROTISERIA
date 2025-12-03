@@ -132,7 +132,8 @@ export const Dashboard = () => {
               {productsList.map((item, index) => (
     
                 <Col className="justify-content-center mb-3" style={{ display: "flex" }}>
-                  <ProductCard item={item}></ProductCard>
+                  <ProductCard item={item} 
+                    onEdit={handleEditFields} ></ProductCard>
                 </Col>
               
             ))}
